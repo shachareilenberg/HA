@@ -1,0 +1,20 @@
+{
+  "domain": "oref_alert",
+  "name": "Israel Pikud Haoref Alert",
+  "codeowners": [
+    "@amitfin"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/amitfin/oref_alert",
+  "iot_class": "cloud_push",
+  "issue_tracker": "https://github.com/amitfin/oref_alert/issues",
+  "loggers": [
+    "paho"
+  ],
+  "requirements": [
+    "aiofiles",
+    "paho-mqtt",
+    "shapely==2.1.2"
+  ],
+  "version": "v4.2.2"
+}

@@ -1,0 +1,143 @@
+'1766497466499':
+  sequence:
+  - action: climate.turn_off
+    entity_id: all
+    metadata: {}
+    data: {}
+  alias: Turn off all ACs
+  description: ''
+  icon: mdi:hvac-off
+  mode: queued
+  max: 10
+play_music_in_the_kitchen:
+  alias: Play Music in the Kitchen
+  sequence:
+  - action: music_assistant.get_library
+    data:
+      config_entry_id: 01KD5Z1KSAB05R0NVBYJARNEB6
+      media_type: playlist
+      limit: 1
+    response_variable: last_recent
+  - action: music_assistant.play_media
+    target:
+      entity_id: media_player.kitchen
+    data:
+      media_id: '{{ last_recent[''items''][0].uri }}'
+      enqueue: replace
+  mode: single
+play_music_in_the_living_room:
+  alias: Play Music in the Living Room
+  sequence:
+  - action: music_assistant.get_library
+    data:
+      config_entry_id: 01KD5Z1KSAB05R0NVBYJARNEB6
+      media_type: playlist
+      limit: 1
+    response_variable: last_recent
+  - action: music_assistant.play_media
+    target:
+      entity_id: media_player.living_room
+    data:
+      media_id: '{{ last_recent[''items''][0].uri }}'
+      enqueue: replace
+  mode: single
+play_music_everywhere:
+  alias: Play Music Everywhere
+  sequence:
+  - action: music_assistant.get_library
+    data:
+      config_entry_id: 01KD5Z1KSAB05R0NVBYJARNEB6
+      media_type: playlist
+      limit: 1
+    response_variable: last_recent
+  - action: music_assistant.play_media
+    target:
+      entity_id: media_player.everywhere
+    data:
+      media_id: '{{ last_recent[''items''][0].uri }}'
+      enqueue: replace
+  - delay: 00:00:01
+  - action: music_assistant.play_media
+    target:
+      entity_id: media_player.everywhere
+    data:
+      media_id: '{{ last_recent[''items''][0].uri }}'
+      enqueue: replace
+  mode: single
+turn_off_all_lights:
+  sequence:
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      area_id:
+      - bedroom
+      - office
+      - parents_bathroom
+      entity_id: switch.mqlkht_mqlkht_tnvr
+    data: {}
+  - action: light.turn_off
+    metadata: {}
+    target:
+      area_id:
+      - living_room
+      - kitchen
+      - bedroom
+      - office
+      - kids_bedroom
+      - entrance
+      - hallway
+      - balcony
+      - parents_bathroom
+      - kids_bathroom
+    data: {}
+  alias: Turn off all lights
+  description: ''
+  mode: queued
+  max: 10
+close_all_blinds:
+  sequence:
+  - action: cover.close_cover
+    metadata: {}
+    data: {}
+    target:
+      entity_id: all
+  alias: Close all blinds
+  description: ''
+exit_home_event:
+  sequence:
+  - event: Exit home
+    event_data: {}
+  alias: Exit home event
+  description: ''
+welcome_home_event_trigger:
+  sequence:
+  - event: Welcome home
+    event_data: {}
+  alias: Welcome home event
+  description: ''
+  mode: queued
+  max: 10
+good_morning_event:
+  sequence:
+  - event: Good morning
+    event_data: {}
+  alias: Good morning event
+  description: ''
+  mode: queued
+  max: 10
+good_night_event:
+  sequence:
+  - event: Good night
+    event_data: {}
+  alias: Good night event
+  description: ''
+  mode: queued
+  max: 10
+turn_off_all_lights_v2:
+  alias: Turn off all lights
+  sequence:
+  - target:
+      entity_id: all
+    action: light.turn_off
+  mode: single
+  description: ''

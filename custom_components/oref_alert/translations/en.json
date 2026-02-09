@@ -1,0 +1,161 @@
+{
+    "title": "Oref Alert",
+    "config": {
+        "step": {
+            "user": {
+                "title": "Setup Oref Alert",
+                "data": {
+                    "areas": "Select areas to monitor (Hebrew only)"
+                }
+            },
+            "confirm": {
+                "title": "Oref Alert: {area}",
+                "description": "Do you want to start setup?"
+            }
+        },
+        "abort": {
+            "single_instance_allowed": "Already configured. Only a single configuration possible."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Configure Oref Alert",
+                "data": {
+                    "areas": "Select areas to monitor (Hebrew only)",
+                    "alert_active_duration": "Alert's active duration (minutes)",
+                    "all_alerts_attributes": "Add 'all alerts' attributes"
+                }
+            }
+        }
+    },
+    "device": {
+        "default": {
+            "name": "Oref Alert"
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "all_areas": {
+                "name": "All Areas"
+            }
+        },
+        "sensor": {
+            "default_time_to_shelter": {
+                "name": "Time To Shelter"
+            },
+            "named_time_to_shelter": {
+                "name": "{name} Time To Shelter"
+            },
+            "default_end_time": {
+                "name": "End Time"
+            },
+            "named_end_time": {
+                "name": "{name} End Time"
+            }
+        },
+        "event": {
+            "alert": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "pre_alert": "Pre Alert",
+                            "alert": "Alert",
+                            "end": "End"
+                        }
+                    },
+                    "record": {
+                        "name": "Record"
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "no_config_entry": {
+            "message": "Config entry not found"
+        },
+        "config_entry_not_loaded": {
+            "message": "Config entry not loaded"
+        },
+        "pushy_invalid_response": {
+            "message": "{url} reply payload is invalid: {content}"
+        }
+    },
+    "services": {
+        "add_sensor": {
+            "name": "Add Sensor",
+            "description": "Add a new sensor for selected areas",
+            "fields": {
+                "name": {
+                    "name": "Name",
+                    "description": "The name of the sensor"
+                },
+                "areas": {
+                    "name": "Areas",
+                    "description": "The selected areas (Hebrew only)"
+                }
+            }
+        },
+        "remove_sensor": {
+            "name": "Remove Sensor",
+            "description": "Remove a sensor",
+            "fields": {
+                "entity_id": {
+                    "name": "Entity",
+                    "description": "The entity to remove"
+                }
+            }
+        },
+        "edit_sensor": {
+            "name": "Edit Sensor",
+            "description": "Edit sensor's areas",
+            "fields": {
+                "entity_id": {
+                    "name": "Entity",
+                    "description": "The entity to edit"
+                },
+                "add_areas": {
+                    "name": "Add Areas",
+                    "description": "The areas to add"
+                },
+                "remove_areas": {
+                    "name": "Remove Areas",
+                    "description": "The areas to remove"
+                }
+            }
+        },
+        "synthetic_alert": {
+            "name": "Create Synthetic Alert",
+            "description": "Create a synthetic alert for testing purposes",
+            "fields": {
+                "area": {
+                    "name": "Area",
+                    "description": "The area(s) of the alert(s)"
+                },
+                "duration": {
+                    "name": "Duration",
+                    "description": "Alert's existence time (seconds)"
+                },
+                "category": {
+                    "name": "Category",
+                    "description": "Alert's category"
+                },
+                "title": {
+                    "name": "Title",
+                    "description": "Alert's description"
+                }
+            }
+        }
+    },
+    "issues": {
+        "unknown_area": {
+            "title": "Oref Alert Unknown Area",
+            "description": "The area \"{area}\" doesn't exist. Please remove it and select the relevant area from the list."
+        },
+        "upgrade_required": {
+            "title": "Oref Alert Upgrade Required",
+            "description": "The list of areas was changed. Please install the latest version of Oref Alert integration."
+        }
+    }
+}

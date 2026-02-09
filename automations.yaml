@@ -1,0 +1,363 @@
+- id: '1766686871623'
+  alias: Everyone left home - Turn off all ACs
+  description: ''
+  triggers:
+  - entity_id:
+    - person.shachar
+    - person.ariel
+    to: not_home
+    trigger: state
+  conditions:
+  - condition: state
+    entity_id: person.shachar
+    state: not_home
+    for: 00:03:00
+    enabled: false
+  - condition: state
+    entity_id: person.ariel
+    state: not_home
+    for: 00:03:00
+    enabled: false
+  actions:
+  - action: script.1766497466499
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1769606499675'
+  alias: Good night
+  description: ''
+  triggers:
+  - device_id: 29b44de226a19290bcc8958776b4e0ab
+    domain: vitrea
+    entity_id: sensor.knysh_lylh_tvb_byt
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  - trigger: event
+    event_type: Good night
+  conditions:
+  - condition: sun
+    after: sunset
+    before: sunrise
+  actions:
+  - action: script.close_all_blinds
+    metadata: {}
+    data: {}
+  - action: script.turn_off_all_lights_v2
+    metadata: {}
+    data: {}
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      entity_id: all
+    data: {}
+  - action: climate.turn_off
+    metadata: {}
+    target:
+      area_id:
+      - kitchen
+      - office
+      entity_id: climate.l8_104
+    data: {}
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id:
+      - light.msdrvn_msdrvn_tvrt_lylh
+      - light.mqlkht_mqlkht_tvrt_lylh
+    data: {}
+  - action: input_boolean.turn_on
+    metadata: {}
+    target:
+      entity_id: input_boolean.good_night_state
+    data: {}
+  - action: media_player.turn_off
+    metadata: {}
+    target:
+      device_id: d11bd43721d6c7352acc8f1c20581c2b
+    data: {}
+  mode: queued
+  max: 10
+- id: '1769608500286'
+  alias: Welcome home at daylight
+  description: ''
+  triggers:
+  - device_id: ac6ee83cd2088fe68ae719d2b63ef8b0
+    domain: vitrea
+    entity_id: sensor.knysh_knysh
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  - trigger: event
+    event_type: Welcome home
+  conditions:
+  - condition: sun
+    before: sunset
+  actions:
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 100
+    target:
+      entity_id:
+      - cover.knysh_n4_1
+      - cover.slvn_slvn_trys
+      - cover.mtbkh_mtbkh_trys
+      - cover.slvn_slvn_trys_khlvn
+  - action: light.turn_off
+    metadata: {}
+    target:
+      entity_id: light.knysh_knysh_qyr
+    data: {}
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id:
+      - input_boolean.is_away_state
+    data: {}
+  mode: queued
+  max: 10
+- id: '1769608776716'
+  alias: Welcome home at night time
+  description: ''
+  triggers:
+  - device_id: ac6ee83cd2088fe68ae719d2b63ef8b0
+    domain: vitrea
+    entity_id: sensor.knysh_knysh
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  conditions:
+  - condition: sun
+    after: sunset
+  actions:
+  - action: cover.set_cover_position
+    metadata: {}
+    target:
+      entity_id:
+      - cover.mtbkh_mtbkh_trys
+      - cover.slvn_slvn_trys
+    data:
+      position: 100
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id:
+      - light.mtbkh_mtbkh_y
+      - light.mtbkh_mtbkh_ps
+    data: {}
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.knysh_knysh_qyr
+    data: {}
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id:
+      - input_boolean.is_away_state
+    data: {}
+  mode: queued
+  max: 10
+- id: '1769609302281'
+  alias: Exit home
+  description: ''
+  triggers:
+  - device_id: 682c0fcb524006a86ff26cf21035bbbc
+    domain: vitrea
+    entity_id: sensor.knysh_ytsyh
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  - trigger: event
+    event_type: Exit home
+  conditions: []
+  actions:
+  - action: script.1766497466499
+    metadata: {}
+    data: {}
+  - action: script.turn_off_all_lights_v2
+    metadata: {}
+    data: {}
+  - action: media_player.turn_off
+    metadata: {}
+    target:
+      device_id: 9b1a1a72456630c35e2d1babd80d8930
+    data: {}
+  - action: input_boolean.turn_on
+    metadata: {}
+    target:
+      entity_id:
+      - input_boolean.is_away_state
+    data: {}
+  mode: queued
+  max: 10
+- id: '1769681395045'
+  alias: Good morning
+  description: ''
+  triggers:
+  - device_id: 29b44de226a19290bcc8958776b4e0ab
+    domain: vitrea
+    entity_id: sensor.knysh_lylh_tvb_byt
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  - trigger: event
+    event_type: Good morning
+  conditions:
+  - condition: sun
+    after: sunrise
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.msdrvn_msdrvn_tvrt_lylh
+      - switch.mqlkht_mqlkht_tvrt_lylh
+  - action: cover.set_cover_position
+    metadata: {}
+    target:
+      area_id:
+      - living_room
+      - kitchen
+      - office
+    data:
+      position: 100
+  - action: media_player.turn_on
+    metadata: {}
+    target:
+      device_id: d11bd43721d6c7352acc8f1c20581c2b
+    data: {}
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id: input_boolean.good_night_state
+    data: {}
+  mode: queued
+  max: 10
+- id: '1769691868798'
+  alias: Morning boiler routine
+  description: ''
+  triggers:
+  - at: 07:45:00
+    trigger: time
+  conditions:
+  - condition: numeric_state
+    entity_id: number.mqlkht_dvd_countdown
+    below: 1
+  actions:
+  - target:
+      entity_id: number.mqlkht_dvd_countdown
+    data:
+      value: '60'
+    action: number.set_value
+  mode: single
+- id: '1769692116002'
+  alias: Evening boiler routine
+  description: ''
+  triggers:
+  - at: '17:00:00'
+    trigger: time
+  conditions:
+  - condition: numeric_state
+    entity_id: number.mqlkht_dvd_countdown
+    below: 1
+  actions:
+  - target:
+      entity_id: number.mqlkht_dvd_countdown
+    data:
+      value: '120'
+    action: number.set_value
+  mode: single
+- id: '1769693536365'
+  alias: Kitchen blind protection
+  description: ''
+  triggers:
+  - device_id: d06f6f0329960758a62d49820eb9ba70
+    domain: cover
+    entity_id: 6d0603e2bde188e863a78d3d18cb9a9c
+    type: opened
+    metadata:
+      secondary: false
+    trigger: device
+  conditions:
+  - condition: numeric_state
+    entity_id: cover.mtbkh_mtbkh_trys
+    attribute: current_position
+    above: 10
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: cover.set_cover_position
+    metadata: {}
+    target:
+      entity_id: cover.mtbkh_mtbkh_trys
+    data:
+      position: 1
+  mode: single
+- id: '1769693583182'
+  alias: Living room blind protection
+  description: ''
+  triggers:
+  - device_id: 72ce3a12c017a4353467a9d0ec8b4b9c
+    domain: cover
+    entity_id: 38d748ec8a9e346212f1abf0d34aecb2
+    type: opened
+    trigger: device
+  conditions:
+  - condition: numeric_state
+    entity_id: cover.slvn_slvn_trys
+    attribute: current_position
+    above: 80
+  actions:
+  - action: cover.stop_cover
+    metadata: {}
+    target:
+      entity_id: cover.mtbkh_mtbkh_trys
+    data: {}
+  mode: single
+- id: '1769721987593'
+  alias: Kitchen blind protection adv
+  description: ''
+  triggers:
+  - device_id: d06f6f0329960758a62d49820eb9ba70
+    domain: cover
+    entity_id: cover.mtbkh_mtbkh_trys
+    type: opened
+    trigger: device
+  conditions:
+  - condition: numeric_state
+    entity_id: cover.mtbkh_mtbkh_trys
+    attribute: current_position
+    above: 10
+  actions:
+  - delay: 00:00:01
+  - target:
+      entity_id: cover.mtbkh_mtbkh_trys
+    data:
+      position: '{{ initial_position }}'
+    action: cover.set_cover_position
+  mode: single
+  variables:
+    initial_position: '{{ state_attr(''cover.mtbkh_mtbkh_trys'', ''current_position'')
+      | int }}'
+- id: '1769884447827'
+  alias: Set theme at boot
+  triggers:
+  - event_type: homeassistant_start
+    trigger: event
+  actions:
+  - data:
+      name: noctis
+      mode: dark
+    action: frontend.set_theme
+  mode: single

@@ -1,0 +1,34 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "home_alert": {
+        "default": "mdi:home-outline",
+        "state": {
+          "on": "mdi:home-alert-outline"
+        }
+      },
+      "all_areas": {
+        "default": "mdi:home-outline",
+        "state": {
+          "on": "mdi:home-alert-outline"
+        }
+      }
+    },
+    "sensor": {
+      "timer": {
+        "default": "mdi:timer-sand"
+      }
+    },
+    "event": {
+      "alert": {
+        "default": "mdi:bullhorn-variant-outline"
+      }
+    }
+  },
+  "services": {
+    "add_sensor": "mdi:map-marker-plus-outline",
+    "remove_sensor": "mdi:map-marker-remove-outline",
+    "edit_sensor": "mdi:map-marker-star-outline",
+    "synthetic_alert": "mdi:rocket-launch"
+  }
+}

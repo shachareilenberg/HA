@@ -1,0 +1,161 @@
+{
+    "title": "התרעות פיקוד העורף",
+    "config": {
+        "step": {
+            "user": {
+                "title": "התקנת התרעות פיקוד העורף",
+                "data": {
+                    "areas": "בחר אזורים לניטור (בעברית בלבד)"
+                }
+            },
+            "confirm": {
+                "title": "התרעות פיקוד העורף: {area}",
+                "description": "האם ברצונך להתחיל בהגדרה?"
+            }
+        },
+        "abort": {
+            "single_instance_allowed": "תצורתו כבר נקבעה. רק תצורה אחת אפשרית."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "תצורת התרעות פיקוד העורף",
+                "data": {
+                    "areas": "בחר אזורים לניטור (בעברית בלבד)",
+                    "alert_active_duration": "משך הזמן שהתרעה נחשבת כפעילה (דקות)",
+                    "all_alerts_attributes": " הוסף את השדות עבור כלל ההתרעות"
+                }
+            }
+        }
+    },
+    "device": {
+        "default": {
+            "name": "התרעות פיקוד העורף"
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "all_areas": {
+                "name": "כל האזורים"
+            }
+        },
+        "sensor": {
+            "default_time_to_shelter": {
+                "name": "זמן להתמגן"
+            },
+            "named_time_to_shelter": {
+                "name": "{name} זמן להתמגן"
+            },
+            "default_end_time": {
+                "name": "סיום התמגנות"
+            },
+            "named_end_time": {
+                "name": "{name} סיום התמגנות"
+            }
+        },
+        "event": {
+            "alert": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "pre_alert": "הנחיה מקדימה",
+                            "alert": "אזעקה",
+                            "end": "האירוע הסתיים"
+                        }
+                    },
+                    "record": {
+                        "name": "רשומה"
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "no_config_entry": {
+            "message": "הגדרת תצורה לא נמצאה"
+        },
+        "config_entry_not_loaded": {
+            "message": "הגדרת תצורה לא טעונה"
+        },
+        "pushy_invalid_response": {
+            "message": "{url} החזיר תוכן לא תקין: {content}"
+        }
+    },
+    "services": {
+        "add_sensor": {
+            "name": "הוספת חיישן",
+            "description": "הוספת חיישן עבור אזורים לניטור",
+            "fields": {
+                "name": {
+                    "name": "שם",
+                    "description": "שם החיישן"
+                },
+                "areas": {
+                    "name": "אזורים",
+                    "description": "אזורים לניטור (בעברית בלבד)"
+                }
+            }
+        },
+        "remove_sensor": {
+            "name": "הסרת חיישן",
+            "description": "הסרת חיישן",
+            "fields": {
+                "entity_id": {
+                    "name": "ישות",
+                    "description": "הישות שתוסר"
+                }
+            }
+        },
+        "edit_sensor": {
+            "name": "עריכת חיישן",
+            "description": "עריכת חיישן",
+            "fields": {
+                "entity_id": {
+                    "name": "ישות",
+                    "description": "הישות לעריכה"
+                },
+                "add_areas": {
+                    "name": "אזורים להוספה",
+                    "description": "האזורים שיוספו לחיישן"
+                },
+                "remove_areas": {
+                    "name": "אזורים להורדה",
+                    "description": "האזורים שיורדו מהחיישן"
+                }
+            }
+        },
+        "synthetic_alert": {
+            "name": "יצירת התרעה סינטטית",
+            "description": "יצירת התרעה סינטטית לצורך בדיקה",
+            "fields": {
+                "area": {
+                    "name": "אזור",
+                    "description": "אזור(י) ההתרעה"
+                },
+                "duration": {
+                    "name": "משך הזמן",
+                    "description": "משך הזמן שבו מדווחת ההתרעה (שניות)"
+                },
+                "category": {
+                    "name": "קטגוריה",
+                    "description": "קטגורית ההתרעה"
+                },
+                "title": {
+                    "name": "כותרת",
+                    "description": "תאור ההתרעה"
+                }
+            }
+        }
+    },
+    "issues": {
+        "unknown_area": {
+            "title": "אזור לא קיים בפיקוד העורף",
+            "description": "האזור '{area}' לא קיים. אנא מחק/י אותו ובחר/י את האזור הרלוונטי מהרשימה."
+        },
+        "upgrade_required": {
+            "title": "נדרש עידכון התוסף של פיקוד העורף",
+            "description": "רשימת האזורים התעדכנה. אנא עדכנ/י את התוסף של פיקוד העורף."
+        }
+    }
+}
