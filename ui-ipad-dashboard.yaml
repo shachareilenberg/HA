@@ -207,6 +207,27 @@ views:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
+              # ── Apps ──────────────────────────────
+              # Tapping opens the baby monitor app via an iOS Shortcut.
+              # Setup: on the iPad, create a Shortcut named exactly
+              # "Baby Monitor+" with one action: Open App → Philips Baby Monitor+
+              - type: custom:mushroom-title-card
+                title: Apps
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: custom:mushroom-template-card
+                primary: Baby Monitor
+                secondary: Philips Avent
+                icon: mdi:baby-face-outline
+                icon_color: pink
+                layout: vertical
+                fill_container: true
+                tap_action:
+                  action: url
+                  url_path: "shortcuts://run-shortcut?name=Baby%20Monitor%2B"
+
 
           # ╔═══════════════════════════════╗
           # ║          MAIN AREA            ║
