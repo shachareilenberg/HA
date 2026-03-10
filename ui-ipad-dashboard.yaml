@@ -15,7 +15,7 @@
 #  ✓ clock-weather-card       (Sidebar clock + weather)
 #
 # ── SAMSUNG TV NOTE ────────────────────────────────────────
-#  TV entity: media_player.tv2
+#  TV entity: media_player.tv_2
 #  Yamaha receiver source name: RX-V6A
 #  D-pad navigation (send_key) requires the SamsungTV or
 #  SamsungTV-Tizen integration (not SmartThings alone).
@@ -568,7 +568,7 @@ views:
 
               # ── Main TV player (on/off, volume, play controls) ────────────
               - type: custom:mushroom-media-player-card
-                entity: media_player.tv2
+                entity: media_player.tv_2
                 name: Samsung TV
                 use_media_info: true
                 volume_controls:
@@ -626,7 +626,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: app
                         media_content_id: "111299001912"
@@ -640,7 +640,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: app
                         media_content_id: "rJeHak5zRg.Spotify"
@@ -654,7 +654,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: app
                         media_content_id: "xNjDbgVJeT.stingtv"
@@ -671,7 +671,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: app
                         media_content_id: "3201807018807"
@@ -685,7 +685,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: app
                         media_content_id: "3201601007230"
@@ -709,7 +709,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: send_key
                         media_content_id: KEY_RETURN
@@ -723,7 +723,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: send_key
                         media_content_id: KEY_UP
@@ -737,7 +737,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: send_key
                         media_content_id: KEY_HOME
@@ -755,7 +755,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: send_key
                         media_content_id: KEY_LEFT
@@ -769,7 +769,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: send_key
                         media_content_id: KEY_ENTER
@@ -783,7 +783,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: send_key
                         media_content_id: KEY_RIGHT
@@ -801,7 +801,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: send_key
                         media_content_id: KEY_MENU
@@ -815,7 +815,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: send_key
                         media_content_id: KEY_DOWN
@@ -829,7 +829,7 @@ views:
                       action: call-service
                       service: media_player.play_media
                       target:
-                        entity_id: media_player.tv2
+                        entity_id: media_player.tv_2
                       data:
                         media_content_type: send_key
                         media_content_id: KEY_MUTE
