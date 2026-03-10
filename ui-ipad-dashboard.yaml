@@ -659,8 +659,24 @@ views:
                         media_content_type: app
                         media_content_id: "xNjDbgVJeT.stingtv"
 
+              # !! App IDs below need verification — switch to each app on the TV
+              # then read sensor.tv_tv_channel_name to get the correct ID for IL !!
               - type: horizontal-stack
                 cards:
+                  - type: custom:mushroom-template-card
+                    primary: Netflix
+                    icon: mdi:netflix
+                    icon_color: red
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "11101200001"
                   - type: custom:mushroom-template-card
                     primary: Apple TV
                     icon: mdi:apple
@@ -689,6 +705,20 @@ views:
                       data:
                         media_content_type: app
                         media_content_id: "3201601007230"
+                  - type: custom:mushroom-template-card
+                    primary: Disney+
+                    icon: mdi:alpha-d-box
+                    icon_color: indigo
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "3201809020684"
 
               # ── Navigation remote ─────────────────────────────────────────
               # Keys work via the Samsung Smart TV / SamsungTV-Tizen integration.
