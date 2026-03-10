@@ -767,11 +767,11 @@
       entity_id:
       - cover.slvn_slvn_trys
       - cover.slvn_slvn_trys_khlvn
-  - action: media_player.select_source
+  - action: select.select_option
     target:
-      entity_id: media_player.tv_2
+      entity_id: select.tv_2_sound_output
     data:
-      source: "RX-V6A"
+      option: "external_arc"
   mode: single
 #
 # ─────────────────────────────────────────────────────────────────────────────
@@ -801,7 +801,7 @@
   - condition: state
     entity: binary_sensor.config_update_available
     state: 'on'
-  - action: notify.IPAD_NOTIFY_ENTITY
+  - action: notify.mobile_app_ipad_2
     data:
       title: "Config Update Available"
       message: "New configuration pulled from GitHub. Restart Home Assistant to apply?"

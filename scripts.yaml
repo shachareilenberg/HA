@@ -328,11 +328,15 @@ good_night_event_25m_delayed:
 
 tv_audio_yamaha:
   alias: TV Audio → Yamaha Receiver
-  description: Switch Samsung TV input to the Yamaha RX-V6A receiver.
+  description: >
+    Sets the Samsung TV audio output to the external ARC port (Yamaha RX-V6A).
+    Verify entity name and option value in Developer Tools → States:
+    search "tv_2" for a select entity with "sound" or "output" in the name.
+    Common option values: "external_arc", "bt_soundbar", "tv_speaker".
   sequence:
-  - action: media_player.select_source
+  - action: select.select_option
     target:
-      entity_id: media_player.tv_2
+      entity_id: select.tv_2_sound_output
     data:
-      source: "RX-V6A"
+      option: "external_arc"
   mode: single
