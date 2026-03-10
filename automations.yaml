@@ -740,6 +740,47 @@
 #   3. Replace REPLACE_WITH_IPAD_BROWSER_ID below (both occurrences) with that UUID.
 #   4. Reload automations (Developer Tools → YAML → Reload Automations).
 # ─────────────────────────────────────────────────────────────────────────────
+# ── SUGGESTED AUTOMATIONS ────────────────────────────────────────────────────
+# Uncomment and customise the blocks below to activate.
+#
+# ── Movie Mode ───────────────────────────────────────────────────────────────
+# Turns off kitchen + living room lights, closes living room blinds, and
+# switches the Samsung TV audio source to the Yamaha receiver.
+#
+# Before uncommenting:
+#   1. Replace media_player.samsung_tv with your real TV entity ID.
+#   2. Find the exact Yamaha source label by pasting this in Developer Tools
+#      → Template tab:
+#        {{ state_attr('media_player.samsung_tv', 'source_list') }}
+#      Then replace "AV Receiver" below with what appears in that list.
+#
+- id: '1773200000010'
+ alias: Movie Mode
+ description: >
+   Turn off kitchen and living room lights, close living room blinds,
+   switch TV audio to Yamaha receiver.
+ triggers: []
+ conditions: []
+ actions:
+ - action: light.turn_off
+   target:
+     entity_id:
+     - light.mtbkh_mtbkh_y
+     - light.mtbkh_mtbkh_ps
+ - action: cover.close_cover
+   target:
+     entity_id:
+     - cover.slvn_slvn_trys
+     - cover.slvn_slvn_trys_khlvn
+ - action: media_player.select_source
+   target:
+     entity_id: media_player.tv_qe65s95datxil       # UPDATE THIS
+   data:
+     source: "AV Receiver"                    # UPDATE: check source_list
+ mode: single
+#
+# ─────────────────────────────────────────────────────────────────────────────
+
 - id: '1773200000001'
   alias: iPad — Navigate to iPad Dashboard on Connect
   description: >

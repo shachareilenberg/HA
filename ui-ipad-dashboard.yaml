@@ -1,20 +1,27 @@
 ##############################################################
 # iPad Landscape Dashboard — ui-ipad-dashboard.yaml
+# v2
 #
 # HOW TO REGISTER:
 #   Settings → Dashboards → Add Dashboard
 #   Title: iPad Home  |  Icon: mdi:tablet  |  URL: /ui-ipad
-#   Mode: YAML  →  paste this file path
+#   Mode: YAML  →  point to this file path
 #
 # ── REQUIRED HACS FRONTEND CARDS (all pre-installed) ──────
 #  ✓ lovelace-mushroom        (Mushroom Cards v5+)
 #  ✓ lovelace-card-mod        (CSS overrides)
 #  ✓ lovelace-layout-card     (Grid Layout engine)
 #  ✓ browser_mod              (Smart popups v2+)
-#  ✓ mini-climate-card        (Climate detail popups)
 #  ✓ clock-weather-card       (Sidebar clock + weather)
 #
-# ── THEME ─────────────────────────────────────────────────
+# ── SAMSUNG TV NOTE ────────────────────────────────────────
+#  In the Entertainment section, replace media_player.samsung_tv
+#  with your actual entity ID:
+#    Settings → Devices & Services → Samsung Smart TV → entity
+#  For full remote control (arrows, home, back, app launcher):
+#    Install "SamsungTV Smart" from HACS.
+#
+# ── THEME ──────────────────────────────────────────────────
 #  "Frosted Glass Dark" — installed in themes/
 #  Provides automatic glassmorphism on all ha-card elements
 ##############################################################
@@ -47,12 +54,11 @@ views:
             cards:
 
               # ── Clock + Weather ──────────────────
+              # If weather.forecast_home shows an error, try weather.home
               - type: custom:clock-weather-card
-                entity: weather.home
+                entity: weather.forecast_home
                 time_format: 24
-                date_pattern: "EEEE, d MMMM"
                 animated_icon: true
-                show_humidity: true
                 forecast_rows: 3
 
               # ── Presence ─────────────────────────
@@ -166,18 +172,6 @@ views:
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-template-card
-                    primary: Car Home
-                    secondary: Garage + Light
-                    icon: mdi:car-home
-                    icon_color: cyan
-                    layout: vertical
-                    fill_container: true
-                    tap_action:
-                      action: call-service
-                      service: script.turn_on
-                      service_data:
-                        entity_id: script.car_home_arrival
-                  - type: custom:mushroom-template-card
                     primary: ACs Off
                     secondary: All Units
                     icon: mdi:air-conditioner
@@ -189,6 +183,18 @@ views:
                       service: script.turn_on
                       service_data:
                         entity_id: script.1766497466499
+                  - type: custom:mushroom-template-card
+                    entity: cover.4g600204913
+                    primary: Garage Gate
+                    secondary: >
+                      {{ 'Open' if is_state('cover.4g600204913', 'open') else 'Closed' }}
+                    icon: mdi:garage
+                    icon_color: >
+                      {{ 'green' if is_state('cover.4g600204913', 'open') else 'grey' }}
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: more-info
 
               # ── Good Night Mode State ─────────────
               - type: custom:mushroom-entity-card
@@ -257,53 +263,31 @@ views:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
+              # Row 1: Kitchen 1 | Kitchen 2 | Office
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_101
-                    name: Kitchen Relay
+                    name: Kitchen 1
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Kitchen Relay AC
-                          initial_style: wide
-                          content:
-                            type: custom:mini-climate-card
-                            entity: climate.l8_101
+                      action: more-info
 
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_102
-                    name: AC Unit 2
+                    name: Kitchen 2
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: AC Unit 2
-                          initial_style: wide
-                          content:
-                            type: custom:mini-climate-card
-                            entity: climate.l8_102
+                      action: more-info
 
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_103
-                    name: AC Unit 3
+                    name: Office
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: AC Unit 3
-                          initial_style: wide
-                          content:
-                            type: custom:mini-climate-card
-                            entity: climate.l8_103
+                      action: more-info
 
+              # Row 2: Kids Bathroom | Bedroom
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-climate-card
@@ -311,255 +295,103 @@ views:
                     name: Kids Bathroom
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Kids Bathroom AC
-                          initial_style: wide
-                          content:
-                            type: custom:mini-climate-card
-                            entity: climate.l8_104
+                      action: more-info
 
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_105
                     name: Bedroom
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Bedroom AC
-                          initial_style: wide
-                          content:
-                            type: custom:mini-climate-card
-                            entity: climate.l8_105
-
-                  - type: custom:mushroom-climate-card
-                    entity: climate.l8_106
-                    name: AC Unit 6
-                    fill_container: true
-                    tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: AC Unit 6
-                          initial_style: wide
-                          content:
-                            type: custom:mini-climate-card
-                            entity: climate.l8_106
+                      action: more-info
 
 
               # ══════════════════════════════════════
               # LIGHTING
               # ══════════════════════════════════════
+              # Names come from HA friendly names — no overrides here.
+              # Tap to toggle on/off.
               - type: custom:mushroom-title-card
                 title: Lighting
-                subtitle: Rooms & Switches
                 card_mod:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
-              # Row: Kitchen + Entrance lights
+              # Row: Kitchen + Entrance
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-light-card
                     entity: light.mtbkh_mtbkh_y
-                    name: Kitchen Main
-                    show_brightness_control: true
-                    show_color_temp_control: true
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Kitchen Main Light
-                          content:
-                            type: custom:mushroom-light-card
-                            entity: light.mtbkh_mtbkh_y
-                            name: Kitchen Main
-                            show_brightness_control: true
-                            show_color_temp_control: true
-                            collapsible_controls: false
+                      action: toggle
 
                   - type: custom:mushroom-light-card
                     entity: light.mtbkh_mtbkh_ps
-                    name: Kitchen Strip
-                    show_brightness_control: true
-                    show_color_temp_control: true
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Kitchen Strip Light
-                          content:
-                            type: custom:mushroom-light-card
-                            entity: light.mtbkh_mtbkh_ps
-                            name: Kitchen Strip
-                            show_brightness_control: true
-                            show_color_temp_control: true
-                            collapsible_controls: false
+                      action: toggle
 
                   - type: custom:mushroom-light-card
                     entity: light.knysh_knysh_qyr
-                    name: Entrance Wall
-                    show_brightness_control: true
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Entrance Wall Light
-                          content:
-                            type: custom:mushroom-light-card
-                            entity: light.knysh_knysh_qyr
-                            name: Entrance Wall
-                            show_brightness_control: true
-                            collapsible_controls: false
+                      action: toggle
 
-              # Row: Entrance + Bathroom lights
+              # Row: Entrance + Shower
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-light-card
                     entity: light.knysh_knysh_tvrh
-                    name: Entrance
-                    show_brightness_control: true
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Entrance Light
-                          content:
-                            type: custom:mushroom-light-card
-                            entity: light.knysh_knysh_tvrh
-                            name: Entrance
-                            show_brightness_control: true
-                            collapsible_controls: false
+                      action: toggle
 
                   - type: custom:mushroom-light-card
                     entity: light.mqlkht_mqlkht_qyr
-                    name: Bathroom Wall
-                    show_brightness_control: true
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Bathroom Wall Light
-                          content:
-                            type: custom:mushroom-light-card
-                            entity: light.mqlkht_mqlkht_qyr
-                            name: Bathroom Wall
-                            show_brightness_control: true
-                            collapsible_controls: false
+                      action: toggle
 
                   - type: custom:mushroom-light-card
                     entity: light.mqlkht_mqlkht_tvrt_lylh
-                    name: Bathroom Night
-                    show_brightness_control: true
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Bathroom Night Light
-                          content:
-                            type: custom:mushroom-light-card
-                            entity: light.mqlkht_mqlkht_tvrt_lylh
-                            name: Bathroom Night
-                            show_brightness_control: true
-                            collapsible_controls: false
+                      action: toggle
 
-              # Row: Hallway + Safe Room + Heater switch
+              # Row: Hallway + Safe Room + Shower Heater
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-light-card
                     entity: light.msdrvn_msdrvn_tvrt_lylh
-                    name: Hallway Night
-                    show_brightness_control: true
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Hallway Night Light
-                          content:
-                            type: custom:mushroom-light-card
-                            entity: light.msdrvn_msdrvn_tvrt_lylh
-                            name: Hallway Night
-                            show_brightness_control: true
-                            collapsible_controls: false
+                      action: toggle
 
                   - type: custom:mushroom-light-card
                     entity: light.mm_d_mm_d_tqrh
-                    name: Safe Room
-                    show_brightness_control: true
                     fill_container: true
                     tap_action:
-                      action: fire-dom-event
-                      browser_mod:
-                        service: browser_mod.popup
-                        data:
-                          title: Safe Room Light
-                          content:
-                            type: custom:mushroom-light-card
-                            entity: light.mm_d_mm_d_tqrh
-                            name: Safe Room
-                            show_brightness_control: true
-                            collapsible_controls: false
+                      action: toggle
 
                   - type: custom:mushroom-entity-card
                     entity: switch.mqlkht_mqlkht_tnvr
-                    name: Bath Heater
                     icon: mdi:radiator
                     icon_color: deep-orange
                     toggle: true
                     fill_container: true
 
-              # Row: Light switches
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-entity-card
-                    entity: switch.knysh_knysh_qyr
-                    name: Entrance Switch
-                    icon: mdi:light-switch
-                    toggle: true
-                    fill_container: true
-                  - type: custom:mushroom-entity-card
-                    entity: switch.msdrvn_msdrvn_tvrt_lylh
-                    name: Hallway Switch
-                    icon: mdi:light-switch
-                    toggle: true
-                    fill_container: true
-                  - type: custom:mushroom-entity-card
-                    entity: switch.mqlkht_mqlkht_tvrt_lylh
-                    name: Bath Night Switch
-                    icon: mdi:light-switch
-                    toggle: true
-                    fill_container: true
-
 
               # ══════════════════════════════════════
-              # BLINDS & COVERS
+              # BLINDS
               # ══════════════════════════════════════
               - type: custom:mushroom-title-card
-                title: Blinds & Covers
+                title: Blinds
                 subtitle: Position Control
                 card_mod:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
+              # Row: Living Room + Kitchen
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-cover-card
@@ -570,6 +402,7 @@ views:
                     fill_container: true
                     tap_action:
                       action: more-info
+
                   - type: custom:mushroom-cover-card
                     entity: cover.slvn_slvn_trys_khlvn
                     name: Living Window
@@ -578,36 +411,32 @@ views:
                     fill_container: true
                     tap_action:
                       action: more-info
+
                   - type: custom:mushroom-cover-card
                     entity: cover.mtbkh_mtbkh_trys
-                    name: Kitchen Blind
+                    name: Kitchen
                     show_position_control: true
                     show_buttons_control: true
                     fill_container: true
                     tap_action:
                       action: more-info
 
+              # Row: Office + Bedroom
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-cover-card
                     entity: cover.knysh_n4_1
-                    name: Entrance
+                    name: Office
                     show_position_control: true
                     show_buttons_control: true
                     fill_container: true
                     tap_action:
                       action: more-info
+
                   - type: custom:mushroom-cover-card
                     entity: cover.hvrym_hvrym_trys
-                    name: Parents Bath
+                    name: Bedroom
                     show_position_control: true
-                    show_buttons_control: true
-                    fill_container: true
-                    tap_action:
-                      action: more-info
-                  - type: custom:mushroom-cover-card
-                    entity: cover.4g600204913
-                    name: Garage Gate
                     show_buttons_control: true
                     fill_container: true
                     tap_action:
@@ -619,54 +448,12 @@ views:
               # ══════════════════════════════════════
               - type: custom:mushroom-title-card
                 title: Media
-                subtitle: Players & Music Assistant
+                subtitle: Alexa & Music
                 card_mod:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
-              # Row: Music Assistant players
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-media-player-card
-                    entity: media_player.kitchen
-                    name: Kitchen
-                    volume_controls:
-                      - volume_set
-                      - volume_mute
-                    media_controls:
-                      - on_off
-                      - play_pause_stop
-                      - previous
-                      - next
-                    fill_container: true
-
-                  - type: custom:mushroom-media-player-card
-                    entity: media_player.living_room
-                    name: Living Room
-                    volume_controls:
-                      - volume_set
-                      - volume_mute
-                    media_controls:
-                      - on_off
-                      - play_pause_stop
-                      - previous
-                      - next
-                    fill_container: true
-
-                  - type: custom:mushroom-media-player-card
-                    entity: media_player.everywhere
-                    name: Everywhere
-                    volume_controls:
-                      - volume_set
-                      - volume_mute
-                    media_controls:
-                      - on_off
-                      - play_pause_stop
-                      - previous
-                      - next
-                    fill_container: true
-
-              # Row: Alexa Echo devices + quick play everywhere
+              # Row: Alexa Echoes + Play Everywhere
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-media-player-card
@@ -704,38 +491,12 @@ views:
                       service_data:
                         entity_id: script.play_music_everywhere
 
-              # Row: Music quick-start scripts
+              # Row: Delayed Good Night
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-template-card
-                    primary: Kitchen Music
-                    secondary: Music Assistant
-                    icon: mdi:music-note
-                    icon_color: pink
-                    layout: vertical
-                    fill_container: true
-                    tap_action:
-                      action: call-service
-                      service: script.turn_on
-                      service_data:
-                        entity_id: script.play_music_in_the_kitchen
-
-                  - type: custom:mushroom-template-card
-                    primary: Living Room Music
-                    secondary: Music Assistant
-                    icon: mdi:music-note
-                    icon_color: deep-purple
-                    layout: vertical
-                    fill_container: true
-                    tap_action:
-                      action: call-service
-                      service: script.turn_on
-                      service_data:
-                        entity_id: script.play_music_in_the_living_room
-
-                  - type: custom:mushroom-template-card
                     primary: Delayed Night
-                    secondary: Good Night +25 min
+                    secondary: Good Night in 25 min
                     icon: mdi:timer-outline
                     icon_color: blue-grey
                     layout: vertical
@@ -745,3 +506,33 @@ views:
                       service: script.turn_on
                       service_data:
                         entity_id: script.good_night_event_25m_delayed
+
+
+              # ══════════════════════════════════════
+              # ENTERTAINMENT
+              # ══════════════════════════════════════
+              # !! Replace media_player.samsung_tv with your actual entity ID !!
+              # Find it: Settings → Devices & Services → Samsung Smart TV → entity
+              # Source name for Yamaha: check state_attr('media_player.samsung_tv','source_list')
+              #   in Developer Tools → Template to see all available sources.
+              - type: custom:mushroom-title-card
+                title: Entertainment
+                subtitle: Samsung TV
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-media-player-card
+                    entity: media_player.samsung_tv
+                    name: Samsung TV
+                    volume_controls:
+                      - volume_set
+                      - volume_mute
+                    media_controls:
+                      - on_off
+                      - play_pause_stop
+                      - previous
+                      - next
+                    fill_container: true

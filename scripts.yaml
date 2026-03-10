@@ -325,3 +325,14 @@ good_night_event_25m_delayed:
   description: ''
   mode: queued
   max: 10
+
+tv_audio_yamaha:
+ alias: TV Audio → Yamaha Receiver
+ description: Switch Samsung TV audio output to Yamaha receiver.
+ sequence:
+ - action: media_player.select_source
+   target:
+     entity_id: media_player.tv_qe65s95datxil      # UPDATE THIS
+   data:
+     source: "HDMI"                   # UPDATE: check source_list
+ mode: single
