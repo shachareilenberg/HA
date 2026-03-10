@@ -781,6 +781,48 @@
 #
 # ─────────────────────────────────────────────────────────────────────────────
 
+# ── Config-update automations ─────────────────────────────────────────────────
+
+- id: '1773300000001'
+  alias: Config Update — Notify iPad when new config pulled
+  description: >
+    Fires when check-updates.sh pulls new commits from GitHub and drops
+    /tmp/ha-config-updated. Shows a persistent notification and a banner on
+    the iPad dashboard asking the user to restart Home Assistant.
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.config_update_available
+    to: 'on'
+  conditions: []
+  actions:
+  - action: persistent_notification.create
+    data:
+      notification_id: config_update
+      title: "Dashboard / Config Update Available"
+      message: >
+        New configuration was pulled from GitHub.
+        Restart Home Assistant to apply the changes.
+  mode: single
+
+- id: '1773300000002'
+  alias: Config Update — Clear flag after HA restarts
+  description: >
+    Runs once HA finishes starting. Removes the signal file and dismisses
+    the persistent notification, so the banner disappears automatically
+    after the user restarts HA.
+  triggers:
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
+  - action: shell_command.clear_update_flag
+  - action: persistent_notification.dismiss
+    data:
+      notification_id: config_update
+  mode: single
+
+# ─────────────────────────────────────────────────────────────────────────────
+
 - id: '1773200000001'
   alias: iPad — Navigate to iPad Dashboard on Connect
   description: >

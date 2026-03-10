@@ -237,6 +237,33 @@ views:
             type: vertical-stack
             cards:
 
+              # ── UPDATE BANNER (hidden until a git pull delivers new commits) ──
+              - type: conditional
+                conditions:
+                  - condition: state
+                    entity: binary_sensor.config_update_available
+                    state: 'on'
+                card:
+                  type: custom:mushroom-template-card
+                  primary: System / Dashboard Update Available
+                  secondary: New config pulled from GitHub — tap to restart HA
+                  icon: mdi:update
+                  icon_color: amber
+                  fill_container: true
+                  tap_action:
+                    action: call-service
+                    service: homeassistant.restart
+                  hold_action:
+                    action: call-service
+                    service: shell_command.clear_update_flag
+                  card_mod:
+                    style: |
+                      ha-card {
+                        border: 1px solid rgba(255,180,0,0.6) !important;
+                        background: rgba(255,180,0,0.12) !important;
+                        margin-bottom: 6px !important;
+                      }
+
               # ── STATUS BAR ────────────────────────
               - type: horizontal-stack
                 cards:
