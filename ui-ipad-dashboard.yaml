@@ -645,6 +645,37 @@ views:
                         media_content_type: app
                         media_content_id: "xNjDbgVJeT.stingtv"
 
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Apple TV
+                    icon: mdi:apple
+                    icon_color: grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "3201807018807"
+                  - type: custom:mushroom-template-card
+                    primary: Prime
+                    icon: mdi:amazon
+                    icon_color: cyan
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "3201601007230"
+
               # ── Navigation remote ─────────────────────────────────────────
               # Keys work via the Samsung Smart TV / SamsungTV-Tizen integration.
               # (send_key is not supported by the SmartThings integration alone.)
