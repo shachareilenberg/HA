@@ -747,12 +747,7 @@
 # Turns off kitchen + living room lights, closes living room blinds, and
 # switches the Samsung TV audio source to the Yamaha receiver.
 #
-# Before uncommenting:
-#   1. Replace media_player.samsung_tv with your real TV entity ID.
-#   2. Find the exact Yamaha source label by pasting this in Developer Tools
-#      → Template tab:
-#        {{ state_attr('media_player.samsung_tv', 'source_list') }}
-#      Then replace "AV Receiver" below with what appears in that list.
+# TV entity: media_player.tv_2 · Yamaha source: RX-V6A (already configured)
 #
 - id: '1773200000010'
   alias: Movie Mode
@@ -774,9 +769,9 @@
       - cover.slvn_slvn_trys_khlvn
   - action: media_player.select_source
     target:
-      entity_id: media_player.tv_qe65s95datxil
+      entity_id: media_player.tv_2
     data:
-      source: "HDMI"
+      source: "RX-V6A"
   mode: single
 #
 # ─────────────────────────────────────────────────────────────────────────────

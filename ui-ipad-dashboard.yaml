@@ -15,11 +15,11 @@
 #  ✓ clock-weather-card       (Sidebar clock + weather)
 #
 # ── SAMSUNG TV NOTE ────────────────────────────────────────
-#  In the Entertainment section, replace media_player.samsung_tv
-#  with your actual entity ID:
-#    Settings → Devices & Services → Samsung Smart TV → entity
-#  For full remote control (arrows, home, back, app launcher):
-#    Install "SamsungTV Smart" from HACS.
+#  TV entity: media_player.tv_2
+#  Yamaha receiver source name: RX-V6A
+#  D-pad navigation (send_key) requires the SamsungTV or
+#  SamsungTV-Tizen integration (not SmartThings alone).
+#  HACS: "SamsungTV Smart" adds full remote + app control.
 #
 # ── THEME ──────────────────────────────────────────────────
 #  "Frosted Glass Dark" — installed in themes/
@@ -226,7 +226,7 @@ views:
                 fill_container: true
                 tap_action:
                   action: url
-                  url_path: "com.philips.myavent://"
+                  url_path: "itms-apps://itunes.apple.com/app/id1544760744"
 
 
           # ╔═══════════════════════════════╗
@@ -559,28 +559,304 @@ views:
               # ══════════════════════════════════════
               # ENTERTAINMENT
               # ══════════════════════════════════════
-              # !! Replace media_player.samsung_tv with your actual entity ID !!
-              # Find it: Settings → Devices & Services → Samsung Smart TV → entity
-              # Source name for Yamaha: check state_attr('media_player.samsung_tv','source_list')
-              #   in Developer Tools → Template to see all available sources.
               - type: custom:mushroom-title-card
                 title: Entertainment
-                subtitle: Samsung TV
+                subtitle: Samsung TV · Yamaha RX-V6A
                 card_mod:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
+              # ── Main TV player (on/off, volume, play controls) ────────────
+              - type: custom:mushroom-media-player-card
+                entity: media_player.tv_2
+                name: Samsung TV
+                use_media_info: true
+                volume_controls:
+                  - volume_set
+                  - volume_mute
+                media_controls:
+                  - on_off
+                  - play_pause_stop
+                  - previous
+                  - next
+                fill_container: true
+
+              # ── Sources ───────────────────────────────────────────────────
               - type: horizontal-stack
                 cards:
-                  - type: custom:mushroom-media-player-card
-                    entity: media_player.tv_qe65s95datxil
-                    name: Samsung TV
-                    volume_controls:
-                      - volume_set
-                      - volume_mute
-                    media_controls:
-                      - on_off
-                      - play_pause_stop
-                      - previous
-                      - next
+                  - type: custom:mushroom-template-card
+                    primary: Live TV
+                    icon: mdi:television-play
+                    icon_color: blue
+                    layout: vertical
                     fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        source: "TV"
+                  - type: custom:mushroom-template-card
+                    primary: Yamaha
+                    secondary: RX-V6A
+                    icon: mdi:audio-video
+                    icon_color: deep-orange
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.select_source
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        source: "RX-V6A"
+                  - type: custom:mushroom-template-card
+                    primary: Netflix
+                    icon: mdi:netflix
+                    icon_color: red
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "11101200001"
+                  - type: custom:mushroom-template-card
+                    primary: YouTube
+                    icon: mdi:youtube
+                    icon_color: red
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "111299001912"
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Apple TV
+                    icon: mdi:apple
+                    icon_color: grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "com.apple.appletv"
+                  - type: custom:mushroom-template-card
+                    primary: Spotify
+                    icon: mdi:spotify
+                    icon_color: green
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "rJeHak5zRg.Spotify"
+                  - type: custom:mushroom-template-card
+                    primary: Stingtv
+                    icon: mdi:play-circle
+                    icon_color: purple
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "xNjDbgVJeT.stingtv"
+                  - type: custom:mushroom-template-card
+                    primary: Prime
+                    icon: mdi:amazon
+                    icon_color: cyan
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "org.tizen.ignite"
+
+              # ── Navigation remote ─────────────────────────────────────────
+              # Keys work via the Samsung Smart TV / SamsungTV-Tizen integration.
+              # (send_key is not supported by the SmartThings integration alone.)
+              - type: custom:mushroom-title-card
+                title: Remote
+
+              # D-pad row 1 — Up
+              - type: horizontal-stack
+                cards:
+                  - type: markdown
+                    content: ""
+                    card_mod:
+                      style: |
+                        ha-card { background: transparent !important;
+                                  box-shadow: none !important;
+                                  border: none !important; }
+                  - type: custom:mushroom-template-card
+                    primary: ""
+                    icon: mdi:chevron-up
+                    icon_color: grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: send_key
+                        media_content_id: KEY_UP
+                  - type: markdown
+                    content: ""
+                    card_mod:
+                      style: |
+                        ha-card { background: transparent !important;
+                                  box-shadow: none !important;
+                                  border: none !important; }
+
+              # D-pad row 2 — Left / OK / Right
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: ""
+                    icon: mdi:chevron-left
+                    icon_color: grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: send_key
+                        media_content_id: KEY_LEFT
+                  - type: custom:mushroom-template-card
+                    primary: OK
+                    icon: mdi:circle-outline
+                    icon_color: white
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: send_key
+                        media_content_id: KEY_ENTER
+                  - type: custom:mushroom-template-card
+                    primary: ""
+                    icon: mdi:chevron-right
+                    icon_color: grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: send_key
+                        media_content_id: KEY_RIGHT
+
+              # D-pad row 3 — Down
+              - type: horizontal-stack
+                cards:
+                  - type: markdown
+                    content: ""
+                    card_mod:
+                      style: |
+                        ha-card { background: transparent !important;
+                                  box-shadow: none !important;
+                                  border: none !important; }
+                  - type: custom:mushroom-template-card
+                    primary: ""
+                    icon: mdi:chevron-down
+                    icon_color: grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: send_key
+                        media_content_id: KEY_DOWN
+                  - type: markdown
+                    content: ""
+                    card_mod:
+                      style: |
+                        ha-card { background: transparent !important;
+                                  box-shadow: none !important;
+                                  border: none !important; }
+
+              # Utility: Back / Home / Menu
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Back
+                    icon: mdi:keyboard-backspace
+                    icon_color: grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: send_key
+                        media_content_id: KEY_RETURN
+                  - type: custom:mushroom-template-card
+                    primary: Home
+                    icon: mdi:home-outline
+                    icon_color: grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: send_key
+                        media_content_id: KEY_HOME
+                  - type: custom:mushroom-template-card
+                    primary: Menu
+                    icon: mdi:menu
+                    icon_color: grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: send_key
+                        media_content_id: KEY_MENU
