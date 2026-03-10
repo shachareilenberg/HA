@@ -767,11 +767,11 @@
       entity_id:
       - cover.slvn_slvn_trys
       - cover.slvn_slvn_trys_khlvn
-  - action: select.select_option
+  - action: media_player.select_source
     target:
-      entity_id: select.tv_2_sound_output
+      entity_id: media_player.tv_2
     data:
-      option: "external_arc"
+      source: "RX-V6A"
   mode: single
 #
 # ─────────────────────────────────────────────────────────────────────────────
