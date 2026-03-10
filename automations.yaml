@@ -747,7 +747,7 @@
 # Turns off kitchen + living room lights, closes living room blinds, and
 # switches the Samsung TV audio source to the Yamaha receiver.
 #
-# TV entity: media_player.tv2 · Yamaha source: RX-V6A (already configured)
+# TV entity: media_player.tv_2 · Yamaha source: RX-V6A (already configured)
 #
 - id: '1773200000010'
   alias: Movie Mode
