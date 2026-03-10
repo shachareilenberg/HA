@@ -1,0 +1,730 @@
+- id: '1766686871623'
+  alias: Everyone left home - Turn off all ACs
+  description: ''
+  triggers:
+  - entity_id:
+    - person.shachar
+    - person.ariel
+    to: not_home
+    trigger: state
+  conditions:
+  - condition: state
+    entity_id: person.shachar
+    state: not_home
+    for: 00:03:00
+    enabled: false
+  - condition: state
+    entity_id: person.ariel
+    state: not_home
+    for: 00:03:00
+    enabled: false
+  actions:
+  - action: script.1766497466499
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1769606499675'
+  alias: Good night
+  description: ''
+  triggers:
+  - device_id: 29b44de226a19290bcc8958776b4e0ab
+    domain: vitrea
+    entity_id: sensor.knysh_lylh_tvb_byt
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  - trigger: event
+    event_type: Good night
+  conditions:
+  - condition: sun
+    after: sunset
+    before: sunrise
+  actions:
+  - action: script.turn_off_all_by_domain
+    metadata: {}
+    data:
+      domain: switch
+  - action: script.turn_off_all_lights_v2
+    metadata: {}
+    data:
+      exclude_entities:
+      - light.msdrvn_msdrvn_tvrt_lylh
+      - light.mqlkht_mqlkht_tvrt_lylh
+  - action: script.iterate_entities_with_action
+    metadata: {}
+    data:
+      entities:
+      - climate.l8_101
+      - climate.l8_102
+      - climate.l8_103
+      action: climate.turn_off
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+    enabled: false
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id:
+      - light.mqlkht_mqlkht_tvrt_lylh
+    data: {}
+  - action: script.close_all_blinds
+    metadata: {}
+    data: {}
+  - action: input_boolean.turn_on
+    metadata: {}
+    target:
+      entity_id: input_boolean.good_night_state
+    data: {}
+  - action: media_player.turn_off
+    metadata: {}
+    target:
+      device_id: d11bd43721d6c7352acc8f1c20581c2b
+    data: {}
+  mode: queued
+  max: 10
+- id: '1769608500286'
+  alias: Welcome home at daylight
+  description: ''
+  triggers:
+  - device_id: ac6ee83cd2088fe68ae719d2b63ef8b0
+    domain: vitrea
+    entity_id: sensor.knysh_knysh
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  - trigger: event
+    event_type: Welcome home
+  conditions:
+  - condition: sun
+    before: sunset
+  actions:
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 100
+    target:
+      entity_id:
+      - cover.knysh_n4_1
+      - cover.slvn_slvn_trys
+      - cover.mtbkh_mtbkh_trys
+      - cover.slvn_slvn_trys_khlvn
+    enabled: true
+  - action: light.turn_off
+    metadata: {}
+    target:
+      entity_id: light.knysh_knysh_qyr
+    data: {}
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id:
+      - input_boolean.is_away_state
+    data: {}
+  mode: queued
+  max: 10
+- id: '1769608776716'
+  alias: Welcome home at night time
+  description: ''
+  triggers:
+  - device_id: ac6ee83cd2088fe68ae719d2b63ef8b0
+    domain: vitrea
+    entity_id: sensor.knysh_knysh
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  conditions:
+  - condition: sun
+    after: sunset
+  actions:
+  - action: cover.set_cover_position
+    metadata: {}
+    target:
+      entity_id:
+      - cover.mtbkh_mtbkh_trys
+      - cover.slvn_slvn_trys
+    data:
+      position: 100
+    enabled: true
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id:
+      - light.mtbkh_mtbkh_y
+      - light.mtbkh_mtbkh_ps
+    data: {}
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.knysh_knysh_qyr
+    data: {}
+  - action: input_boolean.turn_off
+    metadata: {}
+    target:
+      entity_id:
+      - input_boolean.is_away_state
+    data: {}
+  mode: queued
+  max: 10
+- id: '1769609302281'
+  alias: Exit home
+  description: ''
+  triggers:
+  - device_id: 682c0fcb524006a86ff26cf21035bbbc
+    domain: vitrea
+    entity_id: sensor.knysh_ytsyh
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  - trigger: event
+    event_type: Exit home
+  conditions: []
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.is_away_state
+  - parallel:
+    - action: script.1766497466499
+      data: {}
+    - action: script.turn_off_all_lights_v2
+      data: {}
+    - action: media_player.turn_off
+      target:
+        device_id: 9b1a1a72456630c35e2d1babd80d8930
+      data: {}
+  mode: queued
+  max: 10
+- id: '1769681395045'
+  alias: Good morning
+  description: ''
+  triggers:
+  - device_id: 29b44de226a19290bcc8958776b4e0ab
+    domain: vitrea
+    entity_id: sensor.knysh_lylh_tvb_byt
+    type: Short
+    metadata:
+      secondary: false
+    trigger: device
+  - trigger: event
+    event_type: Good morning
+  conditions:
+  - condition: sun
+    after: sunrise
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.good_night_state
+  - parallel:
+    - action: switch.turn_off
+      target:
+        entity_id:
+        - switch.msdrvn_msdrvn_tvrt_lylh
+        - switch.mqlkht_mqlkht_tvrt_lylh
+    - action: script.iterate_entities_with_action
+      data:
+        action: cover.set_cover_position
+        entities:
+        - cover.slvn_slvn_trys_khlvn
+        - cover.knysh_n4_1
+        - cover.mtbkh_mtbkh_trys
+        - cover.slvn_slvn_trys
+        data:
+          position: 100
+    - action: media_player.turn_on
+      target:
+        device_id: d11bd43721d6c7352acc8f1c20581c2b
+      enabled: false
+  mode: queued
+  max: 10
+- id: '1769691868798'
+  alias: Morning boiler routine
+  description: ''
+  triggers:
+  - at: 07:45:00
+    trigger: time
+  conditions:
+  - condition: numeric_state
+    entity_id: number.mqlkht_dvd_countdown
+    below: 1
+  actions:
+  - target:
+      entity_id: number.mqlkht_dvd_countdown
+    data:
+      value: '60'
+    action: number.set_value
+  mode: single
+- id: '1769692116002'
+  alias: Evening boiler routine
+  description: ''
+  triggers:
+  - at: '17:00:00'
+    trigger: time
+  conditions:
+  - condition: numeric_state
+    entity_id: number.mqlkht_dvd_countdown
+    below: 1
+  actions:
+  - target:
+      entity_id: number.mqlkht_dvd_countdown
+    data:
+      value: '120'
+    action: number.set_value
+  mode: single
+- id: '1769693536365'
+  alias: Kitchen blind protection
+  description: ''
+  triggers:
+  - device_id: d06f6f0329960758a62d49820eb9ba70
+    domain: cover
+    entity_id: 6d0603e2bde188e863a78d3d18cb9a9c
+    type: opened
+    metadata:
+      secondary: false
+    trigger: device
+  conditions:
+  - condition: numeric_state
+    entity_id: cover.mtbkh_mtbkh_trys
+    attribute: current_position
+    above: 10
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: cover.set_cover_position
+    metadata: {}
+    target:
+      entity_id: cover.mtbkh_mtbkh_trys
+    data:
+      position: 1
+  mode: single
+- id: '1769693583182'
+  alias: Living room blind protection
+  description: ''
+  triggers:
+  - device_id: 72ce3a12c017a4353467a9d0ec8b4b9c
+    domain: cover
+    entity_id: 38d748ec8a9e346212f1abf0d34aecb2
+    type: opened
+    trigger: device
+  conditions:
+  - condition: numeric_state
+    entity_id: cover.slvn_slvn_trys
+    attribute: current_position
+    above: 80
+  actions:
+  - action: cover.stop_cover
+    metadata: {}
+    target:
+      entity_id: cover.mtbkh_mtbkh_trys
+    data: {}
+  mode: single
+- id: '1769721987593'
+  alias: Kitchen blind protection adv
+  description: ''
+  triggers:
+  - device_id: d06f6f0329960758a62d49820eb9ba70
+    domain: cover
+    entity_id: cover.mtbkh_mtbkh_trys
+    type: opened
+    trigger: device
+  conditions:
+  - condition: numeric_state
+    entity_id: cover.mtbkh_mtbkh_trys
+    attribute: current_position
+    above: 10
+  actions:
+  - delay: 00:00:01
+  - target:
+      entity_id: cover.mtbkh_mtbkh_trys
+    data:
+      position: '{{ initial_position }}'
+    action: cover.set_cover_position
+  mode: single
+  variables:
+    initial_position: '{{ state_attr(''cover.mtbkh_mtbkh_trys'', ''current_position'')
+      | int }}'
+- id: '1769884447827'
+  alias: Set theme at boot
+  triggers:
+  - event_type: homeassistant_start
+    trigger: event
+  actions:
+  - data:
+      name: noctis
+      mode: dark
+    action: frontend.set_theme
+  mode: single
+- id: '1770993350066'
+  alias: Kids shower routine
+  description: ''
+  triggers:
+  - trigger: time
+    at: '17:30:00'
+  conditions: []
+  actions:
+  - action: climate.set_hvac_mode
+    metadata: {}
+    target:
+      entity_id:
+      - climate.l8_105
+      - climate.l8_104
+    data:
+      hvac_mode: heat
+    enabled: false
+  - action: cover.close_cover
+    metadata: {}
+    target:
+      entity_id: cover.hvrym_hvrym_trys
+    data: {}
+  - action: light.turn_off
+    metadata: {}
+    target:
+      entity_id: light.mm_d_mm_d_tqrh
+    data: {}
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.mqlkht_mqlkht_qyr
+    data: {}
+  - action: notify.alexa_media
+    data:
+      target:
+      - media_player.kitchen_s_echo
+      message: Shower routine has started
+      data:
+        type: announce
+  mode: single
+- id: '1770993397298'
+  alias: Kids shower end routine
+  description: ''
+  triggers:
+  - trigger: time
+    at: '19:00:00'
+  conditions: []
+  actions:
+  - action: climate.turn_off
+    metadata: {}
+    target:
+      entity_id: climate.l8_104
+    data: {}
+  mode: single
+- id: '1771108554232'
+  alias: Sync Kitchen 1 AC Mode Relay
+  description: ''
+  triggers:
+  - entity_id:
+    - climate.l8_102
+    - climate.l8_103
+    - climate.l8_104
+    - climate.l8_105
+    - climate.l8_106
+    trigger: state
+  conditions:
+  - condition: template
+    value_template: "{{\n  requested_mode in ['heat','cool']\n  and trigger.from_state
+      is not none\n  and requested_mode != trigger.from_state.state\n  and is_state('climate.l8_101',
+      'off')\n  and requested_mode != last_mode\n}}\n"
+  actions:
+  - target:
+      entity_id: climate.l8_101
+    data:
+      hvac_mode: '{{ requested_mode }}'
+    action: climate.set_hvac_mode
+  - delay: 00:00:02
+  - target:
+      entity_id: climate.l8_101
+    action: climate.turn_off
+  mode: queued
+  max: 10
+  variables:
+    requested_mode: '{{ trigger.to_state.state }}'
+    last_mode: '{{ states(''input_select.kitchen_1_last_mode'') }}'
+- id: '1771108652863'
+  alias: Track Kitchen 1 AC Last Mode
+  description: ''
+  triggers:
+  - entity_id: climate.l8_101
+    trigger: state
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.to_state.state in [''heat'',''cool''] }}
+
+      '
+  actions:
+  - target:
+      entity_id: input_select.kitchen_1_last_mode
+    data:
+      option: '{{ trigger.to_state.state }}'
+    action: input_select.select_option
+  mode: restart
+- id: '1771140236537'
+  alias: 9:30 Turn off bedroom AC
+  description: ''
+  triggers:
+  - trigger: time
+    at: 09:30:00
+  conditions: []
+  actions:
+  - action: climate.turn_off
+    metadata: {}
+    target:
+      entity_id: climate.l8_105
+    data: {}
+  mode: single
+- id: '1771367668126'
+  alias: Confirm HVAC Mode Sync (Kichen 1 relay)
+  triggers:
+  - entity_id:
+    - climate.l8_102
+    - climate.l8_103
+    - climate.l8_104
+    - climate.l8_105
+    trigger: state
+  conditions:
+  - condition: template
+    value_template: "{{\n  requested_mode in ['heat','cool']\n  and trigger.from_state
+      is not none\n  and requested_mode != trigger.from_state.state\n  and is_state('climate.l8_101',
+      'off')\n  and requested_mode != last_mode\n}}\n"
+  actions:
+  - data:
+      title: HVAC mode change needs confirmation
+      message: '{{ trigger.to_state.name }} set to {{ requested_mode|upper }} while
+        Kitchen 1 relay is OFF. Turned-on climates: {{ turned_on_pretty if turned_on_pretty
+        else ''none'' }}. What do you want to do?
+
+        '
+      data:
+        tag: hvac_mode_confirm
+        actions:
+        - action: HVAC_SYNC
+          title: Sync (enable {{ requested_mode|upper }})
+        - action: HVAC_TURN_OFF_AND_SYNC
+          title: Turn them off + Sync
+        - action: HVAC_ABORT
+          title: Abort
+    action: notify.mobile_app_shachars_iphone
+  - wait_for_trigger:
+    - event_type: mobile_app_notification_action
+      event_data:
+        action: HVAC_SYNC
+      trigger: event
+    - event_type: mobile_app_notification_action
+      event_data:
+        action: HVAC_TURN_OFF_AND_SYNC
+      trigger: event
+    - event_type: mobile_app_notification_action
+      event_data:
+        action: HVAC_ABORT
+      trigger: event
+    timeout: 00:01:00
+    continue_on_timeout: false
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == ''HVAC_SYNC'' }}'
+      sequence:
+      - target:
+          entity_id: climate.l8_101
+        data:
+          hvac_mode: '{{ requested_mode }}'
+        action: climate.set_hvac_mode
+      - delay: 00:00:02
+      - target:
+          entity_id: climate.l8_101
+        action: climate.turn_off
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == ''HVAC_TURN_OFF_AND_SYNC''
+          }}'
+      sequence:
+      - if:
+        - condition: template
+          value_template: '{{ turned_on_climates | count > 0 }}'
+        then:
+        - target:
+            entity_id: '{{ turned_on_climates }}'
+          action: climate.turn_off
+        - delay: 00:00:01
+      - target:
+          entity_id: climate.l8_101
+        data:
+          hvac_mode: '{{ requested_mode }}'
+        action: climate.set_hvac_mode
+      - delay: 00:00:02
+      - target:
+          entity_id: climate.l8_101
+        action: climate.turn_off
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == ''HVAC_ABORT'' }}'
+      sequence: []
+  mode: queued
+  max: 10
+  variables:
+    requested_mode: '{{ trigger.to_state.state }}'
+    last_mode: '{{ states(''input_select.kitchen_1_last_mode'') }}'
+    all_climates:
+    - climate.l8_102
+    - climate.l8_103
+    - climate.l8_104
+    - climate.l8_105
+    turned_on_climates: '{{ expand(all_climates) | selectattr(''state'',''ne'',''off'')
+      | map(attribute=''entity_id'') | list }}
+
+      '
+    turned_on_pretty: "{{ expand(all_climates) | selectattr('state','ne','off')\n
+      \  | map(attribute='name') | list | join(', ') }}\n"
+- id: '1772529828443'
+  alias: 'Oref: Pre-Alert Notification'
+  description: Announce red alert on Alexa if before 19:30 with high volume
+  triggers:
+  - entity_id:
+    - sensor.oref_alert
+    trigger: state
+    to:
+    - pre_alert
+  conditions: []
+  actions:
+  - variables:
+      current_vol: '{{ state_attr(''media_player.kitchen_s_echo'', ''volume_level'')
+        | default(0.5, true) }}'
+  - if:
+    - condition: time
+      before: '19:30:00'
+    then:
+    - action: media_player.volume_set
+      target:
+        entity_id: media_player.kitchen_s_echo
+      data:
+        volume_level: 0.4
+    else:
+    - action: media_player.volume_set
+      target:
+        entity_id: media_player.kitchen_s_echo
+      data:
+        volume_level: 0.2
+  - action: notify.alexa_media
+    data:
+      target: media_player.kitchen_s_echo
+      data:
+        type: tts
+      message: Warning. Red alert detected. Please move to the protected area immediately.
+  - action: notify.mobile_app_shachars_iphone
+    metadata: {}
+    data:
+      message: In a few minutes, there will probably be a siren.
+      title: "\U0001F6A8 Pre alert"
+  - delay: 00:00:08
+  - action: media_player.volume_set
+    target:
+      entity_id: media_player.kitchen_s_echo
+    data:
+      volume_level: '{{ current_vol }}'
+  mode: single
+- id: '1772535520807'
+  alias: 'Oref: Alert Ended Notification'
+  description: 'Notify when the alert ends only if the flow was either: alert -> ok
+    or alert -> pre_alert -> ok'
+  triggers:
+  - trigger: state
+    entity_id: sensor.oref_alert
+    to: ok
+  conditions:
+  - condition: state
+    entity_id: input_boolean.oref_alert_was_active
+    state: 'on'
+  actions:
+  - action: notify.mobile_app_shachars_iphone
+    data:
+      title: Red alert end
+      message: It is safe to get out of the shelter.
+  - if:
+    - condition: time
+      before: '19:30:00'
+    then:
+    - variables:
+        current_vol: '{{ state_attr(''media_player.bedroom_echo_spot'', ''volume_level'')
+          | default(0.5, true) }}'
+    - action: media_player.volume_set
+      target:
+        entity_id: media_player.bedroom_echo_spot
+      data:
+        volume_level: 0.3
+    - action: notify.alexa_media
+      data:
+        target: media_player.bedroom_echo_spot
+        data:
+          type: tts
+        message: The alert has ended. You may leave the protected area.
+    - delay: 00:00:06
+    - action: media_player.volume_set
+      target:
+        entity_id: media_player.bedroom_echo_spot
+      data:
+        volume_level: '{{ current_vol }}'
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.oref_alert_was_active
+  mode: single
+- id: '1772606072371'
+  alias: 'Oref alert: Intercepted notification'
+  description: 'Announce threat intercepted on Alexa + Shachar’s iPhone only if the
+    previous state was Pre Alert and now its Ok (restore previous Alexa volume afterwards).
+
+    '
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.oref_alert
+    from:
+    - pre_alert
+    to:
+    - ok
+  conditions: []
+  actions:
+  - variables:
+      current_vol: "{{ state_attr('media_player.kitchen_s_echo', 'volume_level')\n
+        \  | default(0.5, true) }}"
+  - action: notify.mobile_app_shachars_iphone
+    data:
+      title: Red alert canceled
+      message: Threat intercepted
+  - action: media_player.volume_set
+    target:
+      entity_id: media_player.kitchen_s_echo
+    data:
+      volume_level: 0.4
+  - action: notify.alexa_media
+    data:
+      target: media_player.kitchen_s_echo
+      data:
+        type: tts
+      message: 'The red alert has been canceled. The threat was intercepted. '
+  - delay: 00:00:06
+  - action: media_player.volume_set
+    target:
+      entity_id: media_player.kitchen_s_echo
+    data:
+      volume_level: '{{ current_vol }}'
+  mode: single
+- id: '1773147979600'
+  alias: 'Oref: Track Alert Active'
+  description: Turn on flag when Oref enters alert state
+  triggers:
+  - trigger: state
+    entity_id: sensor.oref_alert
+    to: alert
+  conditions: []
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.oref_alert_was_active
+  mode: single

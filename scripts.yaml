@@ -1,0 +1,327 @@
+'1766497466499':
+  alias: Turn off active ACs
+  mode: parallel
+  sequence:
+  - action: script.turn_off_all_by_domain
+    metadata: {}
+    data:
+      domain: climate
+play_music_in_the_kitchen:
+  alias: Play Music in the Kitchen
+  sequence:
+  - action: music_assistant.get_library
+    data:
+      config_entry_id: 01KD5Z1KSAB05R0NVBYJARNEB6
+      media_type: playlist
+      limit: 1
+    response_variable: last_recent
+  - action: music_assistant.play_media
+    target:
+      entity_id: media_player.kitchen
+    data:
+      media_id: '{{ last_recent[''items''][0].uri }}'
+      enqueue: replace
+  mode: single
+play_music_in_the_living_room:
+  alias: Play Music in the Living Room
+  sequence:
+  - action: music_assistant.get_library
+    data:
+      config_entry_id: 01KD5Z1KSAB05R0NVBYJARNEB6
+      media_type: playlist
+      limit: 1
+    response_variable: last_recent
+  - action: music_assistant.play_media
+    target:
+      entity_id: media_player.living_room
+    data:
+      media_id: '{{ last_recent[''items''][0].uri }}'
+      enqueue: replace
+  mode: single
+play_music_everywhere:
+  alias: Play Music Everywhere
+  sequence:
+  - action: music_assistant.get_library
+    data:
+      config_entry_id: 01KD5Z1KSAB05R0NVBYJARNEB6
+      media_type: playlist
+      limit: 1
+    response_variable: last_recent
+  - action: music_assistant.play_media
+    target:
+      entity_id: media_player.everywhere
+    data:
+      media_id: '{{ last_recent[''items''][0].uri }}'
+      enqueue: replace
+  - delay: 00:00:01
+  - action: music_assistant.play_media
+    target:
+      entity_id: media_player.everywhere
+    data:
+      media_id: '{{ last_recent[''items''][0].uri }}'
+      enqueue: replace
+  mode: single
+turn_off_all_lights:
+  sequence:
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      area_id:
+      - bedroom
+      - office
+      - parents_bathroom
+      entity_id: switch.mqlkht_mqlkht_tnvr
+    data: {}
+  - action: light.turn_off
+    metadata: {}
+    target:
+      area_id:
+      - living_room
+      - kitchen
+      - bedroom
+      - office
+      - kids_bedroom
+      - entrance
+      - hallway
+      - balcony
+      - parents_bathroom
+      - kids_bathroom
+    data: {}
+  alias: Turn off all lights
+  description: ''
+  mode: queued
+  max: 10
+exit_home_event:
+  sequence:
+  - event: Exit home
+    event_data: {}
+  alias: Exit home event
+  description: ''
+welcome_home_event_trigger:
+  sequence:
+  - event: Welcome home
+    event_data: {}
+  alias: Welcome home event
+  description: ''
+  mode: queued
+  max: 10
+good_morning_event:
+  sequence:
+  - event: Good morning
+    event_data: {}
+  alias: Good morning event
+  description: ''
+  mode: queued
+  max: 10
+good_night_event:
+  sequence:
+  - event: Good night
+    event_data: {}
+  alias: Good night event
+  description: ''
+  mode: queued
+  max: 10
+turn_off_all_lights_v2:
+  alias: Turn off all lights
+  mode: parallel
+  fields:
+    exclude_entities:
+      description: List of light entities to exclude
+      example: light.kitchen, light.living_room
+    exclude_areas:
+      description: List of area names to exclude
+      example: Bedroom, Living Room
+    exclude_labels:
+      description: List of labels to exclude
+      example: Critical, Do not turn off
+  sequence:
+  - action: script.turn_off_all_by_domain
+    metadata: {}
+    data:
+      domain: light
+      exclude_entities: '{{ exclude_entities | default([], true) }}'
+      exclude_areas: '{{ exclude_areas | default([], true) }}'
+      exclude_labels: '{{ exclude_labels | default([], true) }}'
+turn_off_all_by_domain:
+  alias: Turn off all by domain
+  mode: queued
+  max: 10
+  fields:
+    domain:
+      description: Domain to turn off (light / climate / switch / fan, etc.)
+      example: climate
+    exclude_entities:
+      description: Entities to exclude
+      example: climate.living_room, climate.bedroom
+    exclude_areas:
+      description: Area names to exclude
+      example: Bedroom, Living Room
+    exclude_labels:
+      description: Label names to exclude
+      example: Do not turn off, Critical
+  sequence:
+  - variables:
+      excluded_entities: '{{ exclude_entities | default([], true) }}'
+      excluded_areas: '{{ exclude_areas | default([], true) }}'
+      excluded_labels: '{{ exclude_labels | default([], true) }}'
+      entities: "{% set ns = namespace(result=[]) %} {% for s in states[domain] %}\n
+        \ {% set entity_id = s.entity_id %}\n  {% set area_name_value = area_name(entity_id)
+        %}\n  {% set labels_value = labels(entity_id) | default([], true) %}\n\n  {%
+        if s.state not in ['off', 'unavailable', 'unknown'] %}\n    {% if entity_id
+        not in excluded_entities %}\n      {% if area_name_value not in excluded_areas
+        %}\n        {% if not (labels_value | select('in', excluded_labels) | list
+        | count > 0) %}\n          {% set ns.result = ns.result + [entity_id] %}\n
+        \       {% endif %}\n      {% endif %}\n    {% endif %}\n  {% endif %}\n{%
+        endfor %} {{ ns.result }}"
+  - condition: template
+    value_template: '{{ entities | count > 0 }}'
+  - repeat:
+      for_each: '{{ entities }}'
+      sequence:
+      - variables:
+          entity_id: '{{ repeat.item }}'
+      - repeat:
+          count: 3
+          sequence:
+          - action: '{{ domain }}.turn_off'
+            target:
+              entity_id: '{{ entity_id }}'
+          - wait_template: '{{ is_state(entity_id, ''off'') }}'
+            timeout: 00:00:05
+            continue_on_timeout: true
+          - if:
+            - condition: template
+              value_template: '{{ not is_state(entity_id, ''off'') }}'
+            then:
+            - delay: 00:00:01
+            else:
+            - stop: Entity turned off successfully
+close_all_blinds:
+  alias: Close all blinds
+  mode: queued
+  max: 10
+  sequence:
+  - variables:
+      covers: "{{\n  states.cover\n  | rejectattr('entity_id', 'eq', 'cover.4g600204913')\n
+        \ | rejectattr('state','in',['closed','unavailable','unknown'])\n  | map(attribute='entity_id')\n
+        \ | list\n}}\n"
+  - condition: template
+    value_template: '{{ covers | count > 0 }}'
+  - repeat:
+      for_each: '{{ covers }}'
+      sequence:
+      - variables:
+          entity_id: '{{ repeat.item }}'
+      - repeat:
+          count: 3
+          sequence:
+          - target:
+              entity_id: '{{ entity_id }}'
+            action: cover.close_cover
+          - wait_template: "{{\n  is_state(entity_id, 'closed')\n  or (state_attr(entity_id,
+              'current_position') | int(-1)) == 0\n}}"
+            timeout: 00:00:15
+            continue_on_timeout: true
+          - if:
+            - condition: template
+              value_template: "{{\n  not (\n    is_state(entity_id, 'closed')\n    or
+                (state_attr(entity_id, 'current_position') | int(-1)) == 0\n  )\n}}"
+            then:
+            - delay: 00:00:01
+iterate_entities_with_action:
+  alias: Iterate entities with action
+  description: ''
+  mode: parallel
+  fields:
+    action:
+      name: Action
+      description: Service to call (e.g. climate.turn_off, light.turn_on)
+      required: true
+    entities:
+      name: Target
+      description: Space-separated list OR YAML list of entity_ids
+      required: true
+    data:
+      name: Data
+      description: Optional service data (position, temperature, etc.)
+      example: '{"position": 50}'
+      selector:
+        object: {}
+    wait_template:
+      name: Wait Template
+      description: Optional template to confirm success. Use entity_id variable (e.g.
+        {{ is_state(entity_id,'off') }})
+      example: '{{ is_state(entity_id, ''off'') }}'
+      selector:
+        template: {}
+  sequence:
+  - variables:
+      ent_list: "{% if entities is mapping %}\n  {{ entities.entity_id }}\n{% elif
+        entities is string %}\n  {{ entities.split() }}\n{% else %}\n  {{ entities
+        }}\n{% endif %}\n"
+  - condition: template
+    value_template: '{{ ent_list | count > 0 }}'
+  - repeat:
+      for_each: '{{ ent_list }}'
+      sequence:
+      - variables:
+          entity_id: '{{ repeat.item }}'
+      - repeat:
+          count: 3
+          sequence:
+          - action: '{% if action is list %} {{ action[0].action }} {% elif action
+              is mapping %} {{ action.action }} {% else %} {{ action }} {% endif %}
+
+              '
+            target:
+              entity_id: '{{ entity_id }}'
+            data: '{{ data | default({}) }}'
+          - if:
+            - condition: template
+              value_template: '{{ wait_template is defined and wait_template | string
+                | length > 0 }}'
+            then:
+            - wait_template: '{{ wait_template }}'
+              timeout: 00:00:10
+              continue_on_timeout: true
+            - if:
+              - condition: template
+                value_template: '{{ not (wait_template | bool) }}'
+              then:
+              - delay: 00:00:01
+            else:
+            - delay: 00:00:01
+car_home_arrival:
+  alias: Car home arrival
+  description: ''
+  sequence:
+  - action: cover.open_cover
+    metadata: {}
+    target:
+      entity_id: cover.4g600204913
+    data: {}
+  - if:
+    - condition: sun
+      after: sunset
+      after_offset: -00:20:00
+    then:
+    - action: light.turn_on
+      metadata: {}
+      target:
+        entity_id:
+        - light.knysh_knysh_tvrh
+      data: {}
+  mode: single
+good_night_event_25m_delayed:
+  sequence:
+  - delay:
+      hours: 0
+      minutes: 25
+      seconds: 0
+      milliseconds: 0
+  - event: Good night
+    event_data: {}
+  alias: Good night event (25m delayed)
+  description: ''
+  mode: queued
+  max: 10
