@@ -24,18 +24,20 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 # ── Config-update detection ───────────────────────────────────────────────────
-# check-updates.sh (Mac, every 5 min via launchd) calls the webhook
-# "ha-config-updated" after a successful git pull. The automation in
-# automations.yaml receives that webhook and turns this helper on, which
-# makes the dashboard banner visible. It resets automatically on HA restart.
-input_boolean:
-  config_update_available:
-    name: Config Update Available
-    icon: mdi:update
+# ha-pull.sh (run every 5 min via time_pattern automation on the HA device)
+# touches /tmp/ha-config-updated after a successful git pull. The binary
+# sensor below watches that file; because both this sensor and the script run
+# on the same HA device, /tmp/ is the same filesystem.
+command_line:
+  - binary_sensor:
+      name: "Config Update Available"
+      unique_id: config_update_available
+      command: "test -f /tmp/ha-config-updated && echo 1 || echo 0"
+      payload_on: "1"
+      payload_off: "0"
+      scan_interval: 30
 
-# Optional: pull the latest config directly on the HA device.
-# Requires git to be available in the HA shell environment
-# (e.g. via the "Advanced SSH & Web Terminal" add-on).
-# Call this service from Developer Tools → Services to test.
 shell_command:
-  git_pull_config: "git -C /config pull --ff-only --quiet 2>&1"
+  ha_pull_config: "bash /config/ha-pull.sh"
+  ha_push_config: "bash /config/ha-push.sh"
+  clear_update_flag: "rm -f /tmp/ha-config-updated"

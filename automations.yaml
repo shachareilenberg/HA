@@ -784,22 +784,45 @@
 # ── Config-update automations ─────────────────────────────────────────────────
 
 - id: '1773300000001'
-  alias: Config Update — Webhook receiver
+  alias: Config Update — Pull from GitHub every 5 min
   description: >
-    The Mac's check-updates.sh POSTs to this webhook after a git pull.
-    Turns on input_boolean.config_update_available so the dashboard banner
-    appears, and creates a persistent notification.
+    Runs ha-pull.sh on the HA device every 5 minutes. If new commits are
+    found on origin, the script fast-forward-pulls and touches
+    /tmp/ha-config-updated, which flips binary_sensor.config_update_available
+    on and shows the dashboard restart banner.
   triggers:
-  - trigger: webhook
-    webhook_id: ha-config-updated
-    allowed_methods:
-      - POST
-      - GET
+  - trigger: time_pattern
+    minutes: "/5"
   conditions: []
   actions:
-  - action: input_boolean.turn_on
-    target:
-      entity_id: input_boolean.config_update_available
+  - action: shell_command.ha_pull_config
+  mode: single
+
+- id: '1773300000003'
+  alias: Config Update — Auto push to GitHub every 5 min
+  description: >
+    Runs ha-push.sh on the HA device every 5 minutes. Commits and pushes any
+    local changes (from HA UI editors, File Editor, SSH edits, etc.) so the
+    config on GitHub always stays in sync with the device.
+  triggers:
+  - trigger: time_pattern
+    minutes: "/5"
+  conditions: []
+  actions:
+  - action: shell_command.ha_push_config
+  mode: single
+
+- id: '1773300000002'
+  alias: Config Update — Show notification when update banner appears
+  description: >
+    When the binary sensor flips on after a pull, create a persistent
+    notification as a secondary alert alongside the dashboard banner.
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.config_update_available
+    to: 'on'
+  conditions: []
+  actions:
   - action: persistent_notification.create
     data:
       notification_id: config_update
@@ -809,19 +832,17 @@
         Restart Home Assistant to apply the changes.
   mode: single
 
-- id: '1773300000002'
-  alias: Config Update — Clear on HA start
+- id: '1773300000004'
+  alias: Config Update — Clear flag after HA restarts
   description: >
-    Runs once HA finishes starting after a restart. Clears the update flag
-    and dismisses the notification so the banner disappears automatically.
+    Runs once HA finishes starting. Removes the signal file and dismisses
+    the persistent notification so the banner disappears automatically.
   triggers:
   - trigger: homeassistant
     event: start
   conditions: []
   actions:
-  - action: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.config_update_available
+  - action: shell_command.clear_update_flag
   - action: persistent_notification.dismiss
     data:
       notification_id: config_update

@@ -226,7 +226,7 @@ views:
                 fill_container: true
                 tap_action:
                   action: url
-                  url_path: "shortcuts://run-shortcut?name=Baby%20Monitor%2B"
+                  url_path: "philipsavent://"
 
 
           # ╔═══════════════════════════════╗
@@ -241,7 +241,7 @@ views:
               - type: conditional
                 conditions:
                   - condition: state
-                    entity: input_boolean.config_update_available
+                    entity: binary_sensor.config_update_available
                     state: 'on'
                 card:
                   type: custom:mushroom-template-card
@@ -255,9 +255,7 @@ views:
                     service: homeassistant.restart
                   hold_action:
                     action: call-service
-                    service: input_boolean.turn_off
-                    target:
-                      entity_id: input_boolean.config_update_available
+                    service: shell_command.clear_update_flag
                   card_mod:
                     style: |
                       ha-card {
