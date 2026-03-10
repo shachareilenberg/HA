@@ -575,7 +575,7 @@ views:
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-media-player-card
-                    entity: media_player.samsung_tv
+                    entity: media_player.tv_qe65s95datxil
                     name: Samsung TV
                     volume_controls:
                       - volume_set
