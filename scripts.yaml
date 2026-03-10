@@ -327,12 +327,29 @@ good_night_event_25m_delayed:
   max: 10
 
 tv_audio_yamaha:
-  alias: TV Audio → Yamaha Receiver
-  description: Switches the Samsung TV audio output to the Yamaha RX-V6A receiver.
+  alias: TV Audio → Yamaha RX-V6A
+  description: >
+    Route Samsung TV audio output to the Yamaha RX-V6A receiver.
+    TODO — replace the action below with the correct service once identified.
+    To find it: Developer Tools → States → search "tv_2" for any select.*
+    or switch.* entity that controls audio output/routing (not source/input).
   sequence:
-  - action: media_player.select_source
+  - action: media_player.select_source   # TODO: replace with correct service
     target:
       entity_id: media_player.tv_2
     data:
-      source: "RX-V6A"
+      source: "RX-V6A"                   # TODO: replace with correct value
+  mode: single
+
+tv_audio_tv_speaker:
+  alias: TV Audio → Built-in Speaker
+  description: >
+    Route Samsung TV audio back to the built-in TV speaker.
+    TODO — same as tv_audio_yamaha: replace with correct service once identified.
+  sequence:
+  - action: media_player.select_source   # TODO: replace with correct service
+    target:
+      entity_id: media_player.tv_2
+    data:
+      source: "טלוויזיה"                 # TODO: replace with correct value
   mode: single

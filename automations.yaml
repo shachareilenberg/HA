@@ -767,11 +767,7 @@
       entity_id:
       - cover.slvn_slvn_trys
       - cover.slvn_slvn_trys_khlvn
-  - action: media_player.select_source
-    target:
-      entity_id: media_player.tv_2
-    data:
-      source: "RX-V6A"
+  - action: script.tv_audio_yamaha
   mode: single
 #
 # ─────────────────────────────────────────────────────────────────────────────
