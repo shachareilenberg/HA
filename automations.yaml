@@ -754,30 +754,30 @@
 #        {{ state_attr('media_player.samsung_tv', 'source_list') }}
 #      Then replace "AV Receiver" below with what appears in that list.
 #
-#- id: '1773200000010'
-#  alias: Movie Mode
-#  description: >
-#    Turn off kitchen and living room lights, close living room blinds,
-#    switch TV audio to Yamaha receiver.
-#  triggers: []
-#  conditions: []
-#  actions:
-#  - action: light.turn_off
-#    target:
-#      entity_id:
-#      - light.mtbkh_mtbkh_y
-#      - light.mtbkh_mtbkh_ps
-#  - action: cover.close_cover
-#    target:
-#      entity_id:
-#      - cover.slvn_slvn_trys
-#      - cover.slvn_slvn_trys_khlvn
-#  - action: media_player.select_source
-#    target:
-#      entity_id: media_player.tv_qe65s95datxil       # UPDATE THIS
-#    data:
-#      source: "HDMI"                    # UPDATE: check source_list
-#  mode: single
+- id: '1773200000010'
+  alias: Movie Mode
+  description: >
+    Turn off kitchen and living room lights, close living room blinds,
+    switch TV audio to Yamaha receiver.
+  triggers: []
+  conditions: []
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id:
+      - light.mtbkh_mtbkh_y
+      - light.mtbkh_mtbkh_ps
+  - action: cover.close_cover
+    target:
+      entity_id:
+      - cover.slvn_slvn_trys
+      - cover.slvn_slvn_trys_khlvn
+  - action: media_player.select_source
+    target:
+      entity_id: media_player.tv_qe65s95datxil
+    data:
+      source: "HDMI"
+  mode: single
 #
 # ─────────────────────────────────────────────────────────────────────────────
 
