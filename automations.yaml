@@ -776,7 +776,7 @@
    target:
      entity_id: media_player.tv_qe65s95datxil       # UPDATE THIS
    data:
-     source: "AV Receiver"                    # UPDATE: check source_list
+     source: "HDMI"                    # UPDATE: check source_list
  mode: single
 #
 # ─────────────────────────────────────────────────────────────────────────────
