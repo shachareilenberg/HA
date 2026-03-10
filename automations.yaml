@@ -728,32 +728,12 @@
     target:
       entity_id: input_boolean.oref_alert_was_active
   mode: single
-
-# ── iPad Default Dashboard ────────────────────────────────────────────────────
-# This automation navigates the registered iPad browser to /ui-ipad every time
-# it connects to Home Assistant.
-#
-# HOW TO GET YOUR IPAD BROWSER ID:
-#   1. Open HA on the iPad and go to Settings → browser_mod (or the browser_mod
-#      popup in Developer Tools).
-#   2. Enable "Register" for the iPad browser — note the Browser ID (a UUID).
-#   3. Replace REPLACE_WITH_IPAD_BROWSER_ID below (both occurrences) with that UUID.
-#   4. Reload automations (Developer Tools → YAML → Reload Automations).
-# ─────────────────────────────────────────────────────────────────────────────
-# ── SUGGESTED AUTOMATIONS ────────────────────────────────────────────────────
-# Uncomment and customise the blocks below to activate.
-#
-# ── Movie Mode ───────────────────────────────────────────────────────────────
-# Turns off kitchen + living room lights, closes living room blinds, and
-# switches the Samsung TV audio source to the Yamaha receiver.
-#
-# TV entity: media_player.tv_2 · Yamaha source: RX-V6A (already configured)
-#
 - id: '1773200000010'
   alias: Movie Mode
-  description: >
-    Turn off kitchen and living room lights, close living room blinds,
+  description: 'Turn off kitchen and living room lights, close living room blinds,
     switch TV audio to Yamaha receiver.
+
+    '
   triggers: []
   conditions: []
   actions:
@@ -771,70 +751,68 @@
     target:
       entity_id: select.tv_2_sound_output
     data:
-      option: "external_arc"
+      option: external_arc
   mode: single
-#
-# ─────────────────────────────────────────────────────────────────────────────
-
-# ── Config-update automations ─────────────────────────────────────────────────
-
 - id: '1773300000001'
   alias: Config Update — Pull from GitHub every 5 min
-  description: >
-    Runs ha-pull.sh every 5 minutes. If new commits were pulled, forces an
-    immediate binary_sensor rescan and sends an actionable push notification
-    to the iPad asking the user to approve a restart.
-    ── SETUP ──────────────────────────────────────────────────────────────
-    Replace IPAD_NOTIFY_ENTITY below with your iPad's notify entity.
-    Find it: Settings → Devices & Services → Companion App → your iPad
-    → the notify service is usually notify.mobile_app_<device_name>
+  description: 'Runs ha-pull.sh every 5 minutes. If new commits were pulled, forces
+    an immediate binary_sensor rescan and sends an actionable push notification to
+    the iPad asking the user to approve a restart. ── SETUP ──────────────────────────────────────────────────────────────
+    Replace IPAD_NOTIFY_ENTITY below with your iPad''s notify entity. Find it: Settings
+    → Devices & Services → Companion App → your iPad → the notify service is usually
+    notify.mobile_app_<device_name>
+
+    '
   triggers:
   - trigger: time_pattern
-    minutes: "/5"
+    minutes: /5
   conditions: []
   actions:
   - action: shell_command.ha_pull_config
-  - delay: "00:00:02"
+  - delay: 00:00:02
   - action: homeassistant.update_entity
     target:
       entity_id: binary_sensor.config_update_available
+    data:
+      entity_id:
+      - binary_sensor.config_update_available
   - condition: state
-    entity: binary_sensor.config_update_available
+    entity_id: binary_sensor.config_update_available
     state: 'on'
   - action: notify.mobile_app_ipad_2
     data:
-      title: "Config Update Available"
-      message: "New configuration pulled from GitHub. Restart Home Assistant to apply?"
+      title: Config Update Available
+      message: New configuration pulled from GitHub. Restart Home Assistant to apply?
       data:
         push:
           sound: default
         actions:
-          - action: "RESTART_HA"
-            title: "Restart HA"
-            destructive: true
-          - action: "DISMISS_UPDATE"
-            title: "Later"
+        - action: RESTART_HA
+          title: Restart HA
+          destructive: true
+        - action: DISMISS_UPDATE
+          title: Later
   mode: single
-
 - id: '1773300000003'
   alias: Config Update — Auto push to GitHub every 5 min
-  description: >
-    Runs ha-push.sh on the HA device every 5 minutes. Commits and pushes any
-    local changes (from HA UI editors, File Editor, SSH edits, etc.) so the
-    config on GitHub always stays in sync with the device.
+  description: 'Runs ha-push.sh on the HA device every 5 minutes. Commits and pushes
+    any local changes (from HA UI editors, File Editor, SSH edits, etc.) so the config
+    on GitHub always stays in sync with the device.
+
+    '
   triggers:
   - trigger: time_pattern
-    minutes: "/5"
+    minutes: /5
   conditions: []
   actions:
   - action: shell_command.ha_push_config
   mode: single
-
 - id: '1773300000002'
   alias: Config Update — Restart HA on iPad approval
-  description: >
-    Fires when the user taps "Restart HA" in the push notification.
-    Restarts Home Assistant immediately.
+  description: 'Fires when the user taps "Restart HA" in the push notification. Restarts
+    Home Assistant immediately.
+
+    '
   triggers:
   - trigger: event
     event_type: mobile_app_notification_action
@@ -844,13 +822,12 @@
   actions:
   - action: homeassistant.restart
   mode: single
-
 - id: '1773300000005'
   alias: Config Update — Dismiss on "Later"
-  description: >
-    Fires when the user taps "Later" in the push notification.
-    Clears the signal file so the dashboard banner disappears
-    without restarting HA.
+  description: 'Fires when the user taps "Later" in the push notification. Clears
+    the signal file so the dashboard banner disappears without restarting HA.
+
+    '
   triggers:
   - trigger: event
     event_type: mobile_app_notification_action
@@ -863,12 +840,12 @@
     target:
       entity_id: binary_sensor.config_update_available
   mode: single
-
 - id: '1773300000004'
   alias: Config Update — Clear flag after HA restarts
-  description: >
-    Runs once HA finishes starting after a restart. Removes the signal file
-    so the dashboard banner disappears automatically.
+  description: 'Runs once HA finishes starting after a restart. Removes the signal
+    file so the dashboard banner disappears automatically.
+
+    '
   triggers:
   - trigger: homeassistant
     event: start
@@ -876,15 +853,13 @@
   actions:
   - action: shell_command.clear_update_flag
   mode: single
-
-# ─────────────────────────────────────────────────────────────────────────────
-
 - id: '1773200000001'
   alias: iPad — Navigate to iPad Dashboard on Connect
-  description: >
-    Redirects the registered iPad browser to the iPad landscape dashboard
-    (/ui-ipad) whenever it connects. Replace REPLACE_WITH_IPAD_BROWSER_ID
-    with the UUID shown in the browser_mod panel on the iPad.
+  description: 'Redirects the registered iPad browser to the iPad landscape dashboard
+    (/ui-ipad) whenever it connects. Replace REPLACE_WITH_IPAD_BROWSER_ID with the
+    UUID shown in the browser_mod panel on the iPad.
+
+    '
   triggers:
   - trigger: event
     event_type: browser_mod_connected
@@ -892,7 +867,7 @@
       browser_id: REPLACE_WITH_IPAD_BROWSER_ID
   conditions: []
   actions:
-  - delay: '00:00:01'
+  - delay: 00:00:01
   - action: browser_mod.navigate
     data:
       browser_id: REPLACE_WITH_IPAD_BROWSER_ID
