@@ -226,7 +226,7 @@ views:
                 fill_container: true
                 tap_action:
                   action: url
-                  url_path: "https://apps.apple.com/app/id1544760744"
+                  url_path: "com.philips.myavent://"
 
 
           # ╔═══════════════════════════════╗
