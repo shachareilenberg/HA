@@ -649,6 +649,8 @@
   - if:
     - condition: time
       before: '19:30:00'
+    - condition: sun
+      after: sunrise
     then:
     - variables:
         current_vol: '{{ state_attr(''media_player.bedroom_echo_spot'', ''volume_level'')
