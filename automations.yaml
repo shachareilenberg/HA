@@ -784,17 +784,22 @@
 # ── Config-update automations ─────────────────────────────────────────────────
 
 - id: '1773300000001'
-  alias: Config Update — Notify iPad when new config pulled
+  alias: Config Update — Webhook receiver
   description: >
-    Fires when check-updates.sh pulls new commits from GitHub and drops
-    /tmp/ha-config-updated. Shows a persistent notification and a banner on
-    the iPad dashboard asking the user to restart Home Assistant.
+    The Mac's check-updates.sh POSTs to this webhook after a git pull.
+    Turns on input_boolean.config_update_available so the dashboard banner
+    appears, and creates a persistent notification.
   triggers:
-  - trigger: state
-    entity_id: binary_sensor.config_update_available
-    to: 'on'
+  - trigger: webhook
+    webhook_id: ha-config-updated
+    allowed_methods:
+      - POST
+      - GET
   conditions: []
   actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.config_update_available
   - action: persistent_notification.create
     data:
       notification_id: config_update
@@ -805,17 +810,18 @@
   mode: single
 
 - id: '1773300000002'
-  alias: Config Update — Clear flag after HA restarts
+  alias: Config Update — Clear on HA start
   description: >
-    Runs once HA finishes starting. Removes the signal file and dismisses
-    the persistent notification, so the banner disappears automatically
-    after the user restarts HA.
+    Runs once HA finishes starting after a restart. Clears the update flag
+    and dismisses the notification so the banner disappears automatically.
   triggers:
   - trigger: homeassistant
     event: start
   conditions: []
   actions:
-  - action: shell_command.clear_update_flag
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.config_update_available
   - action: persistent_notification.dismiss
     data:
       notification_id: config_update
