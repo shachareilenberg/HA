@@ -226,7 +226,7 @@ views:
                 fill_container: true
                 tap_action:
                   action: url
-                  url_path: "itms-apps://itunes.apple.com/app/id1544760744"
+                  url_path: "https://apps.apple.com/app/id1544760744?mt=8"
 
 
           # ╔═══════════════════════════════╗
@@ -245,8 +245,8 @@ views:
                     state: 'on'
                 card:
                   type: custom:mushroom-template-card
-                  primary: System / Dashboard Update Available
-                  secondary: New config pulled from GitHub — tap to restart HA
+                  primary: Config Update Available
+                  secondary: Check your iPad notification to approve restart · Hold to dismiss
                   icon: mdi:update
                   icon_color: amber
                   fill_container: true

@@ -781,16 +781,39 @@
 - id: '1773300000001'
   alias: Config Update — Pull from GitHub every 5 min
   description: >
-    Runs ha-pull.sh on the HA device every 5 minutes. If new commits are
-    found on origin, the script fast-forward-pulls and touches
-    /tmp/ha-config-updated, which flips binary_sensor.config_update_available
-    on and shows the dashboard restart banner.
+    Runs ha-pull.sh every 5 minutes. If new commits were pulled, forces an
+    immediate binary_sensor rescan and sends an actionable push notification
+    to the iPad asking the user to approve a restart.
+    ── SETUP ──────────────────────────────────────────────────────────────
+    Replace IPAD_NOTIFY_ENTITY below with your iPad's notify entity.
+    Find it: Settings → Devices & Services → Companion App → your iPad
+    → the notify service is usually notify.mobile_app_<device_name>
   triggers:
   - trigger: time_pattern
     minutes: "/5"
   conditions: []
   actions:
   - action: shell_command.ha_pull_config
+  - delay: "00:00:02"
+  - action: homeassistant.update_entity
+    target:
+      entity_id: binary_sensor.config_update_available
+  - condition: state
+    entity: binary_sensor.config_update_available
+    state: 'on'
+  - action: notify.IPAD_NOTIFY_ENTITY
+    data:
+      title: "Config Update Available"
+      message: "New configuration pulled from GitHub. Restart Home Assistant to apply?"
+      data:
+        push:
+          sound: default
+        actions:
+          - action: "RESTART_HA"
+            title: "Restart HA"
+            destructive: true
+          - action: "DISMISS_UPDATE"
+            title: "Later"
   mode: single
 
 - id: '1773300000003'
@@ -808,39 +831,50 @@
   mode: single
 
 - id: '1773300000002'
-  alias: Config Update — Show notification when update banner appears
+  alias: Config Update — Restart HA on iPad approval
   description: >
-    When the binary sensor flips on after a pull, create a persistent
-    notification as a secondary alert alongside the dashboard banner.
+    Fires when the user taps "Restart HA" in the push notification.
+    Restarts Home Assistant immediately.
   triggers:
-  - trigger: state
-    entity_id: binary_sensor.config_update_available
-    to: 'on'
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: RESTART_HA
   conditions: []
   actions:
-  - action: persistent_notification.create
-    data:
-      notification_id: config_update
-      title: "Dashboard / Config Update Available"
-      message: >
-        New configuration was pulled from GitHub.
-        Restart Home Assistant to apply the changes.
+  - action: homeassistant.restart
+  mode: single
+
+- id: '1773300000005'
+  alias: Config Update — Dismiss on "Later"
+  description: >
+    Fires when the user taps "Later" in the push notification.
+    Clears the signal file so the dashboard banner disappears
+    without restarting HA.
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: DISMISS_UPDATE
+  conditions: []
+  actions:
+  - action: shell_command.clear_update_flag
+  - action: homeassistant.update_entity
+    target:
+      entity_id: binary_sensor.config_update_available
   mode: single
 
 - id: '1773300000004'
   alias: Config Update — Clear flag after HA restarts
   description: >
-    Runs once HA finishes starting. Removes the signal file and dismisses
-    the persistent notification so the banner disappears automatically.
+    Runs once HA finishes starting after a restart. Removes the signal file
+    so the dashboard banner disappears automatically.
   triggers:
   - trigger: homeassistant
     event: start
   conditions: []
   actions:
   - action: shell_command.clear_update_flag
-  - action: persistent_notification.dismiss
-    data:
-      notification_id: config_update
   mode: single
 
 # ─────────────────────────────────────────────────────────────────────────────
