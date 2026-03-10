@@ -728,3 +728,34 @@
     target:
       entity_id: input_boolean.oref_alert_was_active
   mode: single
+
+# ── iPad Default Dashboard ────────────────────────────────────────────────────
+# This automation navigates the registered iPad browser to /ui-ipad every time
+# it connects to Home Assistant.
+#
+# HOW TO GET YOUR IPAD BROWSER ID:
+#   1. Open HA on the iPad and go to Settings → browser_mod (or the browser_mod
+#      popup in Developer Tools).
+#   2. Enable "Register" for the iPad browser — note the Browser ID (a UUID).
+#   3. Replace REPLACE_WITH_IPAD_BROWSER_ID below (both occurrences) with that UUID.
+#   4. Reload automations (Developer Tools → YAML → Reload Automations).
+# ─────────────────────────────────────────────────────────────────────────────
+- id: '1773200000001'
+  alias: iPad — Navigate to iPad Dashboard on Connect
+  description: >
+    Redirects the registered iPad browser to the iPad landscape dashboard
+    (/ui-ipad) whenever it connects. Replace REPLACE_WITH_IPAD_BROWSER_ID
+    with the UUID shown in the browser_mod panel on the iPad.
+  triggers:
+  - trigger: event
+    event_type: browser_mod_connected
+    event_data:
+      browser_id: REPLACE_WITH_IPAD_BROWSER_ID
+  conditions: []
+  actions:
+  - delay: '00:00:01'
+  - action: browser_mod.navigate
+    data:
+      browser_id: REPLACE_WITH_IPAD_BROWSER_ID
+      path: /ui-ipad
+  mode: single

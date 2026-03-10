@@ -6,6 +6,19 @@ default_config:
 frontend:
   themes: !include_dir_merge_named themes
 
+# Register the iPad YAML dashboard alongside the default UI-managed dashboards.
+# The main lovelace stays in storage mode (UI editor works normally).
+# Visit /ui-ipad on the iPad after restarting HA.
+lovelace:
+  mode: storage
+  dashboards:
+    ui-ipad:
+      mode: yaml
+      title: iPad Home
+      icon: mdi:tablet
+      show_in_sidebar: true
+      filename: ui-ipad-dashboard.yaml
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
