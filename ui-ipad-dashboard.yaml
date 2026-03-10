@@ -226,7 +226,7 @@ views:
                 fill_container: true
                 tap_action:
                   action: url
-                  url_path: "philips-avent://"
+                  url_path: "shortcuts://x-callback-url/run-shortcut?name=Baby%20Monitor%2B"
 
 
           # ╔═══════════════════════════════╗
