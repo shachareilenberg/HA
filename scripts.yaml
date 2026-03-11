@@ -148,54 +148,45 @@ turn_off_all_by_domain:
   max: 10
   fields:
     domain:
-      description: Domain to turn off (light / climate / switch / fan, etc.)
+      description: Domain to turn off (light, climate, switch, fan, etc.)
       example: climate
     exclude_entities:
       description: Entities to exclude
-      example: climate.living_room, climate.bedroom
+      default: []
     exclude_areas:
       description: Area names to exclude
-      example: Bedroom, Living Room
+      default: []
     exclude_labels:
       description: Label names to exclude
-      example: Do not turn off, Critical
+      default: []
   sequence:
   - variables:
-      excluded_entities: '{{ exclude_entities | default([], true) }}'
-      excluded_areas: '{{ exclude_areas | default([], true) }}'
-      excluded_labels: '{{ exclude_labels | default([], true) }}'
-      entities: "{% set ns = namespace(result=[]) %} {% for s in states[domain] %}\n
-        \ {% set entity_id = s.entity_id %}\n  {% set area_name_value = area_name(entity_id)
-        %}\n  {% set labels_value = labels(entity_id) | default([], true) %}\n\n  {%
-        if s.state not in ['off', 'unavailable', 'unknown'] %}\n    {% if entity_id
-        not in excluded_entities %}\n      {% if area_name_value not in excluded_areas
-        %}\n        {% if not (labels_value | select('in', excluded_labels) | list
-        | count > 0) %}\n          {% set ns.result = ns.result + [entity_id] %}\n
-        \       {% endif %}\n      {% endif %}\n    {% endif %}\n  {% endif %}\n{%
-        endfor %} {{ ns.result }}"
+      entities: "{% set all = states[domain] | map(attribute='entity_id') | list %}
+        {% set filtered = namespace(ids=[]) %} {% for e in all if states(e) not in
+        ['off', 'unavailable', 'unknown'] %}\n  {% set a = area_name(e) %}\n  {% set
+        l = labels(e) %}\n  {% if e not in exclude_entities and a not in exclude_areas
+        and not (l | select('in', exclude_labels) | list | count > 0) %}\n    {% set
+        filtered.ids = filtered.ids + [e] %}\n  {% endif %}\n{% endfor %} {{ filtered.ids
+        }}\n"
   - condition: template
     value_template: '{{ entities | count > 0 }}'
   - repeat:
       for_each: '{{ entities }}'
       sequence:
-      - variables:
-          entity_id: '{{ repeat.item }}'
       - repeat:
-          count: 3
+          until:
+          - condition: or
+            conditions:
+            - condition: template
+              value_template: '{{ is_state(repeat.item, ''off'') }}'
+            - condition: template
+              value_template: '{{ repeat.index >= 3 }}'
           sequence:
           - action: '{{ domain }}.turn_off'
             target:
-              entity_id: '{{ entity_id }}'
-          - wait_template: '{{ is_state(entity_id, ''off'') }}'
+              entity_id: '{{ repeat.item }}'
+          - wait_template: '{{ is_state(repeat.item, ''off'') }}'
             timeout: 00:00:05
-            continue_on_timeout: true
-          - if:
-            - condition: template
-              value_template: '{{ not is_state(entity_id, ''off'') }}'
-            then:
-            - delay: 00:00:01
-            else:
-            - stop: Entity turned off successfully
 close_all_blinds:
   alias: Close all blinds
   mode: queued
