@@ -258,3 +258,14 @@ To github.com:shachareilenberg/HA.git
  ! [remote rejected] ipad-dashboard -> ipad-dashboard (push declined due to repository rule violations)
 error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
 2026-03-11 12:11:55 [push] WARN: push failed — commit undone, will retry next run. KEY=/config/.ssh/id_ed25519
+2026-03-11 12:13:49 [pull] --- run start ---
+2026-03-11 12:13:49 [pull] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 12:11 .|drwxr-xr-x   12 root     root          4096 Mar 11 12:11 ..|-rw-------    1 root     root           399 Mar 11 12:11 id_ed25519|-rw-------    1 root     root          3104 Mar 11 12:11 known_hosts|
+2026-03-11 12:13:49 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:13:51 [pull] DEBUG: branch=ipad-dashboard  behind=0  ahead=0
+2026-03-11 12:13:51 [pull] OK: already up to date
+2026-03-11 12:15:00 [pull] --- run start ---
+2026-03-11 12:15:00 [pull] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 12:11 .|drwxr-xr-x   12 root     root          4096 Mar 11 12:14 ..|-rw-------    1 root     root           399 Mar 11 12:11 id_ed25519|-rw-------    1 root     root          3104 Mar 11 12:11 known_hosts|
+2026-03-11 12:15:00 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:15:00 [push] --- run start ---
+2026-03-11 12:15:00 [push] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 12:11 .|drwxr-xr-x   12 root     root          4096 Mar 11 12:14 ..|-rw-------    1 root     root           399 Mar 11 12:11 id_ed25519|-rw-------    1 root     root          3104 Mar 11 12:11 known_hosts|
+2026-03-11 12:15:00 [push] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
