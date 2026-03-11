@@ -8,6 +8,8 @@ FLAG="/config/.ha-update-flag"
 
 log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [pull] $*" >> "$LOG"; }
 
+log "--- run start ---"
+
 # ── fix HOME for HA's shell_command environment ───────────────────────────────
 # HA's process may have HOME unset or set to a path without .git-credentials.
 # Scan known homes so the git credential helper can find the stored PAT.
