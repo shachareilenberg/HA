@@ -1,78 +1,95 @@
 #!/bin/bash
 # create-dashboards.sh
 #
-# Creates all 4 HA dashboards via the Chronograf HTTP API.
-# Uses the HA Supervisor ingress proxy (the only external route to Chronograf,
-# since it listens on 127.0.0.1:8889 inside the add-on container).
+# Creates all 4 HA dashboards via the Chronograf API, routing through
+# the HA Supervisor ingress proxy (the only allowed path to Chronograf).
 #
 # Run from the HA SSH add-on terminal:
 #   cd /config/chronograf && bash create-dashboards.sh
 
-set -e
+set -eo pipefail
 
 SUPERVISOR="http://172.30.32.2"
 ADDON_SLUG="a0d7b954_influxdb"
 
-# ── Check SUPERVISOR_TOKEN ────────────────────────────────────────────────────
+# ── Supervisor token ──────────────────────────────────────────────────────────
 if [ -z "$SUPERVISOR_TOKEN" ]; then
-  echo "ERROR: \$SUPERVISOR_TOKEN is not set."
-  echo "This script must be run from within the HA SSH add-on terminal."
+  echo "ERROR: \$SUPERVISOR_TOKEN not set. Run from the HA SSH add-on terminal."
   exit 1
 fi
+echo "Supervisor token: present (${#SUPERVISOR_TOKEN} chars)"
 
-AUTH="Authorization: Bearer ${SUPERVISOR_TOKEN}"
+# ── Add-on info ───────────────────────────────────────────────────────────────
+echo "Fetching add-on info..."
+ADDON_INFO=$(curl -sf "${SUPERVISOR}/addons/${ADDON_SLUG}/info" \
+  -H "Authorization: Bearer ${SUPERVISOR_TOKEN}")
 
-# ── Get the add-on ingress token ──────────────────────────────────────────────
-ADDON_INFO=$(curl -sf "${SUPERVISOR}/addons/${ADDON_SLUG}/info" -H "$AUTH")
-INGRESS_TOKEN=$(python3 -c "import json,sys; print(json.loads('${ADDON_INFO}')['data']['ingress_token'])" 2>/dev/null)
-INGRESS_ENTRY=$(python3 -c "import json,sys; print(json.loads('${ADDON_INFO}')['data']['ingress_entry'])" 2>/dev/null)
+INGRESS_TOKEN=$(echo "$ADDON_INFO" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+print(d['data']['ingress_token'])
+")
 
-if [ -z "$INGRESS_TOKEN" ]; then
-  echo "ERROR: Could not read ingress token from supervisor."
-  echo "Supervisor response: $ADDON_INFO"
-  exit 1
-fi
+INGRESS_ENTRY=$(echo "$ADDON_INFO" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+print(d['data']['ingress_entry'])
+")
 
-# ── Create an ingress session ─────────────────────────────────────────────────
-SESSION_RESP=$(curl -sf -X POST "${SUPERVISOR}/ingress/session" -H "$AUTH")
-SESSION=$(python3 -c "import json,sys; print(json.loads('${SESSION_RESP}')['data']['session'])" 2>/dev/null)
+echo "  ingress_token : ${INGRESS_TOKEN:0:20}..."
+echo "  ingress_entry : $INGRESS_ENTRY"
 
-if [ -z "$SESSION" ]; then
-  echo "ERROR: Could not create ingress session."
-  echo "Supervisor response: $SESSION_RESP"
-  exit 1
-fi
+# ── Create ingress session ────────────────────────────────────────────────────
+echo "Creating ingress session..."
+SESSION=$(curl -sf -X POST "${SUPERVISOR}/ingress/session" \
+  -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
+  | python3 -c "import json, sys; print(json.load(sys.stdin)['data']['session'])")
+echo "  session: ${SESSION:0:20}..."
 
-CHRONOGRAF="${SUPERVISOR}/ingress/${INGRESS_TOKEN}${INGRESS_ENTRY}chronograf/v1/dashboards"
 COOKIE="Cookie: ingress_session=${SESSION}"
 
-# ── Smoke test ────────────────────────────────────────────────────────────────
-if ! curl -sf "$CHRONOGRAF" -H "$COOKIE" > /dev/null; then
-  echo "ERROR: Cannot reach Chronograf at $CHRONOGRAF"
-  echo "Make sure the InfluxDB add-on is running."
+# ── Find working Chronograf API URL ──────────────────────────────────────────
+# Try: /ingress/{token}{ingress_entry}/chronograf/v1/dashboards
+# Then: /ingress/{token}/chronograf/v1/dashboards
+CHRONOGRAF_API=""
+for CANDIDATE in \
+  "${SUPERVISOR}/ingress/${INGRESS_TOKEN}${INGRESS_ENTRY}/chronograf/v1/dashboards" \
+  "${SUPERVISOR}/ingress/${INGRESS_TOKEN}/chronograf/v1/dashboards"
+do
+  echo "Trying: $CANDIDATE"
+  CODE=$(curl -s -o /dev/null -w "%{http_code}" "$CANDIDATE" -H "$COOKIE")
+  echo "  HTTP $CODE"
+  if [ "$CODE" = "200" ]; then
+    CHRONOGRAF_API="$CANDIDATE"
+    break
+  fi
+done
+
+if [ -z "$CHRONOGRAF_API" ]; then
+  echo "ERROR: Cannot reach Chronograf through either URL."
+  echo "Check the InfluxDB add-on is running and try again."
   exit 1
 fi
 
 # ── Create dashboards ─────────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+echo ""
 echo "Creating dashboards..."
 
 for f in "$SCRIPT_DIR"/0[0-9]-*.json; do
   [ -f "$f" ] || continue
-
   NAME=$(python3 -c "import json; print(json.load(open('$f'))['dashboard']['name'])")
-
+  echo "  Creating: $NAME"
   python3 -c "
 import json, sys
 d = json.load(open('$f'))
 sys.stdout.write(json.dumps(d['dashboard']))
-" | curl -sf -X POST "$CHRONOGRAF" \
-      -H 'Content-Type: application/json' \
+" | curl -sf -X POST "$CHRONOGRAF_API" \
+      -H "Content-Type: application/json" \
       -H "$COOKIE" \
       --data-binary @- > /dev/null
-
-  echo "  Created: $NAME"
+  echo "  Done"
 done
 
 echo ""
-echo "Done. Open Chronograf → Dashboards to see all 4 dashboards."
+echo "All dashboards created. Open Chronograf → Dashboards."
