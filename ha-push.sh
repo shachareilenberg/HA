@@ -1,6 +1,6 @@
 #!/bin/bash
 # ha-push.sh — runs ON the HA device via a time_pattern automation.
-# Commits and pushes any local changes to GitHub.
+# Commits and pushes any local changes to GitHub via SSH.
 
 LOG="/config/ha-git.log"
 
@@ -9,9 +9,10 @@ log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [push] $*" >> "$LOG"; }
 log "--- run start ---"
 
 # ── fix HOME for HA's shell_command environment ───────────────────────────────
-# HA's process may have HOME unset or set to a path without .git-credentials.
-for _H in /root /homeassistant /home/homeassistant /config; do
-  if [ -f "$_H/.git-credentials" ] || [ -f "$_H/.gitconfig" ]; then
+# HA's process may have HOME unset or pointing to the wrong directory.
+# Scan known homes so SSH can find ~/.ssh/id_* and known_hosts.
+for _H in /root /homeassistant /home/homeassistant; do
+  if [ -d "$_H/.ssh" ]; then
     export HOME="$_H"
     break
   fi
@@ -28,6 +29,9 @@ if [ -z "$GIT" ]; then
   exit 1
 fi
 
+# Ensure SSH uses the correct known_hosts (prevents host key verification failure)
+export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
+
 log "DEBUG: HOME=$HOME  GIT=$GIT"
 
 # ── sanity checks ─────────────────────────────────────────────────────────────
@@ -37,9 +41,6 @@ if [ ! -d /config/.git ]; then
 fi
 
 cd /config || { log "ERROR: cannot cd to /config"; exit 1; }
-
-# ── force HTTPS remote (SSH fails non-interactively: no host key verification) ─
-"$GIT" remote set-url origin "https://github.com/shachareilenberg/HA.git" 2>/dev/null || true
 
 # ── skip if another git operation is running ──────────────────────────────────
 if [ -f .git/index.lock ]; then
@@ -60,7 +61,7 @@ fi
 
 BRANCH="$("$GIT" branch --show-current 2>/dev/null)"
 if ! "$GIT" push origin "$BRANCH" 2>> "$LOG"; then
-  log "ERROR: git push failed (check credentials). HOME=$HOME"
+  log "ERROR: git push failed (check SSH key). HOME=$HOME"
   exit 1
 fi
 
