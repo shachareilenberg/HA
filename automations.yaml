@@ -752,28 +752,23 @@
   - action: script.tv_audio_yamaha
   mode: single
 - id: '1773300000001'
-  alias: Config Update — Pull from GitHub every 5 min
-  description: 'Runs ha-pull.sh every 5 minutes. If new commits were pulled, forces
-    an immediate binary_sensor rescan and sends an actionable push notification to
-    the iPad asking the user to approve a restart. ── SETUP ──────────────────────────────────────────────────────────────
-    Replace IPAD_NOTIFY_ENTITY below with your iPad''s notify entity. Find it: Settings
-    → Devices & Services → Companion App → your iPad → the notify service is usually
-    notify.mobile_app_<device_name>
-
-    '
+  alias: Config Update — Pull then Push every 5 min
+  description: >
+    Every 5 minutes: pull from GitHub first (blocking), then push local changes.
+    Sequential order is guaranteed — shell_command blocks until each script finishes.
+    If a pull brought in new commits, sends an actionable push notification to the
+    iPad asking the user to approve a restart.
   triggers:
   - trigger: time_pattern
     minutes: /5
   conditions: []
   actions:
   - action: shell_command.ha_pull_config
-  - delay: 00:00:02
+  - delay: "00:00:03"
   - action: homeassistant.update_entity
     target:
       entity_id: binary_sensor.config_update_available
-    data:
-      entity_id:
-      - binary_sensor.config_update_available
+  - action: shell_command.ha_push_config
   - condition: state
     entity_id: binary_sensor.config_update_available
     state: 'on'
@@ -790,19 +785,6 @@
           destructive: true
         - action: DISMISS_UPDATE
           title: Later
-  mode: single
-- id: '1773300000003'
-  alias: Config Update — Auto push to GitHub every 5 min
-  description: >
-    Runs ha-push.sh on the HA device every 5 minutes, offset by 2 minutes
-    from the pull automation to avoid git index.lock collisions.
-    Commits and pushes any local changes (HA UI editors, File Editor, SSH edits).
-  triggers:
-  - trigger: time_pattern
-    minutes: "/5"
-  conditions: []
-  actions:
-  - action: shell_command.ha_push_config
   mode: single
 - id: '1773300000002'
   alias: Config Update — Restart HA on iPad approval
