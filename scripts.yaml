@@ -326,6 +326,17 @@ good_night_event_25m_delayed:
   mode: queued
   max: 10
 
+tv_mute_toggle:
+  alias: TV — Toggle Mute
+  description: Mutes the TV if sound is on, unmutes if already muted.
+  sequence:
+  - action: media_player.volume_mute
+    target:
+      entity_id: media_player.tv_2
+    data:
+      is_volume_muted: "{{ not state_attr('media_player.tv_2', 'is_volume_muted') }}"
+  mode: single
+
 tv_audio_yamaha:
   alias: TV Audio → Yamaha RX-V6A
   description: Route Samsung TV audio output to the Yamaha RX-V6A receiver.

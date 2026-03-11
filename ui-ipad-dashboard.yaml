@@ -886,16 +886,26 @@ views:
                         media_content_type: send_key
                         media_content_id: KEY_DOWN
                   - type: custom:mushroom-template-card
-                    primary: Mute
-                    icon: mdi:volume-mute
-                    icon_color: grey
+                    primary: >
+                      {% if state_attr('media_player.tv_2', 'is_volume_muted') %}
+                        Unmute
+                      {% else %}
+                        Mute
+                      {% endif %}
+                    icon: >
+                      {% if state_attr('media_player.tv_2', 'is_volume_muted') %}
+                        mdi:volume-off
+                      {% else %}
+                        mdi:volume-mute
+                      {% endif %}
+                    icon_color: >
+                      {% if state_attr('media_player.tv_2', 'is_volume_muted') %}
+                        red
+                      {% else %}
+                        grey
+                      {% endif %}
                     layout: vertical
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: media_player.play_media
-                      target:
-                        entity_id: media_player.tv_2
-                      data:
-                        media_content_type: send_key
-                        media_content_id: KEY_MUTE
+                      service: script.tv_mute_toggle
