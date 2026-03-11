@@ -693,6 +693,9 @@ views:
                               - type: vertical-stack
                                 cards:
 
+                                  - type: custom:mushroom-title-card
+                                    title: Apps & Audio
+
                                   # Audio output
                                   - type: horizontal-stack
                                     cards:
