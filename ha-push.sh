@@ -9,8 +9,6 @@ log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [push] $*" >> "$LOG"; }
 log "--- run start ---"
 
 # ── fix HOME for HA's shell_command environment ───────────────────────────────
-# HA's process may have HOME unset or pointing to the wrong directory.
-# Scan known homes so SSH can find ~/.ssh/id_* and known_hosts.
 for _H in /root /homeassistant /home/homeassistant; do
   if [ -d "$_H/.ssh" ]; then
     export HOME="$_H"
@@ -29,13 +27,23 @@ if [ -z "$GIT" ]; then
   exit 1
 fi
 
-# Ensure SSH uses the correct known_hosts (prevents host key verification failure)
-export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
-# Prevent any interactive prompts or editor windows when running non-interactively
+# ── locate SSH private key ────────────────────────────────────────────────────
+SSH_KEY=""
+for K in "${HOME}/.ssh/id_ed25519" "${HOME}/.ssh/id_rsa" "${HOME}/.ssh/id_ecdsa" \
+         "${HOME}/.ssh/id_ecdsa_sk" "${HOME}/.ssh/id_ed25519_sk"; do
+  [ -f "$K" ] && SSH_KEY="$K" && break
+done
+if [ -z "$SSH_KEY" ]; then
+  log "ERROR: no SSH private key found in ${HOME}/.ssh/ — run ssh-keygen first."
+  exit 1
+fi
+
+# Explicitly pass key + known_hosts so the non-interactive environment works
+export GIT_SSH_COMMAND="ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
 export GIT_TERMINAL_PROMPT=0
 export GIT_EDITOR=true
 
-log "DEBUG: HOME=$HOME  GIT=$GIT"
+log "DEBUG: HOME=$HOME  GIT=$GIT  KEY=$SSH_KEY"
 
 # ── sanity checks ─────────────────────────────────────────────────────────────
 if [ ! -d /config/.git ]; then
@@ -51,20 +59,40 @@ if [ -f .git/index.lock ]; then
   exit 0
 fi
 
-# ── check for local changes ───────────────────────────────────────────────────
-if "$GIT" diff --quiet && \
-   "$GIT" diff --cached --quiet && \
-   [ -z "$("$GIT" ls-files --others --exclude-standard 2>/dev/null)" ]; then
+# ── check for uncommitted file changes ───────────────────────────────────────
+HAS_CHANGES=0
+if ! "$GIT" diff --quiet || \
+   ! "$GIT" diff --cached --quiet || \
+   [ -n "$("$GIT" ls-files --others --exclude-standard 2>/dev/null)" ]; then
+  HAS_CHANGES=1
+fi
+
+# ── check for already-committed but unpushed commits (e.g. from previous failures)
+BRANCH="$("$GIT" branch --show-current 2>/dev/null)"
+AHEAD="$("$GIT" rev-list "origin/$BRANCH..HEAD" --count 2>/dev/null || echo 0)"
+
+if [ "$HAS_CHANGES" -eq 0 ] && [ "$AHEAD" -eq 0 ]; then
   log "OK: nothing to push"
   exit 0
 fi
 
-"$GIT" add -A
-"$GIT" commit -m "auto: update config $(date '+%Y-%m-%d %H:%M')" 2>> "$LOG"
+# ── commit any file changes ───────────────────────────────────────────────────
+COMMITTED=0
+if [ "$HAS_CHANGES" -eq 1 ]; then
+  "$GIT" add -A
+  "$GIT" commit -m "auto: update config $(date '+%Y-%m-%d %H:%M')" 2>> "$LOG"
+  COMMITTED=1
+fi
 
-BRANCH="$("$GIT" branch --show-current 2>/dev/null)"
+# ── push (includes any pre-existing unpushed commits) ────────────────────────
 if ! "$GIT" push origin "$BRANCH" 2>> "$LOG"; then
-  log "ERROR: git push failed (check SSH key). HOME=$HOME"
+  # If we just made a commit and push failed, undo it so it doesn't pile up
+  if [ "$COMMITTED" -eq 1 ]; then
+    "$GIT" reset --soft HEAD~1
+    log "WARN: push failed — commit undone, will retry next run. KEY=$SSH_KEY"
+  else
+    log "ERROR: push failed (pre-existing commits). KEY=$SSH_KEY"
+  fi
   exit 1
 fi
 
