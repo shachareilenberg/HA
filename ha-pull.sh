@@ -103,8 +103,16 @@ if [ "$BEHIND" -eq 0 ]; then
   exit 0
 fi
 
-# ── pull with rebase — handles both ff-only and diverged cases ────────────────
-# Working tree is clean because ha-git.log is not written during this run.
+# ── commit any local changes before rebase ────────────────────────────────────
+# Safe to do here: ha-git.log is buffered so nothing new is written after this
+# commit — the working tree stays clean for the rebase that follows.
+if [ -n "$("$GIT" status --porcelain 2>/dev/null)" ]; then
+  log "INFO: committing local changes before pull"
+  "$GIT" add -A
+  "$GIT" commit -m "auto: save local changes before pull $(date '+%Y-%m-%d %H:%M')" 2>>"$GIT_TMP"
+fi
+
+# ── pull with rebase — handles ff-only and diverged branches ─────────────────
 if ! "$GIT" pull --rebase origin "$BRANCH" 2>>"$GIT_TMP"; then
   log "ERROR: git pull --rebase failed"
   exit 1
