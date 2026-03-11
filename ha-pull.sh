@@ -41,6 +41,10 @@ if [ ! -d .git ]; then
   exit 1
 fi
 
+# ── force HTTPS remote (SSH fails non-interactively: no host key verification) ─
+"$GIT" remote set-url origin "https://github.com/shachareilenberg/HA.git" 2>/dev/null || true
+log "DEBUG: remote=$(\"$GIT\" remote get-url origin 2>/dev/null)"
+
 # ── skip if another git operation is running ──────────────────────────────────
 if [ -f .git/index.lock ]; then
   log "index.lock present — skipping"

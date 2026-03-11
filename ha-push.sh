@@ -38,6 +38,9 @@ fi
 
 cd /config || { log "ERROR: cannot cd to /config"; exit 1; }
 
+# ── force HTTPS remote (SSH fails non-interactively: no host key verification) ─
+"$GIT" remote set-url origin "https://github.com/shachareilenberg/HA.git" 2>/dev/null || true
+
 # ── skip if another git operation is running ──────────────────────────────────
 if [ -f .git/index.lock ]; then
   log "index.lock present — skipping"
