@@ -53,28 +53,18 @@ command_line:
       scan_interval: 120
 
 ##############################################################
-# InfluxDB v2 activity logging
+# InfluxDB v1 activity logging (TICK stack add-on)
 #
-# SETUP (one-time, via HA Supervisor UI):
-#   1. Settings → Add-ons → Add-on Store → install "InfluxDB"
-#   2. Start the add-on → open the InfluxDB web UI (port 8086)
-#   3. Create:  org = homeassistant
-#               bucket = ha_data
-#               API token (All Access or write-only to ha_data)
-#   4. Replace REPLACE_WITH_YOUR_TOKEN below with the token
-#   5. Restart Home Assistant
+# Database "ha_data" must be created first in Chronograf:
+#   Admin → Databases → Create Database → ha_data
 #
-# Optional: install the "Grafana" add-on, add InfluxDB as a
-# data source, and build dashboards to visualize usage patterns.
+# No authentication needed by default (add-on runs locally).
+# To visualise: open Chronograf → Explore → select ha_data.
 ##############################################################
 influxdb:
-  api_version: 2
-  ssl: false
   host: localhost
   port: 8086
-  token: REPLACE_WITH_YOUR_TOKEN
-  organization: homeassistant
-  bucket: ha_data
+  database: ha_data
   tags:
     source: hass
   include:
