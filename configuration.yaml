@@ -54,3 +54,9 @@ shell_command:
   ha_pull_config: "/bin/bash /config/ha-pull.sh"
   ha_push_config: "/bin/bash /config/ha-push.sh"
   clear_update_flag: "rm -f /config/.ha-update-flag"
+  # Keeps the 200 most-recent lines so the log never grows unbounded.
+  # Triggered daily at 03:00 by the "Git Log — daily rotate" automation.
+  rotate_git_log: >-
+    LOG=/config/ha-git.log;
+    [ -f "$LOG" ] || exit 0;
+    tail -200 "$LOG" > "$LOG.tmp" && mv "$LOG.tmp" "$LOG"
