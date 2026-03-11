@@ -328,13 +328,14 @@ good_night_event_25m_delayed:
 
 tv_mute_toggle:
   alias: TV — Toggle Mute
-  description: Mutes the TV if sound is on, unmutes if already muted.
+  description: Sends KEY_MUTE hardware toggle (reliable regardless of attribute availability).
   sequence:
-  - action: media_player.volume_mute
+  - action: media_player.play_media
     target:
       entity_id: media_player.tv_2
     data:
-      is_volume_muted: "{{ not state_attr('media_player.tv_2', 'is_volume_muted') }}"
+      media_content_type: send_key
+      media_content_id: KEY_MUTE
   mode: single
 
 tv_audio_yamaha:
