@@ -511,3 +511,27 @@ From github.com:shachareilenberg/HA
    0d2d92e..f6e14bc  ipad-dashboard -> origin/ipad-dashboard
 error: cannot pull with rebase: You have unstaged changes.
 error: Please commit or stash them.
+2026-03-11 12:40:05 [push] --- run start ---
+2026-03-11 12:40:05 [push] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:40:06 [push] WARN: remote is ahead by 1 — rebasing and retrying push
+2026-03-11 12:40:10 [push] OK: pushed changes to origin/ipad-dashboard (after rebase)
+To github.com:shachareilenberg/HA.git
+ ! [rejected]        ipad-dashboard -> ipad-dashboard (non-fast-forward)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+From github.com:shachareilenberg/HA
+ * branch            ipad-dashboard -> FETCH_HEAD
+Rebasing (1/1)Successfully rebased and updated refs/heads/ipad-dashboard.
+To github.com:shachareilenberg/HA.git
+   f6e14bc..3d3e91b  ipad-dashboard -> ipad-dashboard
+2026-03-11 12:45:00 [pull] --- run start ---
+2026-03-11 12:45:00 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:45:02 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=0
+2026-03-11 12:45:02 [pull] ERROR: git pull --rebase failed
+From github.com:shachareilenberg/HA
+   3d3e91b..308b450  ipad-dashboard -> origin/ipad-dashboard
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
