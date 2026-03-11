@@ -269,3 +269,26 @@ error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
 2026-03-11 12:15:00 [push] --- run start ---
 2026-03-11 12:15:00 [push] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 12:11 .|drwxr-xr-x   12 root     root          4096 Mar 11 12:14 ..|-rw-------    1 root     root           399 Mar 11 12:11 id_ed25519|-rw-------    1 root     root          3104 Mar 11 12:11 known_hosts|
 2026-03-11 12:15:00 [push] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:15:01 [pull] DEBUG: branch=ipad-dashboard  behind=0  ahead=1
+2026-03-11 12:15:01 [pull] OK: already up to date
+To github.com:shachareilenberg/HA.git
+   37122ad..b5841e7  ipad-dashboard -> ipad-dashboard
+2026-03-11 12:15:02 [push] OK: pushed changes to origin/ipad-dashboard
+2026-03-11 12:18:05 [pull] --- run start ---
+2026-03-11 12:18:05 [pull] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 12:11 .|drwxr-xr-x   12 root     root          4096 Mar 11 12:14 ..|-rw-------    1 root     root           399 Mar 11 12:11 id_ed25519|-rw-------    1 root     root          3104 Mar 11 12:11 known_hosts|
+2026-03-11 12:18:05 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+From github.com:shachareilenberg/HA
+   b5841e7..b6426d2  ipad-dashboard -> origin/ipad-dashboard
+2026-03-11 12:18:07 [pull] DEBUG: branch=ipad-dashboard  behind=2  ahead=0
+2026-03-11 12:18:07 [pull] SKIP: uncommitted changes — skipping pull
+2026-03-11 12:18:10 [push] --- run start ---
+2026-03-11 12:18:10 [push] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 12:11 .|drwxr-xr-x   12 root     root          4096 Mar 11 12:14 ..|-rw-------    1 root     root           399 Mar 11 12:11 id_ed25519|-rw-------    1 root     root          3104 Mar 11 12:11 known_hosts|
+2026-03-11 12:18:10 [push] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+To github.com:shachareilenberg/HA.git
+ ! [rejected]        ipad-dashboard -> ipad-dashboard (non-fast-forward)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+2026-03-11 12:18:11 [push] WARN: push failed — commit undone, will retry next run. KEY=/config/.ssh/id_ed25519
