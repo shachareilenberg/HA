@@ -693,7 +693,6 @@ views:
                                     cards:
                                       - type: custom:mushroom-template-card
                                         primary: Yamaha
-                                        secondary: Audio out
                                         icon: mdi:audio-video
                                         icon_color: deep-orange
                                         layout: vertical
@@ -703,7 +702,6 @@ views:
                                           service: script.tv_audio_yamaha
                                       - type: custom:mushroom-template-card
                                         primary: TV Speaker
-                                        secondary: Audio out
                                         icon: mdi:television-speaker
                                         icon_color: blue
                                         layout: vertical
