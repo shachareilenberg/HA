@@ -24,17 +24,8 @@ echo "Fetching add-on info..."
 ADDON_INFO=$(curl -sf "${SUPERVISOR}/addons/${ADDON_SLUG}/info" \
   -H "Authorization: Bearer ${SUPERVISOR_TOKEN}")
 
-INGRESS_TOKEN=$(echo "$ADDON_INFO" | python3 -c "
-import json, sys
-d = json.load(sys.stdin)
-print(d['data']['ingress_token'])
-")
-
-INGRESS_ENTRY=$(echo "$ADDON_INFO" | python3 -c "
-import json, sys
-d = json.load(sys.stdin)
-print(d['data']['ingress_entry'])
-")
+INGRESS_TOKEN=$(echo "$ADDON_INFO" | jq -r '.data.ingress_token')
+INGRESS_ENTRY=$(echo "$ADDON_INFO" | jq -r '.data.ingress_entry')
 
 echo "  ingress_token : ${INGRESS_TOKEN:0:20}..."
 echo "  ingress_entry : $INGRESS_ENTRY"
@@ -43,7 +34,7 @@ echo "  ingress_entry : $INGRESS_ENTRY"
 echo "Creating ingress session..."
 SESSION=$(curl -sf -X POST "${SUPERVISOR}/ingress/session" \
   -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
-  | python3 -c "import json, sys; print(json.load(sys.stdin)['data']['session'])")
+  | jq -r '.data.session')
 echo "  session: ${SESSION:0:20}..."
 
 COOKIE="Cookie: ingress_session=${SESSION}"
@@ -78,13 +69,9 @@ echo "Creating dashboards..."
 
 for f in "$SCRIPT_DIR"/0[0-9]-*.json; do
   [ -f "$f" ] || continue
-  NAME=$(python3 -c "import json; print(json.load(open('$f'))['dashboard']['name'])")
+  NAME=$(jq -r '.dashboard.name' "$f")
   echo "  Creating: $NAME"
-  python3 -c "
-import json, sys
-d = json.load(open('$f'))
-sys.stdout.write(json.dumps(d['dashboard']))
-" | curl -sf -X POST "$CHRONOGRAF_API" \
+  jq -c '.dashboard' "$f" | curl -sf -X POST "$CHRONOGRAF_API" \
       -H "Content-Type: application/json" \
       -H "$COOKIE" \
       --data-binary @- > /dev/null
