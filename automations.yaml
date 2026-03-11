@@ -869,7 +869,7 @@
   - choose:
     - conditions:
       - condition: state
-        entity: sensor.git_setup_status
+        entity_id: sensor.git_setup_status
         state: git_not_found
       sequence:
       - action: persistent_notification.create
@@ -881,7 +881,7 @@
             Git auto-sync is disabled until git is installed.
     - conditions:
       - condition: state
-        entity: sensor.git_setup_status
+        entity_id: sensor.git_setup_status
         state: not_a_repo
       sequence:
       - action: persistent_notification.create
