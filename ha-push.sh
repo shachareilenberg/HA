@@ -28,6 +28,8 @@ if [ -z "$GIT" ]; then
 fi
 
 # ── locate SSH private key ────────────────────────────────────────────────────
+log "DEBUG: .ssh contents: $(ls -la ${HOME}/.ssh/ 2>&1 | tr '\n' '|')"
+
 SSH_KEY=""
 for K in "${HOME}/.ssh/id_ed25519" "${HOME}/.ssh/id_rsa" "${HOME}/.ssh/id_ecdsa" \
          "${HOME}/.ssh/id_ecdsa_sk" "${HOME}/.ssh/id_ed25519_sk"; do
@@ -36,9 +38,10 @@ done
 # If no standard key found, also scan for any private key file in ~/.ssh/
 if [ -z "$SSH_KEY" ]; then
   for K in "${HOME}/.ssh/"*; do
-    [ -f "$K" ] && [[ "$K" != *.pub ]] && [[ "$K" != *known_hosts* ]] && \
-    [[ "$K" != *config* ]] && [[ "$K" != *authorized_keys* ]] && \
-      SSH_KEY="$K" && break
+    case "$K" in
+      *.pub|*known_hosts*|*config*|*authorized_keys*) continue ;;
+    esac
+    [ -f "$K" ] && SSH_KEY="$K" && break
   done
 fi
 
@@ -46,7 +49,6 @@ fi
 if [ -n "$SSH_KEY" ]; then
   export GIT_SSH_COMMAND="ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
 else
-  # No key file found by name — let SSH use ~/.ssh/config (handles custom key names)
   export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
   log "WARN: no standard SSH key found — relying on ${HOME}/.ssh/config"
 fi
