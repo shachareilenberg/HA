@@ -216,6 +216,27 @@ views:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
+              # Status badge — shows git_not_found / not_a_repo / ok:branch
+              - type: custom:mushroom-template-card
+                primary: >
+                  {% set s = states('sensor.git_setup_status') %}
+                  {% if s == 'git_not_found' %}Git not found
+                  {% elif s == 'not_a_repo' %}Run ha-git-setup.sh
+                  {% elif s.startswith('ok:') %}Branch: {{ s[3:] }}
+                  {% else %}{{ s }}
+                  {% endif %}
+                secondary: Git status
+                icon: >
+                  {% set s = states('sensor.git_setup_status') %}
+                  {% if s.startswith('ok:') %}mdi:source-branch-check
+                  {% else %}mdi:alert-circle-outline
+                  {% endif %}
+                icon_color: >
+                  {% set s = states('sensor.git_setup_status') %}
+                  {% if s.startswith('ok:') %}green{% else %}red{% endif %}
+                layout: horizontal
+                fill_container: true
+
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-template-card

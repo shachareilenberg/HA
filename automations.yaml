@@ -850,6 +850,57 @@
   actions:
   - action: shell_command.clear_update_flag
   mode: single
+# ── Git Setup — Diagnose on startup ───────────────────────────────────────────
+- id: '1773300000006'
+  alias: Git Setup — Diagnose & notify on startup
+  description: >
+    Fires 30 s after HA starts. Reads sensor.git_setup_status and sends a
+    persistent notification when git or the repo is missing, so you know exactly
+    what to fix. The notification is auto-dismissed once the repo is OK.
+  triggers:
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
+  - delay: "00:00:30"
+  - action: homeassistant.update_entity
+    target:
+      entity_id: sensor.git_setup_status
+  - choose:
+    - conditions:
+      - condition: state
+        entity: sensor.git_setup_status
+        state: git_not_found
+      sequence:
+      - action: persistent_notification.create
+        data:
+          notification_id: git_setup_error
+          title: "Git Sync ⚠ git not found"
+          message: >
+            The `git` binary is not available in the HA environment.
+            Git auto-sync is disabled until git is installed.
+    - conditions:
+      - condition: state
+        entity: sensor.git_setup_status
+        state: not_a_repo
+      sequence:
+      - action: persistent_notification.create
+        data:
+          notification_id: git_setup_error
+          title: "Git Sync ⚠ repo not initialised"
+          message: >
+            /config is not a git repository.
+            SSH into the HA device and run: bash /config/ha-git-setup.sh
+            Then restart HA — this notification will clear automatically.
+    - conditions:
+      - condition: template
+        value_template: "{{ states('sensor.git_setup_status').startswith('ok:') }}"
+      sequence:
+      - action: persistent_notification.dismiss
+        data:
+          notification_id: git_setup_error
+  mode: single
+
 - id: '1773200000001'
   alias: iPad — Navigate to iPad Dashboard on Connect
   description: 'Redirects the registered iPad browser to the iPad landscape dashboard

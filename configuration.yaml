@@ -38,13 +38,17 @@ command_line:
       scan_interval: 30
 
   - sensor:
-      name: "Git Sync Status"
-      unique_id: git_sync_status
+      name: "Git Setup Status"
+      unique_id: git_setup_status
       command: >-
-        cd /config 2>/dev/null && test -d .git &&
-        echo "repo_ok:$(git rev-list HEAD..origin/$(git branch --show-current) --count 2>/dev/null || echo ?)_behind:$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')_local" ||
-        echo "no_repo"
-      scan_interval: 300
+        GIT="";
+        for P in /usr/bin/git /usr/local/bin/git /bin/git; do [ -x "$P" ] && GIT="$P" && break; done;
+        [ -z "$GIT" ] && command -v git >/dev/null 2>&1 && GIT="git";
+        [ -z "$GIT" ] && echo "git_not_found" && exit 0;
+        cd /config 2>/dev/null || { echo "no_config_dir"; exit 0; };
+        test -d .git || { echo "not_a_repo"; exit 0; };
+        echo "ok:$($GIT branch --show-current 2>/dev/null)"
+      scan_interval: 120
 
 shell_command:
   ha_pull_config: "bash /config/ha-pull.sh"
