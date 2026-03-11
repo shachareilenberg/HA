@@ -393,3 +393,76 @@ From github.com:shachareilenberg/HA
    af0cadf..d811d54  ipad-dashboard -> origin/ipad-dashboard
 2026-03-11 12:27:52 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=0
 2026-03-11 12:27:52 [pull] INFO: uncommitted changes — committing before pull
+From github.com:shachareilenberg/HA
+ * branch            ipad-dashboard -> FETCH_HEAD
+hint: Diverging branches can't be fast-forwarded, you need to either:
+hint:
+hint: 	git merge --no-ff
+hint:
+hint: or:
+hint:
+hint: 	git rebase
+hint:
+hint: Disable this message with "git config set advice.diverging false"
+fatal: Not possible to fast-forward, aborting.
+2026-03-11 12:27:54 [pull] ERROR: git pull failed
+2026-03-11 12:28:01 [push] --- run start ---
+2026-03-11 12:28:01 [push] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+To github.com:shachareilenberg/HA.git
+ ! [rejected]        ipad-dashboard -> ipad-dashboard (non-fast-forward)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+2026-03-11 12:28:03 [push] WARN: remote is ahead by 1 — rebasing and retrying push
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+2026-03-11 12:28:03 [push] ERROR: push still failed after rebase
+2026-03-11 12:28:03 [push] WARN: push failed — commit undone, will retry next run. KEY=/config/.ssh/id_ed25519
+2026-03-11 12:28:06 [pull] --- run start ---
+2026-03-11 12:28:06 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:28:06 [pull] --- run start ---
+2026-03-11 12:28:06 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:28:06 [pull] --- run start ---
+2026-03-11 12:28:06 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:28:06 [pull] --- run start ---
+2026-03-11 12:28:06 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:28:06 [pull] --- run start ---
+2026-03-11 12:28:06 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:28:07 [pull] --- run start ---
+2026-03-11 12:28:07 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:28:07 [pull] --- run start ---
+2026-03-11 12:28:07 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:28:07 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 12:28:07 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 12:28:08 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 12:28:08 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 12:28:08 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 12:28:08 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 12:28:08 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 12:28:08 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 12:28:08 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 12:28:08 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 12:28:08 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 12:28:08 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 12:28:08 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 12:28:08 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 12:28:24 [pull] --- run start ---
+2026-03-11 12:28:24 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:28:26 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 12:28:26 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 12:28:27 [push] --- run start ---
+2026-03-11 12:28:27 [push] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+To github.com:shachareilenberg/HA.git
+ ! [rejected]        ipad-dashboard -> ipad-dashboard (non-fast-forward)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+2026-03-11 12:28:29 [push] WARN: remote is ahead by 1 — rebasing and retrying push
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+2026-03-11 12:28:29 [push] ERROR: push still failed after rebase
+2026-03-11 12:28:29 [push] WARN: push failed — commit undone, will retry next run. KEY=/config/.ssh/id_ed25519
