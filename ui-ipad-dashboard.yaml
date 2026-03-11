@@ -703,11 +703,12 @@ views:
                                         fill_container: true
                                         tap_action:
                                           action: call-service
-                                          service: media_player.select_source
+                                          service: media_player.play_media
                                           target:
                                             entity_id: media_player.tv_2
                                           data:
-                                            source: "Netflix"
+                                            media_content_type: app
+                                            media_content_id: "org.tizen.netflix-app"
                                       - type: custom:mushroom-template-card
                                         primary: Apple TV
                                         icon: mdi:apple
@@ -716,11 +717,12 @@ views:
                                         fill_container: true
                                         tap_action:
                                           action: call-service
-                                          service: media_player.select_source
+                                          service: media_player.play_media
                                           target:
                                             entity_id: media_player.tv_2
                                           data:
-                                            source: "Apple TV+"
+                                            media_content_type: app
+                                            media_content_id: "com.samsung.tv.aria-video"
                                       - type: custom:mushroom-template-card
                                         primary: Prime
                                         picture: /local/icons/prime_video.png
@@ -728,11 +730,12 @@ views:
                                         fill_container: true
                                         tap_action:
                                           action: call-service
-                                          service: media_player.select_source
+                                          service: media_player.play_media
                                           target:
                                             entity_id: media_player.tv_2
                                           data:
-                                            source: "Prime Video"
+                                            media_content_type: app
+                                            media_content_id: "org.tizen.primevideo"
                                       - type: custom:mushroom-template-card
                                         primary: Disney+
                                         picture: /local/icons/disney_plus.png
@@ -740,11 +743,12 @@ views:
                                         fill_container: true
                                         tap_action:
                                           action: call-service
-                                          service: media_player.select_source
+                                          service: media_player.play_media
                                           target:
                                             entity_id: media_player.tv_2
                                           data:
-                                            source: "Disney+"
+                                            media_content_type: app
+                                            media_content_id: "Di0N6xZMEA.disneyplus"
 
                                   # Apps row 2
                                   - type: horizontal-stack
@@ -757,11 +761,12 @@ views:
                                         fill_container: true
                                         tap_action:
                                           action: call-service
-                                          service: media_player.select_source
+                                          service: media_player.play_media
                                           target:
                                             entity_id: media_player.tv_2
                                           data:
-                                            source: "YouTube"
+                                            media_content_type: app
+                                            media_content_id: "111299001912"
                                       - type: custom:mushroom-template-card
                                         primary: Spotify
                                         icon: mdi:spotify
@@ -770,11 +775,12 @@ views:
                                         fill_container: true
                                         tap_action:
                                           action: call-service
-                                          service: media_player.select_source
+                                          service: media_player.play_media
                                           target:
                                             entity_id: media_player.tv_2
                                           data:
-                                            source: "Spotify"
+                                            media_content_type: app
+                                            media_content_id: "3201606009684"
                                       - type: custom:mushroom-template-card
                                         primary: Stingtv
                                         picture: /local/icons/stingtv.png
@@ -782,11 +788,12 @@ views:
                                         fill_container: true
                                         tap_action:
                                           action: call-service
-                                          service: media_player.select_source
+                                          service: media_player.play_media
                                           target:
                                             entity_id: media_player.tv_2
                                           data:
-                                            source: "Stingtv"
+                                            media_content_type: app
+                                            media_content_id: "com.stingtv.stingtv"
 
                                   # Diagnostic — shows real source names & select entities
                                   # Remove this card once apps & audio are working correctly
