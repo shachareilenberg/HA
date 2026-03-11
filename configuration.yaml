@@ -14,7 +14,7 @@ lovelace:
   dashboards:
     ui-ipad:
       mode: yaml
-      title: iPad Home
+      title: iPad
       icon: mdi:tablet
       show_in_sidebar: true
       filename: ui-ipad-dashboard.yaml

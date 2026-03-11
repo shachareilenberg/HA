@@ -26,7 +26,7 @@
 #  Provides automatic glassmorphism on all ha-card elements
 ##############################################################
 
-title: iPad Home
+title: iPad
 
 views:
   - title: Home
@@ -355,8 +355,220 @@ views:
 
 
               # ══════════════════════════════════════
-              # CLIMATE
+              # ROOM OVERVIEW
+              # Tap any card to navigate to the room tab.
               # ══════════════════════════════════════
+              - type: custom:mushroom-title-card
+                title: Rooms
+                subtitle: Tap to manage
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              # Row 1: Living Room & Kitchen | Office
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Living Room & Kitchen
+                    secondary: >
+                      {% set ac1 = states('climate.l8_101') %}
+                      {% set ac2 = states('climate.l8_102') %}
+                      {% set lights = [
+                        states('light.slvn_slvn_spvtym'),
+                        states('light.slvn_slvn_qyr'),
+                        states('light.mtbkh_mtbkh_ps'),
+                        states('light.mtbkh_mtbkh_qyr'),
+                        states('light.mtbkh_mtbkh_shvlkhn'),
+                        states('light.knysh_na'),
+                        states('light.mtbkh_mtbkh_y')
+                      ] %}
+                      {% set lights_on = lights | select('eq','on') | list | count %}
+                      {% set ac_on = [ac1,ac2] | select('ne','off') | list %}
+                      {% if ac_on | count > 0 %}AC {{ ac_on[0] | title }}{% else %}AC Off{% endif %} · {{ lights_on }} light{{ 's' if lights_on != 1 }}
+                    icon: mdi:sofa
+                    icon_color: >
+                      {% set ac1 = states('climate.l8_101') %}
+                      {% set ac2 = states('climate.l8_102') %}
+                      {% set lights = [
+                        states('light.slvn_slvn_spvtym'),
+                        states('light.slvn_slvn_qyr'),
+                        states('light.mtbkh_mtbkh_ps'),
+                        states('light.mtbkh_mtbkh_qyr'),
+                        states('light.mtbkh_mtbkh_shvlkhn'),
+                        states('light.knysh_na'),
+                        states('light.mtbkh_mtbkh_y')
+                      ] %}
+                      {% if [ac1,ac2] | select('ne','off') | list | count > 0 or lights | select('eq','on') | list | count > 0 %}orange{% else %}grey{% endif %}
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/living-kitchen
+
+                  - type: custom:mushroom-template-card
+                    primary: Office
+                    secondary: >
+                      {% set ac = states('climate.l8_103') %}
+                      {% set lights = [
+                        states('light.mshrd_mshrd_tqrh'),
+                        states('light.mshrd_mshrd_qyr_khlvn'),
+                        states('light.mshrd_mshrd_qyr')
+                      ] %}
+                      {% set lights_on = lights | select('eq','on') | list | count %}
+                      {% if ac != 'off' %}AC {{ ac | title }}{% else %}AC Off{% endif %} · {{ lights_on }} light{{ 's' if lights_on != 1 }}
+                    icon: mdi:desk
+                    icon_color: >
+                      {% set ac = states('climate.l8_103') %}
+                      {% set lights = [
+                        states('light.mshrd_mshrd_tqrh'),
+                        states('light.mshrd_mshrd_qyr_khlvn'),
+                        states('light.mshrd_mshrd_qyr')
+                      ] %}
+                      {% if ac != 'off' or lights | select('eq','on') | list | count > 0 %}blue{% else %}grey{% endif %}
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/office
+
+              # Row 2: Kids | Bedroom
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Kids Room
+                    secondary: >
+                      {% set ac = states('climate.l8_104') %}
+                      {% set lights = [
+                        states('light.mm_d_mm_d_tqrh'),
+                        states('light.mqlkht_mqlkht_qyr'),
+                        states('light.mqlkht_mqlkht_tvrt_lylh'),
+                        states('light.mqlkht_mqlkht_spvtym')
+                      ] %}
+                      {% set lights_on = lights | select('eq','on') | list | count %}
+                      {% if ac != 'off' %}AC {{ ac | title }}{% else %}AC Off{% endif %} · {{ lights_on }} light{{ 's' if lights_on != 1 }}
+                    icon: mdi:bed-double
+                    icon_color: >
+                      {% set ac = states('climate.l8_104') %}
+                      {% set lights = [
+                        states('light.mm_d_mm_d_tqrh'),
+                        states('light.mqlkht_mqlkht_qyr'),
+                        states('light.mqlkht_mqlkht_tvrt_lylh'),
+                        states('light.mqlkht_mqlkht_spvtym')
+                      ] %}
+                      {% if ac != 'off' or lights | select('eq','on') | list | count > 0 %}purple{% else %}grey{% endif %}
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/kids
+
+                  - type: custom:mushroom-template-card
+                    primary: Bedroom
+                    secondary: >
+                      {% set ac = states('climate.l8_105') %}
+                      {% set lights = [
+                        states('light.hvrym_hvrym_spvtym'),
+                        states('light.hvrym_hvrym_knysh'),
+                        states('light.hvrym_hvrym_qryh_ymyn'),
+                        states('light.hvrym_hvrym_qryh_shml'),
+                        states('light.hvrym_hvrym_mqlkht_qyr_2'),
+                        states('light.hvrym_hvrym_mqlkht_qyr_1'),
+                        states('light.hvrym_hvrym_mqlkht_spvtym')
+                      ] %}
+                      {% set lights_on = lights | select('eq','on') | list | count %}
+                      {% if ac != 'off' %}AC {{ ac | title }}{% else %}AC Off{% endif %} · {{ lights_on }} light{{ 's' if lights_on != 1 }}
+                    icon: mdi:bed-king
+                    icon_color: >
+                      {% set ac = states('climate.l8_105') %}
+                      {% set lights = [
+                        states('light.hvrym_hvrym_spvtym'),
+                        states('light.hvrym_hvrym_knysh'),
+                        states('light.hvrym_hvrym_qryh_ymyn'),
+                        states('light.hvrym_hvrym_qryh_shml'),
+                        states('light.hvrym_hvrym_mqlkht_qyr_2'),
+                        states('light.hvrym_hvrym_mqlkht_qyr_1'),
+                        states('light.hvrym_hvrym_mqlkht_spvtym')
+                      ] %}
+                      {% if ac != 'off' or lights | select('eq','on') | list | count > 0 %}indigo{% else %}grey{% endif %}
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/bedroom
+
+              # Row 3: Common Areas (full width)
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Common Areas
+                    secondary: >
+                      {% set lights = [
+                        states('light.knysh_knysh_qyr'),
+                        states('light.knysh_knysh_tvrh'),
+                        states('light.msdrvn_msdrvn_ps'),
+                        states('light.msdrvn_msdrvn_tvrt_lylh'),
+                        states('light.mrpst_mrpst_qyr'),
+                        states('light.mrpst_mrpst_tqrh')
+                      ] %}
+                      {% set lights_on = lights | select('eq','on') | list | count %}
+                      Entrance · Hallway · Balcony · {{ lights_on }} light{{ 's' if lights_on != 1 }} on
+                    icon: mdi:home-floor-1
+                    icon_color: >
+                      {% set lights = [
+                        states('light.knysh_knysh_qyr'),
+                        states('light.knysh_knysh_tvrh'),
+                        states('light.msdrvn_msdrvn_ps'),
+                        states('light.msdrvn_msdrvn_tvrt_lylh'),
+                        states('light.mrpst_mrpst_qyr'),
+                        states('light.mrpst_mrpst_tqrh')
+                      ] %}
+                      {% if lights | select('eq','on') | list | count > 0 %}green{% else %}grey{% endif %}
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/common
+
+  # ╔══════════════════════════════════════════════════════════════╗
+  # ║              ROOM TABS  (subview: true = hidden from nav)    ║
+  # ╚══════════════════════════════════════════════════════════════╝
+
+  # ── Living Room & Kitchen ──────────────────────────────────────
+  - title: Living Room & Kitchen
+    path: living-kitchen
+    subview: true
+    theme: "Frosted Glass Dark"
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: "1fr"
+          padding: "10px"
+        cards:
+          - type: vertical-stack
+            cards:
+
+              # ── Back navigation ───────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Back
+                    icon: mdi:arrow-left
+                    icon_color: grey
+                    layout: horizontal
+                    fill_container: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/home
+                    card_mod:
+                      style: |
+                        ha-card { max-width: 120px; }
+                  - type: custom:mushroom-title-card
+                    title: Living Room & Kitchen
+                    fill_container: true
+
+              # ── Climate ───────────────────────────
               - type: custom:mushroom-title-card
                 title: Climate
                 subtitle: Air Conditioning
@@ -364,7 +576,6 @@ views:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
-              # Row 1: Kitchen 1 | Kitchen 2 | Office
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-climate-card
@@ -378,7 +589,6 @@ views:
                       - dry
                     show_temperature_control: true
                     fill_container: true
-
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_102
                     name: Kitchen 2
@@ -391,58 +601,19 @@ views:
                     show_temperature_control: true
                     fill_container: true
 
-                  - type: custom:mushroom-climate-card
-                    entity: climate.l8_103
-                    name: Office
-                    hvac_modes:
-                      - "off"
-                      - cool
-                      - heat
-                      - fan_only
-                      - dry
-                    show_temperature_control: true
-                    fill_container: true
-
-              # Row 2: Kids | Bedroom
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-climate-card
-                    entity: climate.l8_104
-                    name: Kids
-                    hvac_modes:
-                      - "off"
-                      - cool
-                      - heat
-                      - fan_only
-                      - dry
-                    show_temperature_control: true
-                    fill_container: true
-
-                  - type: custom:mushroom-climate-card
-                    entity: climate.l8_105
-                    name: Bedroom
-                    hvac_modes:
-                      - "off"
-                      - cool
-                      - heat
-                      - fan_only
-                      - dry
-                    show_temperature_control: true
-                    fill_container: true
-
-
-              # ══════════════════════════════════════
-              # LIGHTING
-              # ══════════════════════════════════════
-              # LIGHTING
-              # ══════════════════════════════════════
+              # ── Lighting ──────────────────────────
               - type: custom:mushroom-title-card
                 title: Lighting
                 card_mod:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
-              # ── Living Room ───────────────────────
+              - type: custom:mushroom-title-card
+                title: Living Room
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 4px !important; }
+
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-light-card
@@ -456,7 +627,12 @@ views:
                     tap_action:
                       action: toggle
 
-              # ── Kitchen ───────────────────────────
+              - type: custom:mushroom-title-card
+                title: Kitchen
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 4px !important; }
+
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-light-card
@@ -488,64 +664,13 @@ views:
                     tap_action:
                       action: toggle
 
-              # ── Office ────────────────────────────
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-light-card
-                    entity: light.mshrd_mshrd_tqrh
-                    fill_container: true
-                    tap_action:
-                      action: toggle
-
-              # ── Entrance ──────────────────────────
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-light-card
-                    entity: light.knysh_knysh_qyr
-                    fill_container: true
-                    tap_action:
-                      action: toggle
-                  - type: custom:mushroom-light-card
-                    entity: light.knysh_knysh_tvrh
-                    fill_container: true
-                    tap_action:
-                      action: toggle
-
-              # ── Hallway ───────────────────────────
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-light-card
-                    entity: light.msdrvn_msdrvn_ps
-                    fill_container: true
-                    tap_action:
-                      action: toggle
-
-              # ── Balcony ───────────────────────────
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-light-card
-                    entity: light.mrpst_mrpst_qyr
-                    fill_container: true
-                    tap_action:
-                      action: toggle
-                  - type: custom:mushroom-light-card
-                    entity: light.mrpst_mrpst_tqrh
-                    fill_container: true
-                    tap_action:
-                      action: toggle
-
-
-              # ══════════════════════════════════════
-              # BLINDS
-              # ══════════════════════════════════════
+              # ── Blinds ────────────────────────────
               - type: custom:mushroom-title-card
                 title: Blinds
-                subtitle: Position Control
                 card_mod:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
-              # Row: Living Room + Kitchen + Office
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-cover-card
@@ -556,7 +681,14 @@ views:
                     fill_container: true
                     tap_action:
                       action: more-info
-
+                  - type: custom:mushroom-cover-card
+                    entity: cover.slvn_slvn_trys_khlvn
+                    name: Living Room (small)
+                    show_position_control: true
+                    show_buttons_control: true
+                    fill_container: true
+                    tap_action:
+                      action: more-info
                   - type: custom:mushroom-cover-card
                     entity: cover.mtbkh_mtbkh_trys
                     name: Kitchen
@@ -566,27 +698,31 @@ views:
                     tap_action:
                       action: more-info
 
-                  - type: custom:mushroom-cover-card
-                    entity: cover.knysh_n4_1
-                    name: Office
-                    show_position_control: true
-                    show_buttons_control: true
-                    fill_container: true
-                    tap_action:
-                      action: more-info
-
-
-              # ══════════════════════════════════════
-              # MEDIA
-              # ══════════════════════════════════════
+              # ── Fan ───────────────────────────────
               - type: custom:mushroom-title-card
-                title: Media
-                subtitle: Alexa & Music
+                title: Fan
                 card_mod:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
-              # Row: Alexa Echoes + Play Everywhere
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: fan.slvn_slvn_tqrh
+                    name: Living Room Fan
+                    icon: mdi:fan
+                    icon_color: cyan
+                    toggle: true
+                    fill_container: true
+
+              # ── Media & Entertainment ─────────────
+              - type: custom:mushroom-title-card
+                title: Media
+                subtitle: Alexa · TV · Yamaha RX-V6A
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-media-player-card
@@ -599,45 +735,25 @@ views:
                       - on_off
                       - play_pause_stop
                     fill_container: true
-
                   - type: custom:mushroom-media-player-card
-                    entity: media_player.bedroom_echo_spot
-                    name: Bedroom Echo
+                    entity: media_player.living_room_2
+                    name: Yamaha Main
                     volume_controls:
                       - volume_set
                       - volume_mute
                     media_controls:
                       - on_off
-                      - play_pause_stop
+                    fill_container: true
+                  - type: custom:mushroom-media-player-card
+                    entity: media_player.living_room_zone2
+                    name: Yamaha Kitchen
+                    volume_controls:
+                      - volume_set
+                      - volume_mute
+                    media_controls:
+                      - on_off
                     fill_container: true
 
-                  - type: custom:mushroom-template-card
-                    primary: Play Everywhere
-                    secondary: Music Assistant
-                    icon: mdi:music-note-plus
-                    icon_color: purple
-                    layout: vertical
-                    fill_container: true
-                    tap_action:
-                      action: call-service
-                      service: script.turn_on
-                      service_data:
-                        entity_id: script.play_music_everywhere
-
-
-
-              # ══════════════════════════════════════
-              # ENTERTAINMENT
-              # Tap the TV card to open full controls popup.
-              # ══════════════════════════════════════
-              - type: custom:mushroom-title-card
-                title: Entertainment
-                subtitle: Samsung TV · Yamaha RX-V6A
-                card_mod:
-                  style: |
-                    ha-card { margin-top: 8px !important; }
-           
-              # ── Tap to open full TV controls popup ────────────────────────
               - type: custom:mushroom-media-player-card
                 entity: media_player.tv_2
                 name: Samsung TV
@@ -661,8 +777,6 @@ views:
                       content:
                         type: vertical-stack
                         cards:
-
-                          # Full player (volume + playback)
                           - type: custom:mushroom-media-player-card
                             entity: media_player.tv_2
                             name: Samsung TV
@@ -676,19 +790,12 @@ views:
                               - previous
                               - next
                             fill_container: true
-
-                          # ── 2-column: left = audio+apps  |  right = remote ─
                           - type: horizontal-stack
                             cards:
-
-                              # ── LEFT COLUMN ─────────────────────────────────
                               - type: vertical-stack
                                 cards:
-
                                   - type: custom:mushroom-title-card
                                     title: Apps & Audio
-
-                                  # Audio output
                                   - type: horizontal-stack
                                     cards:
                                       - type: custom:mushroom-template-card
@@ -709,8 +816,6 @@ views:
                                         tap_action:
                                           action: call-service
                                           service: script.tv_audio_tv_speaker
-
-                                  # Apps row 1
                                   - type: horizontal-stack
                                     cards:
                                       - type: custom:mushroom-template-card
@@ -767,8 +872,6 @@ views:
                                           data:
                                             media_content_type: app
                                             media_content_id: "Di0N6xZMEA.disneyplus"
-
-                                  # Apps row 2
                                   - type: horizontal-stack
                                     cards:
                                       - type: custom:mushroom-template-card
@@ -812,15 +915,10 @@ views:
                                           data:
                                             media_content_type: app
                                             media_content_id: "xNjDbgVJeT.stingtv"
-
-
-                              # ── RIGHT COLUMN — Navigation remote ────────────
                               - type: vertical-stack
                                 cards:
                                   - type: custom:mushroom-title-card
                                     title: Remote
-
-                                  # Row 1: Back · Up · Home
                                   - type: horizontal-stack
                                     cards:
                                       - type: custom:mushroom-template-card
@@ -865,8 +963,6 @@ views:
                                           data:
                                             media_content_type: send_key
                                             media_content_id: KEY_HOME
-
-                                  # Row 2: Left · OK · Right
                                   - type: horizontal-stack
                                     cards:
                                       - type: custom:mushroom-template-card
@@ -911,8 +1007,6 @@ views:
                                           data:
                                             media_content_type: send_key
                                             media_content_id: KEY_RIGHT
-
-                                  # Row 3: Menu · Down · Mute (smart toggle)
                                   - type: horizontal-stack
                                     cards:
                                       - type: custom:mushroom-template-card
@@ -945,23 +1039,11 @@ views:
                                             media_content_id: KEY_DOWN
                                       - type: custom:mushroom-template-card
                                         primary: >
-                                          {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
-                                            Mute
-                                          {% else %}
-                                            Unmute
-                                          {% endif %}
+                                          {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}Mute{% else %}Unmute{% endif %}
                                         icon: >
-                                          {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
-                                            mdi:volume-mute
-                                          {% else %}
-                                            mdi:volume-off
-                                          {% endif %}
+                                          {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}mdi:volume-mute{% else %}mdi:volume-off{% endif %}
                                         icon_color: >
-                                          {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
-                                            black
-                                          {% else %}
-                                            red
-                                          {% endif %}
+                                          {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}black{% else %}red{% endif %}
                                         layout: vertical
                                         fill_container: true
                                         tap_action:
@@ -972,26 +1054,514 @@ views:
                                           data:
                                             media_content_type: send_key
                                             media_content_id: KEY_MUTE
-         
-              # ── Yamaha speakers ───────────────────────────────────────────
+
+              # ── Boiler ────────────────────────────
+              - type: custom:mushroom-title-card
+                title: Boiler
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: switch.mqlkht_dvd
+                    name: Boiler
+                    icon: mdi:water-boiler
+                    icon_color: deep-orange
+                    toggle: true
+                    fill_container: true
+                  - type: custom:mushroom-number-card
+                    entity: number.mqlkht_dvd_countdown
+                    name: Boiler Timer
+                    icon: mdi:water-boiler-auto
+                    icon_color: deep-orange
+                    display_mode: slider
+                    fill_container: true
+
+  # ── Office ────────────────────────────────────────────────────
+  - title: Office
+    path: office
+    subview: true
+    theme: "Frosted Glass Dark"
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: "1fr"
+          padding: "10px"
+        cards:
+          - type: vertical-stack
+            cards:
+
+              # ── Back navigation ───────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Back
+                    icon: mdi:arrow-left
+                    icon_color: grey
+                    layout: horizontal
+                    fill_container: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/home
+                    card_mod:
+                      style: |
+                        ha-card { max-width: 120px; }
+                  - type: custom:mushroom-title-card
+                    title: Office
+                    fill_container: true
+
+              # ── Climate ───────────────────────────
+              - type: custom:mushroom-title-card
+                title: Climate
+                subtitle: Air Conditioning
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-climate-card
+                    entity: climate.l8_103
+                    name: Office
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
+                    fill_container: true
+
+              # ── Lighting ──────────────────────────
+              - type: custom:mushroom-title-card
+                title: Lighting
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mshrd_mshrd_tqrh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mshrd_mshrd_qyr_khlvn
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mshrd_mshrd_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Blinds ────────────────────────────
+              - type: custom:mushroom-title-card
+                title: Blinds
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-cover-card
+                    entity: cover.knysh_n4_1
+                    name: Office
+                    show_position_control: true
+                    show_buttons_control: true
+                    fill_container: true
+                    tap_action:
+                      action: more-info
+
+  # ── Kids + Kids Bathroom ─────────────────────────────────────
+  - title: Kids
+    path: kids
+    subview: true
+    theme: "Frosted Glass Dark"
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: "1fr"
+          padding: "10px"
+        cards:
+          - type: vertical-stack
+            cards:
+
+              # ── Back navigation ───────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Back
+                    icon: mdi:arrow-left
+                    icon_color: grey
+                    layout: horizontal
+                    fill_container: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/home
+                    card_mod:
+                      style: |
+                        ha-card { max-width: 120px; }
+                  - type: custom:mushroom-title-card
+                    title: Kids Room & Bathroom
+                    fill_container: true
+
+              # ════════════════════
+              # KIDS ROOM
+              # ════════════════════
+              - type: custom:mushroom-title-card
+                title: Kids Room
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              # ── Climate ───────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-climate-card
+                    entity: climate.l8_104
+                    name: Kids
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
+                    fill_container: true
+
+              # ── Lighting ──────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mm_d_mm_d_tqrh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ════════════════════
+              # KIDS BATHROOM
+              # ════════════════════
+              - type: custom:mushroom-title-card
+                title: Kids Bathroom
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 12px !important; }
+
+              # ── Lighting ──────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mqlkht_mqlkht_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mqlkht_mqlkht_tvrt_lylh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mqlkht_mqlkht_spvtym
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Heater ────────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: switch.mqlkht_mqlkht_tnvr
+                    name: Kids Bathroom Heater
+                    icon: mdi:radiator
+                    icon_color: red
+                    toggle: true
+                    fill_container: true
+
+  # ── Bedroom + Parents Bathroom ───────────────────────────────
+  - title: Bedroom
+    path: bedroom
+    subview: true
+    theme: "Frosted Glass Dark"
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: "1fr"
+          padding: "10px"
+        cards:
+          - type: vertical-stack
+            cards:
+
+              # ── Back navigation ───────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Back
+                    icon: mdi:arrow-left
+                    icon_color: grey
+                    layout: horizontal
+                    fill_container: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/home
+                    card_mod:
+                      style: |
+                        ha-card { max-width: 120px; }
+                  - type: custom:mushroom-title-card
+                    title: Bedroom & Parents Bathroom
+                    fill_container: true
+
+              # ════════════════════
+              # BEDROOM
+              # ════════════════════
+              - type: custom:mushroom-title-card
+                title: Bedroom
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              # ── Climate ───────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-climate-card
+                    entity: climate.l8_105
+                    name: Bedroom
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
+                    fill_container: true
+
+              # ── Lighting ──────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.hvrym_hvrym_spvtym
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.hvrym_hvrym_knysh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.hvrym_hvrym_qryh_ymyn
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.hvrym_hvrym_qryh_shml
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Blinds ────────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-cover-card
+                    entity: cover.hvrym_hvrym_trys
+                    name: Bedroom
+                    show_position_control: true
+                    show_buttons_control: true
+                    fill_container: true
+                    tap_action:
+                      action: more-info
+
+              # ── Fan ───────────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: fan.hvrym_hvrym_tqrh
+                    name: Bedroom Fan
+                    icon: mdi:fan
+                    icon_color: cyan
+                    toggle: true
+                    fill_container: true
+
+              # ── Media ─────────────────────────────
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-media-player-card
-                    entity: media_player.living_room_2
-                    name: Living Room
+                    entity: media_player.bedroom_echo_spot
+                    name: Bedroom Echo
                     volume_controls:
                       - volume_set
                       - volume_mute
                     media_controls:
                       - on_off
+                      - play_pause_stop
                     fill_container: true
-                  - type: custom:mushroom-media-player-card
-                    entity: media_player.living_room_zone2
-                    name: Kitchen
-                    volume_controls:
-                      - volume_set
-                      - volume_mute
-                    media_controls:
-                      - on_off
+
+              # ════════════════════
+              # PARENTS BATHROOM
+              # ════════════════════
+              - type: custom:mushroom-title-card
+                title: Parents Bathroom
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 12px !important; }
+
+              # ── Lighting ──────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.hvrym_hvrym_mqlkht_qyr_2
                     fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.hvrym_hvrym_mqlkht_qyr_1
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.hvrym_hvrym_mqlkht_spvtym
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Heater ────────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: switch.hvrym_hvrym_mqlkht_tnvr
+                    name: Parents Bathroom Heater
+                    icon: mdi:radiator
+                    icon_color: red
+                    toggle: true
+                    fill_container: true
+
+  # ── Common Areas ─────────────────────────────────────────────
+  - title: Common Areas
+    path: common
+    subview: true
+    theme: "Frosted Glass Dark"
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: "1fr"
+          padding: "10px"
+        cards:
+          - type: vertical-stack
+            cards:
+
+              # ── Back navigation ───────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Back
+                    icon: mdi:arrow-left
+                    icon_color: grey
+                    layout: horizontal
+                    fill_container: false
+                    tap_action:
+                      action: navigate
+                      navigation_path: /ui-ipad/home
+                    card_mod:
+                      style: |
+                        ha-card { max-width: 120px; }
+                  - type: custom:mushroom-title-card
+                    title: Common Areas
+                    fill_container: true
+
+              # ── Entrance ──────────────────────────
+              - type: custom:mushroom-title-card
+                title: Entrance
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.knysh_knysh_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.knysh_knysh_tvrh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Hallway ───────────────────────────
+              - type: custom:mushroom-title-card
+                title: Hallway
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.msdrvn_msdrvn_ps
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.msdrvn_msdrvn_tvrt_lylh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Balcony ───────────────────────────
+              - type: custom:mushroom-title-card
+                title: Balcony
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mrpst_mrpst_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mrpst_mrpst_tqrh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Garage ────────────────────────────
+              - type: custom:mushroom-title-card
+                title: Garage
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    entity: cover.4g600204913
+                    primary: Garage Gate
+                    secondary: >
+                      {{ 'Open' if is_state('cover.4g600204913', 'open') else 'Closed' }}
+                    icon: mdi:garage
+                    icon_color: >
+                      {{ 'green' if is_state('cover.4g600204913', 'open') else 'grey' }}
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: more-info
 
