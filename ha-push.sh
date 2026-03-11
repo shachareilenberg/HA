@@ -31,6 +31,9 @@ fi
 
 # Ensure SSH uses the correct known_hosts (prevents host key verification failure)
 export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
+# Prevent any interactive prompts or editor windows when running non-interactively
+export GIT_TERMINAL_PROMPT=0
+export GIT_EDITOR=true
 
 log "DEBUG: HOME=$HOME  GIT=$GIT"
 
