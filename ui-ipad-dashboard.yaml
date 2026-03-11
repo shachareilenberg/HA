@@ -666,8 +666,8 @@ views:
                         media_content_id: "rJeHak5zRg.Spotify"
                   - type: custom:mushroom-template-card
                     primary: Stingtv
-                    icon: mdi:play-circle
-                    icon_color: purple
+                    icon: mdi:television-shimmer
+                    icon_color: deep-purple
                     layout: vertical
                     fill_container: true
                     tap_action:
@@ -711,8 +711,7 @@ views:
                         media_content_id: "com.samsung.tv.aria-video"
                   - type: custom:mushroom-template-card
                     primary: Prime
-                    icon: mdi:amazon
-                    icon_color: cyan
+                    picture: /local/icons/prime_video.png
                     layout: vertical
                     fill_container: true
                     tap_action:
@@ -725,8 +724,7 @@ views:
                         media_content_id: "org.tizen.primevideo"
                   - type: custom:mushroom-template-card
                     primary: Disney+
-                    icon: mdi:alpha-d-box
-                    icon_color: indigo
+                    picture: /local/icons/disney_plus.png
                     layout: vertical
                     fill_container: true
                     tap_action:
