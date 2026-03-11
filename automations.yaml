@@ -1030,13 +1030,11 @@
     - condition: state
       entity_id: input_boolean.is_away_state
       state: 'on'
-    # Only a genuinely manual action (not fired by automation/script)
+    # Only a genuinely manual action (not fired by automation/script).
+    # Intentionally no person-GPS guard: phone tracking may lag behind reality,
+    # so a manual light/device action is sufficient evidence someone is home.
     - condition: template
       value_template: "{{ trigger.to_state.context.parent_id is none }}"
-    # At least one person must be home (GPS confirmed)
-    - condition: template
-      value_template: >
-        {{ is_state('person.shachar', 'home') or is_state('person.ariel', 'home') }}
   actions:
     - action: input_boolean.turn_off
       target:
