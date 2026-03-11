@@ -903,14 +903,17 @@
 
 # ── Git Log — daily rotate ────────────────────────────────────────────────────
 - id: '1773300000007'
-  alias: Git Log — daily rotate at 03:00
+  alias: Git Log — weekly rotate on Sunday at 03:00
   description: >
-    Trims /config/ha-git.log to its 200 most-recent lines every night at 03:00
+    Trims /config/ha-git.log to its 200 most-recent lines every Sunday at 03:00
     so it never grows unbounded. The log is written by ha-pull.sh and ha-push.sh.
   triggers:
   - trigger: time
     at: "03:00:00"
-  conditions: []
+  conditions:
+  - condition: time
+    weekday:
+      - sun
   actions:
   - action: shell_command.rotate_git_log
   mode: single
