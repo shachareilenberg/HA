@@ -43,3 +43,19 @@ and the repository exists.
 2026-03-11 11:00:00 [pull] DEBUG: remote=
 2026-03-11 11:00:00 [push] --- run start ---
 2026-03-11 11:00:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git
+2026-03-11 11:00:00 [pull] DEBUG: branch=ipad-dashboard  behind=0  ahead=1
+2026-03-11 11:00:00 [pull] OK: already up to date
+fatal: could not read Username for 'https://github.com': No such device or address
+2026-03-11 11:00:00 [push] ERROR: git push failed (check credentials). HOME=/root
+2026-03-11 11:03:18 [pull] --- run start ---
+2026-03-11 11:03:18 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git
+2026-03-11 11:03:18 [pull] DEBUG: remote=
+From https://github.com/shachareilenberg/HA
+   2d2ed88..fb667d3  ipad-dashboard -> origin/ipad-dashboard
+2026-03-11 11:03:18 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 11:03:18 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 11:03:34 [pull] --- run start ---
+2026-03-11 11:03:34 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git
+2026-03-11 11:03:34 [pull] DEBUG: remote=
+2026-03-11 11:03:34 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
+2026-03-11 11:03:34 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
