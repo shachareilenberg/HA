@@ -24,20 +24,29 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 # ── Config-update detection ───────────────────────────────────────────────────
-# ha-pull.sh (run every 5 min via time_pattern automation on the HA device)
-# touches /tmp/ha-config-updated after a successful git pull. The binary
-# sensor below watches that file; because both this sensor and the script run
-# on the same HA device, /tmp/ is the same filesystem.
+# ha-pull.sh writes /config/.ha-update-flag on a successful pull.
+# Storing the flag inside /config/ ensures it survives container reboots.
+# ha-git.log (also in /config/) records all git operations — readable via
+# the File Editor add-on when diagnosing problems.
 command_line:
   - binary_sensor:
       name: "Config Update Available"
       unique_id: config_update_available
-      command: "test -f /tmp/ha-config-updated && echo 1 || echo 0"
+      command: "test -f /config/.ha-update-flag && echo 1 || echo 0"
       payload_on: "1"
       payload_off: "0"
       scan_interval: 30
 
+  - sensor:
+      name: "Git Sync Status"
+      unique_id: git_sync_status
+      command: >-
+        cd /config 2>/dev/null && test -d .git &&
+        echo "repo_ok:$(git rev-list HEAD..origin/$(git branch --show-current) --count 2>/dev/null || echo ?)_behind:$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')_local" ||
+        echo "no_repo"
+      scan_interval: 300
+
 shell_command:
   ha_pull_config: "bash /config/ha-pull.sh"
   ha_push_config: "bash /config/ha-push.sh"
-  clear_update_flag: "rm -f /tmp/ha-config-updated"
+  clear_update_flag: "rm -f /config/.ha-update-flag"

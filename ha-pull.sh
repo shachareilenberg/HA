@@ -1,45 +1,75 @@
 #!/usr/bin/env bash
-# ha-pull.sh
-# Runs ON the HA device every 5 minutes via a time_pattern automation +
-# shell_command. Fetches from GitHub and, if the branch is strictly behind
-# with a clean working tree, pulls and drops a signal file so the dashboard
-# banner appears asking for a restart.
+# ha-pull.sh — runs ON the HA device via a time_pattern automation.
+# Fetches from GitHub; if behind, fast-forward-pulls and writes a flag
+# that the binary_sensor watches. All paths under /config/ are persistent.
 
-LOG="/tmp/ha-git-pull.log"
-SIGNAL="/tmp/ha-config-updated"
+LOG="/config/ha-git.log"
+FLAG="/config/.ha-update-flag"
 
-cd /config
+log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [pull] $*" >> "$LOG"; }
 
-# Bail early if another git operation is already running
-if [ -f /config/.git/index.lock ]; then
-  echo "$(date '+%Y-%m-%d %H:%M:%S') — index.lock present, skipping" >> "$LOG"
+# ── locate git ────────────────────────────────────────────────────────────────
+GIT=""
+for P in /usr/bin/git /usr/local/bin/git /bin/git; do
+  [ -x "$P" ] && GIT="$P" && break
+done
+if [ -z "$GIT" ] && command -v git >/dev/null 2>&1; then
+  GIT="$(command -v git)"
+fi
+if [ -z "$GIT" ]; then
+  log "ERROR: git not found. Install it or check the HA container environment."
+  exit 1
+fi
+
+# ── sanity checks ─────────────────────────────────────────────────────────────
+if [ ! -d /config ]; then
+  log "ERROR: /config directory not found."
+  exit 1
+fi
+
+cd /config || { log "ERROR: cannot cd to /config"; exit 1; }
+
+if [ ! -d .git ]; then
+  log "ERROR: /config is not a git repository. Run ha-git-setup.sh first via SSH."
+  exit 1
+fi
+
+# ── skip if another git operation is running ──────────────────────────────────
+if [ -f .git/index.lock ]; then
+  log "index.lock present — skipping (another git op is running)"
   exit 0
 fi
 
-git fetch origin --quiet 2>&1
+# ── fetch ─────────────────────────────────────────────────────────────────────
+if ! "$GIT" fetch origin --quiet 2>> "$LOG"; then
+  log "ERROR: git fetch failed (check credentials / network)"
+  exit 1
+fi
 
-BRANCH="$(git branch --show-current)"
-BEHIND="$(git rev-list "HEAD..origin/$BRANCH" --count 2>/dev/null || echo 0)"
-AHEAD="$(git rev-list  "origin/$BRANCH..HEAD"  --count 2>/dev/null || echo 0)"
+BRANCH="$("$GIT" branch --show-current 2>/dev/null)"
+BEHIND="$("$GIT" rev-list "HEAD..origin/$BRANCH" --count 2>/dev/null || echo 0)"
+AHEAD="$("$GIT"  rev-list "origin/$BRANCH..HEAD"  --count 2>/dev/null || echo 0)"
 
 if [ "$BEHIND" -eq 0 ]; then
-  exit 0
+  exit 0   # up to date — exit silently
 fi
 
 if [ "$AHEAD" -gt 0 ]; then
-  echo "$(date '+%Y-%m-%d %H:%M:%S') — $AHEAD local commit(s) ahead; skipping pull" >> "$LOG"
+  log "SKIP: $AHEAD local commit(s) ahead of remote; skipping pull to avoid conflict"
   exit 0
 fi
 
-if [ -n "$(git status --porcelain)" ]; then
-  echo "$(date '+%Y-%m-%d %H:%M:%S') — dirty working tree; skipping pull" >> "$LOG"
+if [ -n "$("$GIT" status --porcelain 2>/dev/null)" ]; then
+  log "SKIP: working tree has uncommitted changes; skipping pull"
   exit 0
 fi
 
-git pull origin "$BRANCH" --ff-only --quiet 2>&1
+if ! "$GIT" pull origin "$BRANCH" --ff-only --quiet 2>> "$LOG"; then
+  log "ERROR: git pull failed"
+  exit 1
+fi
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') — pulled $BEHIND new commit(s) from origin/$BRANCH" >> "$LOG"
+log "OK: pulled $BEHIND new commit(s) from origin/$BRANCH"
 
-# Signal the HA binary sensor — both this script and the sensor run on the
-# same device, so /tmp/ is the same filesystem.
-touch "$SIGNAL"
+# Signal the binary sensor (flag lives in /config/ — survives reboots)
+touch "$FLAG"

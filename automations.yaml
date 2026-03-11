@@ -793,14 +793,13 @@
   mode: single
 - id: '1773300000003'
   alias: Config Update — Auto push to GitHub every 5 min
-  description: 'Runs ha-push.sh on the HA device every 5 minutes. Commits and pushes
-    any local changes (from HA UI editors, File Editor, SSH edits, etc.) so the config
-    on GitHub always stays in sync with the device.
-
-    '
+  description: >
+    Runs ha-push.sh on the HA device every 5 minutes, offset by 2 minutes
+    from the pull automation to avoid git index.lock collisions.
+    Commits and pushes any local changes (HA UI editors, File Editor, SSH edits).
   triggers:
   - trigger: time_pattern
-    minutes: /5
+    minutes: "2,7,12,17,22,27,32,37,42,47,52,57"
   conditions: []
   actions:
   - action: shell_command.ha_push_config

@@ -9,3 +9,5 @@ home-assistant.log*
 secrets.yaml
 **/*.json
 **/*.pem
+.ha-update-flag
+ha-git.log

@@ -1,31 +1,52 @@
 #!/usr/bin/env bash
-# ha-push.sh
-# Runs ON the HA device every 5 minutes via a time_pattern automation +
-# shell_command. Commits and pushes any local config changes to GitHub.
-# Triggered config changes include anything saved via the HA UI editors,
-# the File Editor add-on, or SSH direct edits.
+# ha-push.sh — runs ON the HA device via a time_pattern automation.
+# Commits and pushes any local changes to GitHub.
 
-LOG="/tmp/ha-git-push.log"
+LOG="/config/ha-git.log"
 
-cd /config
+log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [push] $*" >> "$LOG"; }
 
-# Bail early if another git operation is already running
-if [ -f /config/.git/index.lock ]; then
-  echo "$(date '+%Y-%m-%d %H:%M:%S') — index.lock present, skipping" >> "$LOG"
+# ── locate git ────────────────────────────────────────────────────────────────
+GIT=""
+for P in /usr/bin/git /usr/local/bin/git /bin/git; do
+  [ -x "$P" ] && GIT="$P" && break
+done
+if [ -z "$GIT" ] && command -v git >/dev/null 2>&1; then
+  GIT="$(command -v git)"
+fi
+if [ -z "$GIT" ]; then
+  log "ERROR: git not found. Install it or check the HA container environment."
+  exit 1
+fi
+
+# ── sanity checks ─────────────────────────────────────────────────────────────
+if [ ! -d /config/.git ]; then
+  log "ERROR: /config is not a git repository. Run ha-git-setup.sh first via SSH."
+  exit 1
+fi
+
+cd /config || { log "ERROR: cannot cd to /config"; exit 1; }
+
+# ── skip if another git operation is running ──────────────────────────────────
+if [ -f .git/index.lock ]; then
+  log "index.lock present — skipping (another git op is running)"
   exit 0
 fi
 
-# Nothing to do if tree is clean
-if git diff --quiet && \
-   git diff --cached --quiet && \
-   [ -z "$(git ls-files --others --exclude-standard)" ]; then
-  exit 0
+# ── check for local changes ───────────────────────────────────────────────────
+if "$GIT" diff --quiet && \
+   "$GIT" diff --cached --quiet && \
+   [ -z "$("$GIT" ls-files --others --exclude-standard 2>/dev/null)" ]; then
+  exit 0   # nothing to push — exit silently
 fi
 
-git add -A
-git commit -m "auto: update config $(date '+%Y-%m-%d %H:%M')"
+"$GIT" add -A
+"$GIT" commit -m "auto: update config $(date '+%Y-%m-%d %H:%M')" 2>> "$LOG"
 
-BRANCH="$(git branch --show-current)"
-git push origin "$BRANCH"
+BRANCH="$("$GIT" branch --show-current 2>/dev/null)"
+if ! "$GIT" push origin "$BRANCH" 2>> "$LOG"; then
+  log "ERROR: git push failed (check credentials / network)"
+  exit 1
+fi
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') — pushed changes to origin/$BRANCH" >> "$LOG"
+log "OK: pushed changes to origin/$BRANCH"

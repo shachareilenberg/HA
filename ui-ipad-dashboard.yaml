@@ -207,6 +207,38 @@ views:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
+              # ── Git Sync ──────────────────────────
+              # Manual pull / push — use when automated sync isn't working.
+              # Check /config/ha-git.log in File Editor to diagnose errors.
+              - type: custom:mushroom-title-card
+                title: Git Sync
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Pull
+                    secondary: Check & pull
+                    icon: mdi:cloud-download-outline
+                    icon_color: blue
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: shell_command.ha_pull_config
+                  - type: custom:mushroom-template-card
+                    primary: Push
+                    secondary: Commit & push
+                    icon: mdi:cloud-upload-outline
+                    icon_color: green
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: shell_command.ha_push_config
+
               # ── Apps ──────────────────────────────
               # Tapping opens the baby monitor app via an iOS Shortcut.
               # Setup: on the iPad, create a Shortcut named exactly
