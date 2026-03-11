@@ -45,15 +45,18 @@ if [ "$CODE" != "200" ]; then
   exit 1
 fi
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="/config/chronograf"
+echo "Looking for JSON files in: $SCRIPT_DIR"
+ls "$SCRIPT_DIR"/0[0-9]-*.json 2>&1
+
 for f in "$SCRIPT_DIR"/0[0-9]-*.json; do
-  [ -f "$f" ] || continue
+  [ -f "$f" ] || { echo "No files matched"; break; }
   NAME=$(python3 -c "import json; print(json.load(open('$f'))['dashboard']['name'])")
   echo "Creating: $NAME"
-  python3 -c "import json,sys; d=json.load(open('$f')); sys.stdout.write(json.dumps(d['dashboard']))" \
-    | curl -s -X POST "$CHRONOGRAF_API" \
+  RESULT=$(python3 -c "import json,sys; d=json.load(open('$f')); sys.stdout.write(json.dumps(d['dashboard']))" \
+    | curl -s -w "\nHTTP:%{http_code}" -X POST "$CHRONOGRAF_API" \
       -H "Content-Type: application/json" -H "$COOKIE" \
-      --data-binary @- > /dev/null
-  echo "  Done"
+      --data-binary @-)
+  echo "  Response: ${RESULT:0:300}"
 done
-echo "All dashboards created."
+echo "Done."
