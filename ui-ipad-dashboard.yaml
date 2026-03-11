@@ -640,7 +640,7 @@ views:
                     service: browser_mod.popup
                     data:
                       title: Samsung TV Controls
-                      size: wide
+                      size: fullscreen
                       content:
                         type: vertical-stack
                         cards:
