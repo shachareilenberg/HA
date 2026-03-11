@@ -106,5 +106,4 @@ if ! "$GIT" pull --rebase origin "$BRANCH" 2>>"$GIT_TMP"; then
   exit 1
 fi
 
-log "OK: pulled $BEHIND commit(s) from origin/$BRANCH"
 touch "$FLAG"

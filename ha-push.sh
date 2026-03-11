@@ -106,7 +106,6 @@ if ! "$GIT" push origin "$BRANCH" 2>>"$GIT_TMP"; then
     : > "$GIT_TMP"  # clear push rejection noise before rebase
     if "$GIT" pull --rebase origin "$BRANCH" 2>>"$GIT_TMP" && \
        "$GIT" push origin "$BRANCH" 2>>"$GIT_TMP"; then
-      log "OK: pushed to origin/$BRANCH (after rebase)"
       : > "$GIT_TMP"  # suppress successful push output
       exit 0
     fi
@@ -121,5 +120,4 @@ if ! "$GIT" push origin "$BRANCH" 2>>"$GIT_TMP"; then
   exit 1
 fi
 
-log "OK: pushed to origin/$BRANCH"
 : > "$GIT_TMP"  # suppress successful push output
