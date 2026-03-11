@@ -2,3 +2,19 @@
 2026-03-11 10:50:00 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git
 2026-03-11 10:50:00 [push] --- run start ---
 2026-03-11 10:50:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git
+Host key verification failed.
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 10:50:00 [pull] ERROR: git fetch failed (check credentials / network). HOME=/root
+Host key verification failed.
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 10:50:00 [push] ERROR: git push failed (check credentials). HOME=/root
+2026-03-11 10:55:00 [pull] --- run start ---
+2026-03-11 10:55:00 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git
+2026-03-11 10:55:00 [push] --- run start ---
+2026-03-11 10:55:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git
