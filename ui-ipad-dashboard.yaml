@@ -222,7 +222,7 @@ views:
                   {% set s = states('sensor.git_setup_status') %}
                   {% if s == 'git_not_found' %}Git not found
                   {% elif s == 'not_a_repo' %}Run ha-git-setup.sh
-                  {% elif s.startswith('ok:') %}Branch???: {{ s[3:] }}
+                  {% elif s.startswith('ok:') %}Branch???!!!: {{ s[3:] }}
                   {% else %}{{ s }}
                   {% endif %}
                 secondary: Git status
