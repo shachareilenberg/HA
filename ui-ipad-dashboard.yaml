@@ -306,11 +306,11 @@ views:
                   icon_color: amber
                   fill_container: true
                   tap_action:
-                    action: call-service
-                    service: homeassistant.restart
+                    action: perform-action
+                    perform_action: homeassistant.restart
                   hold_action:
-                    action: call-service
-                    service: shell_command.clear_update_flag
+                    action: perform-action
+                    perform_action: shell_command.clear_update_flag
                   card_mod:
                     style: |
                       ha-card {
