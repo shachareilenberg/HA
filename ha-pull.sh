@@ -1,6 +1,6 @@
 #!/bin/bash
 # ha-pull.sh — runs ON the HA device via a time_pattern automation.
-# Fetches from GitHub; if behind, fast-forward-pulls and writes a flag
+# Fetches from GitHub via SSH; if behind, fast-forward-pulls and writes a flag
 # that the binary_sensor watches. All paths under /config/ are persistent.
 
 LOG="/config/ha-git.log"
@@ -11,10 +11,10 @@ log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [pull] $*" >> "$LOG"; }
 log "--- run start ---"
 
 # ── fix HOME for HA's shell_command environment ───────────────────────────────
-# HA's process may have HOME unset or set to a path without .git-credentials.
-# Scan known homes so the git credential helper can find the stored PAT.
-for _H in /root /homeassistant /home/homeassistant /config; do
-  if [ -f "$_H/.git-credentials" ] || [ -f "$_H/.gitconfig" ]; then
+# HA's process may have HOME unset or pointing to the wrong directory.
+# Scan known homes so SSH can find ~/.ssh/id_* and known_hosts.
+for _H in /root /homeassistant /home/homeassistant; do
+  if [ -d "$_H/.ssh" ]; then
     export HOME="$_H"
     break
   fi
@@ -31,7 +31,10 @@ if [ -z "$GIT" ]; then
   exit 1
 fi
 
-log "DEBUG: HOME=$HOME  GIT=$GIT"
+# Ensure SSH uses the correct known_hosts (prevents host key verification failure)
+export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
+
+log "DEBUG: HOME=$HOME  GIT=$GIT  remote=$(\"$GIT\" -C /config remote get-url origin 2>/dev/null)"
 
 # ── sanity checks ─────────────────────────────────────────────────────────────
 cd /config || { log "ERROR: cannot cd to /config"; exit 1; }
@@ -41,10 +44,6 @@ if [ ! -d .git ]; then
   exit 1
 fi
 
-# ── force HTTPS remote (SSH fails non-interactively: no host key verification) ─
-"$GIT" remote set-url origin "https://github.com/shachareilenberg/HA.git" 2>/dev/null || true
-log "DEBUG: remote=$(\"$GIT\" remote get-url origin 2>/dev/null)"
-
 # ── skip if another git operation is running ──────────────────────────────────
 if [ -f .git/index.lock ]; then
   log "index.lock present — skipping"
@@ -53,7 +52,7 @@ fi
 
 # ── fetch ─────────────────────────────────────────────────────────────────────
 if ! "$GIT" fetch origin 2>> "$LOG"; then
-  log "ERROR: git fetch failed (check credentials / network). HOME=$HOME"
+  log "ERROR: git fetch failed (check SSH key / network). HOME=$HOME"
   exit 1
 fi
 
