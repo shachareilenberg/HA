@@ -799,7 +799,7 @@
     Commits and pushes any local changes (HA UI editors, File Editor, SSH edits).
   triggers:
   - trigger: time_pattern
-    minutes: "2,7,12,17,22,27,32,37,42,47,52,57"
+    minutes: "/5"
   conditions: []
   actions:
   - action: shell_command.ha_push_config
