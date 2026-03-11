@@ -10,18 +10,24 @@ Four importable dashboard JSON files for visualising HA data logged to InfluxDB 
 
 ## How to Create the Dashboards
 
-The Chronograf "Import Dashboard" file upload is broken when accessed through
-the HA ingress proxy. Use the API script instead:
+The Chronograf "Import Dashboard" file upload is broken through the HA ingress
+proxy. Use the API script instead.
 
-1. SSH into the HA device (via the SSH add-on or direct SSH)
+**How it works:** Chronograf binds to `127.0.0.1:8889` inside the container,
+so it's not reachable from outside. The script routes through the HA Supervisor
+ingress proxy (`172.30.32.2`) — the same path the browser uses — which is the
+only allowed external route per the nginx config.
+
+**Steps:**
+
+1. SSH into HA (via the SSH & Web Terminal add-on)
 2. Run:
    ```bash
-   bash /config/chronograf/create-dashboards.sh
+   cd /config/chronograf && bash create-dashboards.sh
    ```
-3. Open Chronograf → **Dashboards** — all 4 dashboards will be listed
+3. Open Chronograf → **Dashboards** — all 4 dashboards will appear
 
-The script uses `docker exec` to POST each dashboard directly to the
-Chronograf HTTP API from inside the add-on container, bypassing the proxy.
+The `$SUPERVISOR_TOKEN` env var is automatically set in the SSH add-on shell.
 
 ## Dashboards
 
