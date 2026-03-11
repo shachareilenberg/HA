@@ -247,8 +247,9 @@ views:
                     layout: vertical
                     fill_container: true
                     tap_action:
-                      action: call-service
-                      service: shell_command.ha_pull_config
+                      action: perform-action
+                      perform_action: shell_command.ha_pull_config
+                      data: {}
                   - type: custom:mushroom-template-card
                     primary: Push
                     secondary: Commit & push
@@ -257,8 +258,9 @@ views:
                     layout: vertical
                     fill_container: true
                     tap_action:
-                      action: call-service
-                      service: shell_command.ha_push_config
+                      action: perform-action
+                      perform_action: shell_command.ha_push_config
+                      data: {}
 
               # ── Apps ──────────────────────────────
               # Tapping opens the baby monitor app via an iOS Shortcut.

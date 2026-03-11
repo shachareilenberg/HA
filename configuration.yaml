@@ -47,8 +47,8 @@ command_line:
         [ -z "$GIT" ] && echo "git_not_found" && exit 0;
         cd /config 2>/dev/null || { echo "no_config_dir"; exit 0; };
         test -d .git || { echo "not_a_repo"; exit 0; };
-        B="$($GIT branch --show-current 2>/dev/null)";
-        [ -z "$B" ] && B="$($GIT rev-parse --abbrev-ref HEAD 2>/dev/null)";
+        B="$(cat /config/.git/HEAD 2>/dev/null | sed 's|ref: refs/heads/||' | tr -d '[:space:]')";
+        [ -z "$B" ] && B="unknown";
         echo "ok:$B"
       scan_interval: 120
 
