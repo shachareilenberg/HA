@@ -28,8 +28,10 @@ echo "ingress_entry: $INGRESS_ENTRY"
 echo "ingress_token: $INGRESS_TOKEN"
 
 # Create ingress session (HA core is allowed to do this)
+# Supervisor returns {"result":"ok","data":{"session":"TOKEN"}} — extract the token
 SESSION=$(curl -s -X POST "${SUPERVISOR}/ingress/session" \
-  -H "Authorization: Bearer ${SUPERVISOR_TOKEN}")
+  -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
+  | python3 -c "import json,sys; print(json.load(sys.stdin)['data']['session'])")
 echo "session: ${SESSION:0:30}..."
 
 CHRONOGRAF_API="${SUPERVISOR}/ingress/${INGRESS_TOKEN}/chronograf/v1/dashboards"
