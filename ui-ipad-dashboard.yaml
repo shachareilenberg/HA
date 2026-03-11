@@ -665,12 +665,11 @@ views:
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: media_player.play_media
+                      service: media_player.select_source
                       target:
                         entity_id: media_player.tv_2
                       data:
-                        media_content_type: app
-                        media_content_id: "111299001912"
+                        source: "YouTube"
                   - type: custom:mushroom-template-card
                     primary: Spotify
                     icon: mdi:spotify
@@ -679,12 +678,11 @@ views:
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: media_player.play_media
+                      service: media_player.select_source
                       target:
                         entity_id: media_player.tv_2
                       data:
-                        media_content_type: app
-                        media_content_id: "rJeHak5zRg.Spotify"
+                        source: "Spotify"
                   - type: custom:mushroom-template-card
                     primary: Stingtv
                     picture: /local/icons/stingtv.png
@@ -692,12 +690,11 @@ views:
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: media_player.play_media
+                      service: media_player.select_source
                       target:
                         entity_id: media_player.tv_2
                       data:
-                        media_content_type: app
-                        media_content_id: "xNjDbgVJeT.stingtv"
+                        source: "Stingtv"
 
               - type: horizontal-stack
                 cards:
@@ -709,12 +706,11 @@ views:
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: media_player.play_media
+                      service: media_player.select_source
                       target:
                         entity_id: media_player.tv_2
                       data:
-                        media_content_type: app
-                        media_content_id: "org.tizen.netflix-app"
+                        source: "Netflix"
                   - type: custom:mushroom-template-card
                     primary: Apple TV
                     icon: mdi:apple
@@ -723,12 +719,11 @@ views:
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: media_player.play_media
+                      service: media_player.select_source
                       target:
                         entity_id: media_player.tv_2
                       data:
-                        media_content_type: app
-                        media_content_id: "com.samsung.tv.aria-video"
+                        source: "Apple TV+"
                   - type: custom:mushroom-template-card
                     primary: Prime
                     picture: /local/icons/prime_video.png
@@ -736,12 +731,11 @@ views:
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: media_player.play_media
+                      service: media_player.select_source
                       target:
                         entity_id: media_player.tv_2
                       data:
-                        media_content_type: app
-                        media_content_id: "org.tizen.primevideo"
+                        source: "Prime Video"
                   - type: custom:mushroom-template-card
                     primary: Disney+
                     picture: /local/icons/disney_plus.png
@@ -749,12 +743,11 @@ views:
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: media_player.play_media
+                      service: media_player.select_source
                       target:
                         entity_id: media_player.tv_2
                       data:
-                        media_content_type: app
-                        media_content_id: "Di0N6xZMEA.disneyplus"
+                        source: "Disney+"
 
               # ── Navigation remote ─────────────────────────────────────────
               # Keys work via the Samsung Smart TV / SamsungTV-Tizen integration.
