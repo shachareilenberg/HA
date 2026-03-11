@@ -490,3 +490,24 @@ From github.com:shachareilenberg/HA
    0c38bd3..a23941e  ipad-dashboard -> origin/ipad-dashboard
 2026-03-11 12:37:13 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=0
 2026-03-11 12:37:13 [pull] INFO: uncommitted changes — committing before pull
+From github.com:shachareilenberg/HA
+ * branch            ipad-dashboard -> FETCH_HEAD
+hint: Diverging branches can't be fast-forwarded, you need to either:
+hint:
+hint: 	git merge --no-ff
+hint:
+hint: or:
+hint:
+hint: 	git rebase
+hint:
+hint: Disable this message with "git config set advice.diverging false"
+fatal: Not possible to fast-forward, aborting.
+2026-03-11 12:37:14 [pull] ERROR: git pull failed
+2026-03-11 12:40:00 [pull] --- run start ---
+2026-03-11 12:40:00 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:40:02 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=0
+2026-03-11 12:40:02 [pull] ERROR: git pull --rebase failed
+From github.com:shachareilenberg/HA
+   0d2d92e..f6e14bc  ipad-dashboard -> origin/ipad-dashboard
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
