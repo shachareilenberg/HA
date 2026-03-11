@@ -1,10 +1,23 @@
 #!/bin/bash
 # ha-push.sh — runs ON the HA device via a time_pattern automation.
 # Commits and pushes any local changes to GitHub via SSH.
+#
+# Log buffering: all output is collected in memory and flushed to ha-git.log
+# only at script exit. This keeps ha-git.log unmodified during git operations,
+# so the working tree stays clean and rebase never sees unstaged changes.
 
 LOG="/config/ha-git.log"
+GIT_TMP="$(mktemp)"
 
-log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [push] $*" >> "$LOG"; }
+LOG_BUFFER=""
+log() { LOG_BUFFER+="$(date '+%Y-%m-%d %H:%M:%S') [push] $*"$'\n'; }
+flush_log() {
+  local git_out
+  git_out="$(cat "$GIT_TMP" 2>/dev/null)"
+  { printf '%s' "$LOG_BUFFER"; [ -n "$git_out" ] && printf '%s\n' "$git_out"; } >> "$LOG"
+  rm -f "$GIT_TMP"
+}
+trap flush_log EXIT
 
 log "--- run start ---"
 
@@ -71,7 +84,9 @@ if [ -f .git/index.lock ]; then
   exit 0
 fi
 
-# ── check for uncommitted file changes ───────────────────────────────────────
+# ── check for uncommitted file changes ────────────────────────────────────────
+# ha-git.log is NOT modified during this run (buffered), so only real config
+# changes trigger this check.
 HAS_CHANGES=0
 if ! "$GIT" diff --quiet || \
    ! "$GIT" diff --cached --quiet || \
@@ -79,7 +94,7 @@ if ! "$GIT" diff --quiet || \
   HAS_CHANGES=1
 fi
 
-# ── check for already-committed but unpushed commits (e.g. from previous failures)
+# ── check for already-committed but unpushed commits ─────────────────────────
 BRANCH="$("$GIT" branch --show-current 2>/dev/null)"
 AHEAD="$("$GIT" rev-list "origin/$BRANCH..HEAD" --count 2>/dev/null || echo 0)"
 
@@ -92,25 +107,25 @@ fi
 COMMITTED=0
 if [ "$HAS_CHANGES" -eq 1 ]; then
   "$GIT" add -A
-  "$GIT" commit -m "auto: update config $(date '+%Y-%m-%d %H:%M')" 2>> "$LOG"
+  "$GIT" commit -m "auto: update config $(date '+%Y-%m-%d %H:%M')" 2>>"$GIT_TMP"
   COMMITTED=1
 fi
 
-# ── push (includes any pre-existing unpushed commits) ────────────────────────
-if ! "$GIT" push origin "$BRANCH" 2>> "$LOG"; then
-  # Non-fast-forward: remote is ahead (e.g. Mac pushed). Rebase and retry once.
+# ── push — rebase and retry once if remote is ahead ──────────────────────────
+# Working tree is clean (ha-git.log not written during run), so rebase works.
+if ! "$GIT" push origin "$BRANCH" 2>>"$GIT_TMP"; then
   BEHIND="$("$GIT" rev-list "HEAD..origin/$BRANCH" --count 2>/dev/null || echo 0)"
   if [ "$BEHIND" -gt 0 ]; then
     log "WARN: remote is ahead by $BEHIND — rebasing and retrying push"
-    if "$GIT" pull --rebase origin "$BRANCH" 2>> "$LOG"; then
-      if "$GIT" push origin "$BRANCH" 2>> "$LOG"; then
+    if "$GIT" pull --rebase origin "$BRANCH" 2>>"$GIT_TMP"; then
+      if "$GIT" push origin "$BRANCH" 2>>"$GIT_TMP"; then
         log "OK: pushed changes to origin/$BRANCH (after rebase)"
         exit 0
       fi
     fi
     log "ERROR: push still failed after rebase"
   fi
-  # Push failed for another reason — undo the local commit so it doesn't pile up
+  # Undo the local commit so it doesn't accumulate on repeated failures
   if [ "$COMMITTED" -eq 1 ]; then
     "$GIT" reset --soft HEAD~1
     log "WARN: push failed — commit undone, will retry next run. KEY=$SSH_KEY"

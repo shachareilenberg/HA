@@ -1,12 +1,25 @@
 #!/bin/bash
 # ha-pull.sh — runs ON the HA device via a time_pattern automation.
-# Fetches from GitHub via SSH; if behind, fast-forward-pulls and writes a flag
+# Fetches from GitHub via SSH; if behind, rebases and writes a flag
 # that the binary_sensor watches. All paths under /config/ are persistent.
+#
+# Log buffering: all output is collected in memory and flushed to ha-git.log
+# only at script exit. This keeps ha-git.log unmodified during git operations,
+# so the working tree stays clean and rebase/pull never see unstaged changes.
 
 LOG="/config/ha-git.log"
 FLAG="/config/.ha-update-flag"
+GIT_TMP="$(mktemp)"
 
-log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [pull] $*" >> "$LOG"; }
+LOG_BUFFER=""
+log() { LOG_BUFFER+="$(date '+%Y-%m-%d %H:%M:%S') [pull] $*"$'\n'; }
+flush_log() {
+  local git_out
+  git_out="$(cat "$GIT_TMP" 2>/dev/null)"
+  { printf '%s' "$LOG_BUFFER"; [ -n "$git_out" ] && printf '%s\n' "$git_out"; } >> "$LOG"
+  rm -f "$GIT_TMP"
+}
+trap flush_log EXIT
 
 log "--- run start ---"
 
@@ -74,7 +87,7 @@ if [ -f .git/index.lock ]; then
 fi
 
 # ── fetch ─────────────────────────────────────────────────────────────────────
-if ! "$GIT" fetch origin 2>> "$LOG"; then
+if ! "$GIT" fetch origin 2>>"$GIT_TMP"; then
   log "ERROR: git fetch failed (check SSH key / network). HOME=$HOME  KEY=$SSH_KEY"
   exit 1
 fi
@@ -90,19 +103,10 @@ if [ "$BEHIND" -eq 0 ]; then
   exit 0
 fi
 
-if [ "$AHEAD" -gt 0 ]; then
-  log "SKIP: $AHEAD local commit(s) ahead of remote — skipping pull"
-  exit 0
-fi
-
-if [ -n "$("$GIT" status --porcelain 2>/dev/null)" ]; then
-  log "INFO: uncommitted changes — committing before pull"
-  "$GIT" add -A
-  "$GIT" commit -m "auto: save local changes before pull $(date '+%Y-%m-%d %H:%M')" 2>> "$LOG"
-fi
-
-if ! "$GIT" pull origin "$BRANCH" --ff-only 2>> "$LOG"; then
-  log "ERROR: git pull failed"
+# ── pull with rebase — handles both ff-only and diverged cases ────────────────
+# Working tree is clean because ha-git.log is not written during this run.
+if ! "$GIT" pull --rebase origin "$BRANCH" 2>>"$GIT_TMP"; then
+  log "ERROR: git pull --rebase failed"
   exit 1
 fi
 
