@@ -572,29 +572,7 @@ views:
                 card_mod:
                   style: |
                     ha-card { margin-top: 8px !important; }
-
-              # ── Yamaha speakers ───────────────────────────────────────────
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-media-player-card
-                    entity: media_player.living_room_2
-                    name: Living Room
-                    volume_controls:
-                      - volume_set
-                      - volume_mute
-                    media_controls:
-                      - on_off
-                    fill_container: true
-                  - type: custom:mushroom-media-player-card
-                    entity: media_player.living_room_zone2
-                    name: Kitchen
-                    volume_controls:
-                      - volume_set
-                      - volume_mute
-                    media_controls:
-                      - on_off
-                    fill_container: true
-
+           
               # ── Tap to open full TV controls popup ────────────────────────
               - type: custom:mushroom-media-player-card
                 entity: media_player.tv_2
@@ -932,3 +910,26 @@ views:
                                           data:
                                             media_content_type: send_key
                                             media_content_id: KEY_MUTE
+         
+              # ── Yamaha speakers ───────────────────────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-media-player-card
+                    entity: media_player.living_room_2
+                    name: Living Room
+                    volume_controls:
+                      - volume_set
+                      - volume_mute
+                    media_controls:
+                      - on_off
+                    fill_container: true
+                  - type: custom:mushroom-media-player-card
+                    entity: media_player.living_room_zone2
+                    name: Kitchen
+                    volume_controls:
+                      - volume_set
+                      - volume_mute
+                    media_controls:
+                      - on_off
+                    fill_container: true
+
