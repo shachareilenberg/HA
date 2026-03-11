@@ -353,5 +353,5 @@ tv_audio_tv_speaker:
   sequence:
   - action: media_player.turn_off
     target:
-      entity_id: media_player.living_room
+      entity_id: media_player.living_room_2
   mode: single
