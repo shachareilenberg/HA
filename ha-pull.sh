@@ -96,8 +96,9 @@ if [ "$AHEAD" -gt 0 ]; then
 fi
 
 if [ -n "$("$GIT" status --porcelain 2>/dev/null)" ]; then
-  log "SKIP: uncommitted changes — skipping pull"
-  exit 0
+  log "INFO: uncommitted changes — committing before pull"
+  "$GIT" add -A
+  "$GIT" commit -m "auto: save local changes before pull $(date '+%Y-%m-%d %H:%M')" 2>> "$LOG"
 fi
 
 if ! "$GIT" pull origin "$BRANCH" --ff-only 2>> "$LOG"; then
