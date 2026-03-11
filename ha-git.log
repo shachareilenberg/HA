@@ -126,3 +126,21 @@ and the repository exists.
 2026-03-11 11:25:00 [push] --- run start ---
 2026-03-11 11:25:00 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git  remote=
 2026-03-11 11:25:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 11:25:01 [pull] ERROR: git fetch failed (check SSH key / network). HOME=/root
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 11:25:01 [push] ERROR: git push failed (check SSH key). HOME=/root
+2026-03-11 11:35:00 [pull] --- run start ---
+2026-03-11 11:35:00 [pull] ERROR: no SSH private key found in /root/.ssh/ — run ssh-keygen first.
+2026-03-11 11:35:00 [push] --- run start ---
+2026-03-11 11:35:00 [push] ERROR: no SSH private key found in /root/.ssh/ — run ssh-keygen first.
+2026-03-11 11:35:48 [pull] --- run start ---
+2026-03-11 11:35:48 [pull] ERROR: no SSH private key found in /root/.ssh/ — run ssh-keygen first.
