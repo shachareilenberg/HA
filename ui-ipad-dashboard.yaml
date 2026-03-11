@@ -956,21 +956,21 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: >
                                           {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
-                                            Unmute
-                                          {% else %}
                                             Mute
+                                          {% else %}
+                                            Unmute
                                           {% endif %}
                                         icon: >
                                           {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
-                                            mdi:volume-off
-                                          {% else %}
                                             mdi:volume-mute
+                                          {% else %}
+                                            mdi:volume-off
                                           {% endif %}
                                         icon_color: >
                                           {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
-                                            red
+                                            black
                                           {% else %}
-                                            grey
+                                            red
                                           {% endif %}
                                         layout: vertical
                                         fill_container: true
