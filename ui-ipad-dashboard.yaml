@@ -225,7 +225,7 @@ views:
                   {% elif s.startswith('ok:') %}Branch: {{ s[3:] }}
                   {% else %}{{ s }}
                   {% endif %}
-                secondary: Git status
+                secondary: Git status?
                 icon: >
                   {% set s = states('sensor.git_setup_status') %}
                   {% if s.startswith('ok:') %}mdi:source-branch-check
