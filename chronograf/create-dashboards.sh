@@ -33,45 +33,63 @@ if [ -z "$INGRESS_TOKEN" ]; then
   exit 1
 fi
 
-# ── 3. Create ingress session ─────────────────────────────────────────────────
-echo "3. Creating ingress session..."
-SESSION_RAW=$(curl -s -X POST "${SUPERVISOR}/ingress/session" \
-  -H "Authorization: Bearer ${SUPERVISOR_TOKEN}")
-echo "   raw response: $SESSION_RAW"
-
-# Supervisor may return raw token string OR {"result":"ok","data":{"session":"..."}}
-SESSION=$(echo "$SESSION_RAW" | jq -r '.data.session // empty' 2>/dev/null)
-if [ -z "$SESSION" ]; then
-  SESSION="$SESSION_RAW"  # use raw value if not JSON
-fi
-echo "   session: ${SESSION:0:30}..."
-
-COOKIE="Cookie: ingress_session=${SESSION}"
-
-# ── 4. Find working Chronograf API URL ────────────────────────────────────────
-echo "4. Testing Chronograf URLs..."
+# ── 3. Find working Chronograf API URL ────────────────────────────────────────
+# Session creation returns 403 from SSH add-on (only HA frontend can do that).
+# Try: supervisor bearer token | X-Ingress-Token header | no auth
+echo "3. Testing Chronograf API access..."
 CHRONOGRAF_API=""
-for URL in \
-  "${SUPERVISOR}/ingress/${INGRESS_TOKEN}/chronograf/v1/dashboards" \
-  "${SUPERVISOR}/ingress/${INGRESS_TOKEN}${INGRESS_ENTRY}/chronograf/v1/dashboards"
+
+BASE_URL="${SUPERVISOR}/ingress/${INGRESS_TOKEN}"
+
+for AUTH_HEADER in \
+  "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
+  "X-Ingress-Token: ${INGRESS_TOKEN}" \
+  "X-Supervisor-Token: ${SUPERVISOR_TOKEN}"
 do
-  CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL" -H "$COOKIE")
-  echo "   $URL"
-  echo "   → HTTP $CODE"
-  if [ "$CODE" = "200" ]; then
-    CHRONOGRAF_API="$URL"
-    break
-  fi
+  for URL in \
+    "${BASE_URL}/chronograf/v1/dashboards" \
+    "${BASE_URL}${INGRESS_ENTRY}/chronograf/v1/dashboards"
+  do
+    CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL" -H "$AUTH_HEADER")
+    echo "   [${AUTH_HEADER%%:*}] $URL → HTTP $CODE"
+    if [ "$CODE" = "200" ]; then
+      CHRONOGRAF_API="$URL"
+      CHRONOGRAF_AUTH="$AUTH_HEADER"
+      break 2
+    fi
+  done
 done
 
 if [ -z "$CHRONOGRAF_API" ]; then
   echo ""
-  echo "ERROR: Cannot reach Chronograf through any URL."
-  echo "Make sure the InfluxDB add-on is running and try again."
+  echo "All direct paths blocked. Trying via HA core host..."
+  # HA hostname in the hassio network
+  for HA_HOST in "homeassistant" "172.30.32.0"; do
+    URL="http://${HA_HOST}:8123/api/hassio_ingress/${INGRESS_TOKEN}/chronograf/v1/dashboards"
+    CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL" \
+      -H "Authorization: Bearer ${SUPERVISOR_TOKEN}")
+    echo "   $URL → HTTP $CODE"
+    if [ "$CODE" = "200" ]; then
+      CHRONOGRAF_API="$URL"
+      CHRONOGRAF_AUTH="Authorization: Bearer ${SUPERVISOR_TOKEN}"
+      break
+    fi
+  done
+fi
+
+if [ -z "$CHRONOGRAF_API" ]; then
+  echo ""
+  echo "BLOCKED: Cannot reach Chronograf from SSH add-on."
+  echo "All ingress paths require a browser session or HA core context."
+  echo ""
+  echo "To create dashboards, run instead from HA Developer Tools:"
+  echo "  Service: shell_command.create_chronograf_dashboards"
+  echo "  (after adding it to configuration.yaml — see README.md)"
   exit 1
 fi
 
 echo "   Using: $CHRONOGRAF_API"
+echo "   Auth:  ${CHRONOGRAF_AUTH%%:*}"
 
 # ── 5. Create dashboards ──────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -84,7 +102,7 @@ for f in "$SCRIPT_DIR"/0[0-9]-*.json; do
   echo "   Creating: $NAME"
   RESULT=$(jq -c '.dashboard' "$f" | curl -s -X POST "$CHRONOGRAF_API" \
     -H "Content-Type: application/json" \
-    -H "$COOKIE" \
+    -H "$CHRONOGRAF_AUTH" \
     --data-binary @-)
   if echo "$RESULT" | jq -e '.id' > /dev/null 2>&1; then
     echo "   → OK (id: $(echo "$RESULT" | jq -r '.id'))"

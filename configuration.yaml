@@ -112,6 +112,7 @@ influxdb:
 shell_command:
   ha_pull_config: "/bin/bash /config/ha-pull.sh"
   ha_push_config: "/bin/bash /config/ha-push.sh"
+  create_chronograf_dashboards: "/bin/bash /config/chronograf/create-dashboards-ha.sh"
   clear_update_flag: "rm -f /config/.ha-update-flag"
   # Keeps the 200 most-recent lines so the log never grows unbounded.
   # Triggered daily at 03:00 by the "Git Log — daily rotate" automation.
