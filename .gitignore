@@ -8,6 +8,7 @@ home-assistant.log*
 *.db-wal
 secrets.yaml
 **/*.json
+!chronograf/*.json
 **/*.pem
 .ha-update-flag
 .ssh/
