@@ -52,6 +52,71 @@ command_line:
         echo "ok:$B"
       scan_interval: 120
 
+##############################################################
+# InfluxDB v2 activity logging
+#
+# SETUP (one-time, via HA Supervisor UI):
+#   1. Settings → Add-ons → Add-on Store → install "InfluxDB"
+#   2. Start the add-on → open the InfluxDB web UI (port 8086)
+#   3. Create:  org = homeassistant
+#               bucket = ha_data
+#               API token (All Access or write-only to ha_data)
+#   4. Replace REPLACE_WITH_YOUR_TOKEN below with the token
+#   5. Restart Home Assistant
+#
+# Optional: install the "Grafana" add-on, add InfluxDB as a
+# data source, and build dashboards to visualize usage patterns.
+##############################################################
+influxdb:
+  api_version: 2
+  ssl: false
+  host: localhost
+  port: 8086
+  token: REPLACE_WITH_YOUR_TOKEN
+  organization: homeassistant
+  bucket: ha_data
+  tags:
+    source: hass
+  include:
+    domains:
+      - light
+      - fan
+      - switch
+      - climate
+      - media_player
+      - input_boolean
+      - cover
+  exclude:
+    entities:
+      - switch.dishwasher_intensive_zone
+      - switch.dishwasher_vario_speed
+      - switch.dishwasher_silence_on_demand
+      - switch.dishwasher_half_load
+      - switch.dishwasher_power
+      - switch.refrigerator_sabbath_mode
+      - switch.refrigerator_power_cool
+      - switch.refrigerator_power_freeze
+      - switch.kitchen_s_echo_shuffle_switch
+      - switch.kitchen_s_echo_repeat_switch
+      - switch.everywhere_shuffle_switch
+      - switch.everywhere_repeat_switch
+      - switch.bedroom_echo_spot_shuffle_switch
+      - switch.bedroom_echo_spot_repeat_switch
+      - switch.shachar_s_fire_tv_do_not_disturb
+      - switch.shachar_s_echo_do_not_disturb
+      - switch.kitchen_s_echo_do_not_disturb_switch
+      - switch.fire_tv_do_not_disturb_switch
+      - switch.everywhere_do_not_disturb_switch
+      - switch.bedroom_echo_spot_do_not_disturb_switch
+      - switch.this_device_do_not_disturb
+      - switch.pure_direct
+      - switch.enhancer
+      - switch.enhancer_2
+      - switch.extra_bass
+      - switch.extra_bass_2
+      - switch.adaptive_drc
+      - switch.party_mode
+
 shell_command:
   ha_pull_config: "/bin/bash /config/ha-pull.sh"
   ha_push_config: "/bin/bash /config/ha-push.sh"
