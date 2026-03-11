@@ -24,11 +24,12 @@ echo "Fetching add-on info..."
 ADDON_INFO=$(curl -sf "${SUPERVISOR}/addons/${ADDON_SLUG}/info" \
   -H "Authorization: Bearer ${SUPERVISOR_TOKEN}")
 
-INGRESS_TOKEN=$(echo "$ADDON_INFO" | jq -r '.data.ingress_token')
 INGRESS_ENTRY=$(echo "$ADDON_INFO" | jq -r '.data.ingress_entry')
+# ingress_entry = /api/hassio_ingress/TOKEN — extract the token (last path segment)
+INGRESS_TOKEN=$(echo "$INGRESS_ENTRY" | awk -F'/' '{print $NF}')
 
-echo "  ingress_token : ${INGRESS_TOKEN:0:20}..."
 echo "  ingress_entry : $INGRESS_ENTRY"
+echo "  ingress_token : ${INGRESS_TOKEN:0:20}..."
 
 # ── Create ingress session ────────────────────────────────────────────────────
 echo "Creating ingress session..."
