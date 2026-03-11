@@ -666,8 +666,7 @@ views:
                         media_content_id: "rJeHak5zRg.Spotify"
                   - type: custom:mushroom-template-card
                     primary: Stingtv
-                    icon: mdi:television-shimmer
-                    icon_color: deep-purple
+                    picture: /local/icons/stingtv.png
                     layout: vertical
                     fill_container: true
                     tap_action:
