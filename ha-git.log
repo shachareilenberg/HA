@@ -59,3 +59,8 @@ From https://github.com/shachareilenberg/HA
 2026-03-11 11:03:34 [pull] DEBUG: remote=
 2026-03-11 11:03:34 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=1
 2026-03-11 11:03:34 [pull] SKIP: 1 local commit(s) ahead of remote — skipping pull
+2026-03-11 11:05:00 [pull] --- run start ---
+2026-03-11 11:05:00 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git
+2026-03-11 11:05:00 [pull] DEBUG: remote=
+2026-03-11 11:05:00 [push] --- run start ---
+2026-03-11 11:05:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git
