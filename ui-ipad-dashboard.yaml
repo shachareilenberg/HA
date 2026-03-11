@@ -434,28 +434,70 @@ views:
               # ══════════════════════════════════════
               # LIGHTING
               # ══════════════════════════════════════
+              # LIGHTING
+              # ══════════════════════════════════════
               - type: custom:mushroom-title-card
                 title: Lighting
                 card_mod:
                   style: |
                     ha-card { margin-top: 8px !important; }
 
-              # Row: Living Room lights
+              # ── Living Room ───────────────────────
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-light-card
-                    entity: light.slvn_slvn_y
+                    entity: light.slvn_slvn_spvtym
                     fill_container: true
                     tap_action:
                       action: toggle
-
                   - type: custom:mushroom-light-card
-                    entity: light.slvn_slvn_ps
+                    entity: light.slvn_slvn_qyr
                     fill_container: true
                     tap_action:
                       action: toggle
 
-              # Row: Office + Hallway
+              # ── Kitchen ───────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mtbkh_mtbkh_ps
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mtbkh_mtbkh_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mtbkh_mtbkh_shvlkhn
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.knysh_na
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mtbkh_mtbkh_y
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Office ────────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mshrd_mshrd_tqrh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Entrance ──────────────────────────
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-light-card
@@ -463,9 +505,31 @@ views:
                     fill_container: true
                     tap_action:
                       action: toggle
-
                   - type: custom:mushroom-light-card
-                    entity: light.msdrvn_msdrvn_tvrt_lylh
+                    entity: light.knysh_knysh_tvrh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Hallway ───────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.msdrvn_msdrvn_ps
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Balcony ───────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mrpst_mrpst_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mrpst_mrpst_tqrh
                     fill_container: true
                     tap_action:
                       action: toggle

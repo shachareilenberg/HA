@@ -524,7 +524,8 @@ hint: use 'git pull' before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 From github.com:shachareilenberg/HA
  * branch            ipad-dashboard -> FETCH_HEAD
-Rebasing (1/1)Successfully rebased and updated refs/heads/ipad-dashboard.
+Rebasing (1/1)
+Successfully rebased and updated refs/heads/ipad-dashboard.
 To github.com:shachareilenberg/HA.git
    f6e14bc..3d3e91b  ipad-dashboard -> ipad-dashboard
 2026-03-11 12:45:00 [pull] --- run start ---
@@ -548,7 +549,8 @@ hint: use 'git pull' before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 From github.com:shachareilenberg/HA
  * branch            ipad-dashboard -> FETCH_HEAD
-Rebasing (1/1)Successfully rebased and updated refs/heads/ipad-dashboard.
+Rebasing (1/1)
+Successfully rebased and updated refs/heads/ipad-dashboard.
 To github.com:shachareilenberg/HA.git
    308b450..fc2d5e5  ipad-dashboard -> ipad-dashboard
 2026-03-11 12:46:08 [pull] --- run start ---
@@ -569,7 +571,8 @@ From github.com:shachareilenberg/HA
    e7b4452..4b5ef75  ipad-dashboard -> origin/ipad-dashboard
 From github.com:shachareilenberg/HA
  * branch            ipad-dashboard -> FETCH_HEAD
-Rebasing (1/1)Successfully rebased and updated refs/heads/ipad-dashboard.
+Rebasing (1/1)
+Successfully rebased and updated refs/heads/ipad-dashboard.
 2026-03-11 12:47:01 [push] --- run start ---
 2026-03-11 12:47:01 [push] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
 2026-03-11 12:47:03 [push] OK: pushed changes to origin/ipad-dashboard
@@ -584,13 +587,15 @@ From github.com:shachareilenberg/HA
    d9bc327..2d9a850  ipad-dashboard -> origin/ipad-dashboard
 From github.com:shachareilenberg/HA
  * branch            ipad-dashboard -> FETCH_HEAD
-Rebasing (1/1)Successfully rebased and updated refs/heads/ipad-dashboard.
+Rebasing (1/1)
+Successfully rebased and updated refs/heads/ipad-dashboard.
 2026-03-11 12:50:08 [push] OK: pushed to origin/ipad-dashboard
 2026-03-11 12:55:06 [push] OK: pushed to origin/ipad-dashboard
 2026-03-11 13:00:04 [pull] OK: pulled 2 commit(s) from origin/ipad-dashboard
 From github.com:shachareilenberg/HA
  * branch            ipad-dashboard -> FETCH_HEAD
-Rebasing (1/1)Successfully rebased and updated refs/heads/ipad-dashboard.
+Rebasing (1/1)
+Successfully rebased and updated refs/heads/ipad-dashboard.
 From github.com:shachareilenberg/HA
  * branch            ipad-dashboard -> FETCH_HEAD
 2026-03-11 14:12:40 [pull] ERROR: git pull --rebase failed (branch=ipad-dashboard behind=3)
