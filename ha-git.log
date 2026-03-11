@@ -102,3 +102,23 @@ and the repository exists.
 2026-03-11 11:20:00 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git  remote=
 2026-03-11 11:20:00 [push] --- run start ---
 2026-03-11 11:20:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 11:20:01 [pull] ERROR: git fetch failed (check SSH key / network). HOME=/root
+2026-03-11 11:20:01 [push] ERROR: git push failed (check SSH key). HOME=/root
+2026-03-11 11:22:10 [pull] --- run start ---
+2026-03-11 11:22:10 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git  remote=
+2026-03-11 11:22:11 [pull] DEBUG: branch=ipad-dashboard  behind=0  ahead=1
+2026-03-11 11:22:11 [pull] OK: already up to date
+2026-03-11 11:24:04 [pull] --- run start ---
+2026-03-11 11:24:04 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git  remote=
+2026-03-11 11:24:06 [pull] DEBUG: branch=ipad-dashboard  behind=0  ahead=1
+2026-03-11 11:24:06 [pull] OK: already up to date
