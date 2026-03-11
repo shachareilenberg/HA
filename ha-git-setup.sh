@@ -51,9 +51,13 @@ else
   echo "  https://github.com/settings/ssh/new"
 fi
 
-# ── 4. Set git identity ───────────────────────────────────────────────────────
+# ── 4. Set git identity & behaviour ──────────────────────────────────────────
 git config --global user.email "ha@homeassistant.local"
 git config --global user.name  "Home Assistant"
+# Never open an editor for commit/merge messages when running non-interactively
+git config --global core.editor "true"
+# Always fast-forward only on pull — avoids merge commit prompts
+git config --global pull.ff only
 
 # ── 5. Init or connect the repo ──────────────────────────────────────────────
 if [ -d .git ]; then
