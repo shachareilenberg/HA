@@ -85,3 +85,7 @@ fatal: could not read Username for 'https://github.com': No such device or addre
 2026-03-11 11:15:00 [push] --- run start ---
 2026-03-11 11:15:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git
 2026-03-11 11:15:00 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git  remote=
+fatal: could not read Username for 'https://github.com': terminal prompts disabled
+2026-03-11 11:15:00 [push] ERROR: git push failed (check SSH key). HOME=/root
+2026-03-11 11:15:00 [pull] DEBUG: branch=ipad-dashboard  behind=0  ahead=4
+2026-03-11 11:15:00 [pull] OK: already up to date
