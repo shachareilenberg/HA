@@ -560,3 +560,13 @@ To github.com:shachareilenberg/HA.git
 2026-03-11 12:46:14 [push] OK: pushed changes to origin/ipad-dashboard
 To github.com:shachareilenberg/HA.git
    fc2d5e5..e7b4452  ipad-dashboard -> ipad-dashboard
+2026-03-11 12:46:55 [pull] --- run start ---
+2026-03-11 12:46:55 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:46:56 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=0
+2026-03-11 12:46:56 [pull] INFO: committing local changes before pull
+2026-03-11 12:46:58 [pull] OK: pulled 1 new commit(s) from origin/ipad-dashboard
+From github.com:shachareilenberg/HA
+   e7b4452..4b5ef75  ipad-dashboard -> origin/ipad-dashboard
+From github.com:shachareilenberg/HA
+ * branch            ipad-dashboard -> FETCH_HEAD
+Rebasing (1/1)Successfully rebased and updated refs/heads/ipad-dashboard.
