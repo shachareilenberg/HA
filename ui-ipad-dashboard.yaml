@@ -370,40 +370,65 @@ views:
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_101
                     name: Kitchen 1
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
                     fill_container: true
-                    tap_action:
-                      action: more-info
 
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_102
                     name: Kitchen 2
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
                     fill_container: true
-                    tap_action:
-                      action: more-info
 
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_103
                     name: Office
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
                     fill_container: true
-                    tap_action:
-                      action: more-info
 
-              # Row 2: Kids Bathroom | Bedroom
+              # Row 2: Kids | Bedroom
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_104
-                    name: Kids Bathroom
+                    name: Kids
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
                     fill_container: true
-                    tap_action:
-                      action: more-info
 
                   - type: custom:mushroom-climate-card
                     entity: climate.l8_105
                     name: Bedroom
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
                     fill_container: true
-                    tap_action:
-                      action: more-info
 
 
               # ══════════════════════════════════════
