@@ -832,3 +832,26 @@ remote: - Cannot change this locked branch
 To github.com:shachareilenberg/HA.git
  ! [remote rejected] main -> main (protected branch hook declined)
 error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 22:30:03 [pull] ERROR: git pull --rebase failed (branch=room-tabs behind=3)
+From github.com:shachareilenberg/HA
+ * branch            room-tabs  -> FETCH_HEAD
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+2026-03-11 22:30:09 [push] ERROR: push failed after rebase (branch=room-tabs KEY=/config/.ssh/id_ed25519)
+2026-03-11 22:30:09 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+From github.com:shachareilenberg/HA
+ * branch            room-tabs  -> FETCH_HEAD
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.

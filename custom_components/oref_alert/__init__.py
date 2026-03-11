@@ -62,6 +62,7 @@ from .const import (
     DOMAIN,
     EDIT_SENSOR_ACTION,
     LOGGER,
+    MANUAL_EVENT_END_ACTION,
     REMOVE_AREAS,
     REMOVE_SENSOR_ACTION,
     SYNTHETIC_ALERT_ACTION,
@@ -129,6 +130,15 @@ SYNTHETIC_ALERT_SCHEMA: Final = vol.Schema(
     extra=vol.ALLOW_EXTRA,
 )
 
+MANUAL_EVENT_END_SCHEMA: Final = vol.Schema(
+    {
+        vol.Optional(CONF_AREA): vol.All(
+            cv.ensure_list, [vol.All(cv.string, vol.In(AREAS))]
+        ),
+    },
+    extra=vol.ALLOW_EXTRA,
+)
+
 
 @dataclass
 class OrefAlertRuntimeData:
@@ -152,6 +162,7 @@ class OrefAlertRuntimeData:
         self.classifier.stop()
         await asyncio.gather(
             self.coordinator.async_save(),
+            self.bus_events.async_save(),
             self.pushy.stop(),
             self.tzevaadom.stop(),
             return_exceptions=True,
@@ -285,6 +296,21 @@ async def async_setup(hass: HomeAssistant, _config: ConfigType) -> bool:  # noqa
         SYNTHETIC_ALERT_SCHEMA,
     )
 
+    async def manual_event_end(service_call: ServiceCall) -> None:
+        """Mark active alerts as ended manually."""
+        get_config_entry().runtime_data.coordinator.add_manual_event_end(
+            service_call.data.get(CONF_AREA)
+        )
+        await get_config_entry().runtime_data.coordinator.async_refresh()
+
+    async_register_admin_service(
+        hass,
+        DOMAIN,
+        MANUAL_EVENT_END_ACTION,
+        manual_event_end,
+        MANUAL_EVENT_END_SCHEMA,
+    )
+
     return True
 
 
@@ -335,7 +361,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: OrefAlertConfigEntry) ->
         coordinator,
         OrefAlertCoordinatorUpdater(hass, coordinator),
         AreasChecker(hass),
-        await inject_template_extensions(hass),
+        await inject_template_extensions(hass, entry),
         pushy,
         tzevaadom,
         Classifier(hass),
@@ -346,6 +372,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: OrefAlertConfigEntry) ->
     def _handle_shutdown(*_: object) -> None:
         """Persist coordinator state on Home Assistant shutdown."""
         hass.async_create_task(entry.runtime_data.coordinator.async_save())
+        hass.async_create_task(entry.runtime_data.bus_events.async_save())
 
     entry.async_on_unload(
         hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, _handle_shutdown)
@@ -358,7 +385,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: OrefAlertConfigEntry) ->
 
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-        await entry.runtime_data.coordinator.async_restore()
+        await asyncio.gather(
+            entry.runtime_data.coordinator.async_restore(),
+            entry.runtime_data.bus_events.async_restore(),
+        )
         await entry.runtime_data.coordinator.async_config_entry_first_refresh()
 
         await asyncio.gather(

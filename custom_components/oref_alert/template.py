@@ -18,6 +18,7 @@ from homeassistant.helpers.template import (
 from . import const
 from .categories import category_to_emoji, category_to_icon
 from .const import (
+    ALERTS_TEMPLATE_FUNCTION,
     AREAS_TEMPLATE_FUNCTION,
     COORDINATE_TEMPLATE_FUNCTION,
     DISTANCE_TEMPLATE_FUNCTION,
@@ -41,14 +42,18 @@ from .metadata.areas import AREAS
 from .metadata.areas_and_groups import AREAS_AND_GROUPS
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Generator
 
     from homeassistant.core import HomeAssistant
+
+    from . import OrefAlertConfigEntry
 
 _template_environment_init_signature = inspect.signature(TemplateEnvironment.__init__)
 
 
-async def inject_template_extensions(hass: HomeAssistant) -> Callable[[], None]:  # noqa: PLR0915
+async def inject_template_extensions(  # noqa: PLR0915
+    hass: HomeAssistant, config_entry: OrefAlertConfigEntry
+) -> Callable[[], None]:
     """Inject template extension to the Home Assistant instance."""
     template_environment_init = TemplateEnvironment.__init__
 
@@ -57,6 +62,10 @@ async def inject_template_extensions(hass: HomeAssistant) -> Callable[[], None]:
     def get_areas(groups: bool = False) -> list[str]:  # noqa: FBT001, FBT002
         """Get all areas."""
         return list(AREAS) if not groups else AREAS_AND_GROUPS
+
+    def get_alerts() -> Generator[dict[str, Any]]:
+        """Get historical alerts."""
+        yield from config_entry.runtime_data.bus_events.alert_history.items()
 
     def area_to_district(area: str) -> str:
         """Convert area to district."""
@@ -95,6 +104,7 @@ async def inject_template_extensions(hass: HomeAssistant) -> Callable[[], None]:
     def patch_environment(env: TemplateEnvironment, limited: bool) -> None:  # noqa: FBT001
         """Patch the template environment to add custom filters."""
         env.globals[AREAS_TEMPLATE_FUNCTION] = get_areas
+        env.globals[ALERTS_TEMPLATE_FUNCTION] = get_alerts
         env.globals[DISTRICT_TEMPLATE_FUNCTION] = env.filters[
             DISTRICT_TEMPLATE_FUNCTION
         ] = area_to_district
