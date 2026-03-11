@@ -818,27 +818,8 @@ views:
                                             entity_id: media_player.tv_2
                                           data:
                                             media_content_type: app
-                                            media_content_id: "com.stingtv.stingtv"
+                                            media_content_id: "xNjDbgVJeT.stingtv"
 
-                                  # Diagnostic — shows real source names & select entities
-                                  # Remove this card once apps & audio are working correctly
-                                  - type: custom:mushroom-template-card
-                                    primary: "Sources: {{ state_attr('media_player.tv_2', 'source_list') | join(', ') }}"
-                                    secondary: >
-                                      {% set ents = namespace(out=[]) %}
-                                      {% for s in states.select %}
-                                        {% if 'tv' in s.entity_id | lower %}
-                                          {% set ents.out = ents.out + [s.entity_id ~ '=' ~ s.state] %}
-                                        {% endif %}
-                                      {% endfor %}
-                                      Select entities: {{ ents.out | join(' | ') }}
-                                    icon: mdi:information-outline
-                                    icon_color: grey
-                                    layout: horizontal
-                                    fill_container: true
-                                    card_mod:
-                                      style: |
-                                        ha-card { opacity: 0.6; font-size: 10px; }
 
                               # ── RIGHT COLUMN — Navigation remote ────────────
                               - type: vertical-stack
@@ -852,7 +833,7 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: Back
                                         icon: mdi:keyboard-backspace
-                                        icon_color: grey
+                                        icon_color: black
                                         layout: vertical
                                         fill_container: true
                                         tap_action:
@@ -866,7 +847,7 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: ""
                                         icon: mdi:chevron-up
-                                        icon_color: grey
+                                        icon_color: black
                                         layout: vertical
                                         fill_container: true
                                         tap_action:
@@ -880,7 +861,7 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: Home
                                         icon: mdi:home-outline
-                                        icon_color: grey
+                                        icon_color: black
                                         layout: vertical
                                         fill_container: true
                                         tap_action:
@@ -898,7 +879,7 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: ""
                                         icon: mdi:chevron-left
-                                        icon_color: grey
+                                        icon_color: black
                                         layout: vertical
                                         fill_container: true
                                         tap_action:
@@ -912,7 +893,7 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: OK
                                         icon: mdi:circle-outline
-                                        icon_color: white
+                                        icon_color: black
                                         layout: vertical
                                         fill_container: true
                                         tap_action:
@@ -926,7 +907,7 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: ""
                                         icon: mdi:chevron-right
-                                        icon_color: grey
+                                        icon_color: black
                                         layout: vertical
                                         fill_container: true
                                         tap_action:
@@ -944,7 +925,7 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: Menu
                                         icon: mdi:menu
-                                        icon_color: grey
+                                        icon_color: black
                                         layout: vertical
                                         fill_container: true
                                         tap_action:
@@ -958,7 +939,7 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: ""
                                         icon: mdi:chevron-down
-                                        icon_color: grey
+                                        icon_color: black
                                         layout: vertical
                                         fill_container: true
                                         tap_action:
