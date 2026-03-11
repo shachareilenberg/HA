@@ -30,8 +30,6 @@ if [ -z "$GIT" ]; then
 fi
 
 # ── locate SSH private key ────────────────────────────────────────────────────
-log "DEBUG: .ssh contents: $(ls -la ${HOME}/.ssh/ 2>&1 | tr '\n' '|')"
-
 SSH_KEY=""
 for K in "${HOME}/.ssh/id_ed25519" "${HOME}/.ssh/id_rsa" "${HOME}/.ssh/id_ecdsa" \
          "${HOME}/.ssh/id_ecdsa_sk" "${HOME}/.ssh/id_ed25519_sk"; do
@@ -100,7 +98,19 @@ fi
 
 # ── push (includes any pre-existing unpushed commits) ────────────────────────
 if ! "$GIT" push origin "$BRANCH" 2>> "$LOG"; then
-  # If we just made a commit and push failed, undo it so it doesn't pile up
+  # Non-fast-forward: remote is ahead (e.g. Mac pushed). Rebase and retry once.
+  BEHIND="$("$GIT" rev-list "HEAD..origin/$BRANCH" --count 2>/dev/null || echo 0)"
+  if [ "$BEHIND" -gt 0 ]; then
+    log "WARN: remote is ahead by $BEHIND — rebasing and retrying push"
+    if "$GIT" pull --rebase origin "$BRANCH" 2>> "$LOG"; then
+      if "$GIT" push origin "$BRANCH" 2>> "$LOG"; then
+        log "OK: pushed changes to origin/$BRANCH (after rebase)"
+        exit 0
+      fi
+    fi
+    log "ERROR: push still failed after rebase"
+  fi
+  # Push failed for another reason — undo the local commit so it doesn't pile up
   if [ "$COMMITTED" -eq 1 ]; then
     "$GIT" reset --soft HEAD~1
     log "WARN: push failed — commit undone, will retry next run. KEY=$SSH_KEY"

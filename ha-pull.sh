@@ -32,8 +32,6 @@ if [ -z "$GIT" ]; then
 fi
 
 # ── locate SSH private key ────────────────────────────────────────────────────
-log "DEBUG: .ssh contents: $(ls -la ${HOME}/.ssh/ 2>&1 | tr '\n' '|')"
-
 SSH_KEY=""
 for K in "${HOME}/.ssh/id_ed25519" "${HOME}/.ssh/id_rsa" "${HOME}/.ssh/id_ecdsa" \
          "${HOME}/.ssh/id_ecdsa_sk" "${HOME}/.ssh/id_ed25519_sk"; do
