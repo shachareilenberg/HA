@@ -2,82 +2,96 @@
 # create-dashboards.sh
 #
 # Creates all 4 HA dashboards via the Chronograf API, routing through
-# the HA Supervisor ingress proxy (the only allowed path to Chronograf).
+# the HA Supervisor ingress proxy.
 #
 # Run from the HA SSH add-on terminal:
 #   cd /config/chronograf && bash create-dashboards.sh
 
-set -eo pipefail
-
 SUPERVISOR="http://172.30.32.2"
 ADDON_SLUG="a0d7b954_influxdb"
 
-# ── Supervisor token ──────────────────────────────────────────────────────────
+# ── 1. Supervisor token ───────────────────────────────────────────────────────
 if [ -z "$SUPERVISOR_TOKEN" ]; then
-  echo "ERROR: \$SUPERVISOR_TOKEN not set. Run from the HA SSH add-on terminal."
+  echo "ERROR: \$SUPERVISOR_TOKEN not set."
   exit 1
 fi
-echo "Supervisor token: present (${#SUPERVISOR_TOKEN} chars)"
+echo "1. Token: present (${#SUPERVISOR_TOKEN} chars)"
 
-# ── Add-on info ───────────────────────────────────────────────────────────────
-echo "Fetching add-on info..."
-ADDON_INFO=$(curl -sf "${SUPERVISOR}/addons/${ADDON_SLUG}/info" \
+# ── 2. Add-on info ────────────────────────────────────────────────────────────
+echo "2. Fetching add-on info..."
+INFO=$(curl -s "${SUPERVISOR}/addons/${ADDON_SLUG}/info" \
   -H "Authorization: Bearer ${SUPERVISOR_TOKEN}")
+echo "   raw (first 200): ${INFO:0:200}"
 
-INGRESS_ENTRY=$(echo "$ADDON_INFO" | jq -r '.data.ingress_entry')
-# ingress_entry = /api/hassio_ingress/TOKEN — extract the token (last path segment)
+INGRESS_ENTRY=$(echo "$INFO" | jq -r '.data.ingress_entry // empty' 2>/dev/null)
 INGRESS_TOKEN=$(echo "$INGRESS_ENTRY" | awk -F'/' '{print $NF}')
+echo "   ingress_entry : $INGRESS_ENTRY"
+echo "   ingress_token : $INGRESS_TOKEN"
 
-echo "  ingress_entry : $INGRESS_ENTRY"
-echo "  ingress_token : ${INGRESS_TOKEN:0:20}..."
+if [ -z "$INGRESS_TOKEN" ]; then
+  echo "ERROR: Could not extract ingress token. Check the add-on slug and info above."
+  exit 1
+fi
 
-# ── Create ingress session ────────────────────────────────────────────────────
-echo "Creating ingress session..."
-SESSION=$(curl -sf -X POST "${SUPERVISOR}/ingress/session" \
-  -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
-  | jq -r '.data.session')
-echo "  session: ${SESSION:0:20}..."
+# ── 3. Create ingress session ─────────────────────────────────────────────────
+echo "3. Creating ingress session..."
+SESSION_RAW=$(curl -s -X POST "${SUPERVISOR}/ingress/session" \
+  -H "Authorization: Bearer ${SUPERVISOR_TOKEN}")
+echo "   raw response: $SESSION_RAW"
+
+# Supervisor may return raw token string OR {"result":"ok","data":{"session":"..."}}
+SESSION=$(echo "$SESSION_RAW" | jq -r '.data.session // empty' 2>/dev/null)
+if [ -z "$SESSION" ]; then
+  SESSION="$SESSION_RAW"  # use raw value if not JSON
+fi
+echo "   session: ${SESSION:0:30}..."
 
 COOKIE="Cookie: ingress_session=${SESSION}"
 
-# ── Find working Chronograf API URL ──────────────────────────────────────────
-# Try: /ingress/{token}{ingress_entry}/chronograf/v1/dashboards
-# Then: /ingress/{token}/chronograf/v1/dashboards
+# ── 4. Find working Chronograf API URL ────────────────────────────────────────
+echo "4. Testing Chronograf URLs..."
 CHRONOGRAF_API=""
-for CANDIDATE in \
-  "${SUPERVISOR}/ingress/${INGRESS_TOKEN}${INGRESS_ENTRY}/chronograf/v1/dashboards" \
-  "${SUPERVISOR}/ingress/${INGRESS_TOKEN}/chronograf/v1/dashboards"
+for URL in \
+  "${SUPERVISOR}/ingress/${INGRESS_TOKEN}/chronograf/v1/dashboards" \
+  "${SUPERVISOR}/ingress/${INGRESS_TOKEN}${INGRESS_ENTRY}/chronograf/v1/dashboards"
 do
-  echo "Trying: $CANDIDATE"
-  CODE=$(curl -s -o /dev/null -w "%{http_code}" "$CANDIDATE" -H "$COOKIE")
-  echo "  HTTP $CODE"
+  CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL" -H "$COOKIE")
+  echo "   $URL"
+  echo "   → HTTP $CODE"
   if [ "$CODE" = "200" ]; then
-    CHRONOGRAF_API="$CANDIDATE"
+    CHRONOGRAF_API="$URL"
     break
   fi
 done
 
 if [ -z "$CHRONOGRAF_API" ]; then
-  echo "ERROR: Cannot reach Chronograf through either URL."
-  echo "Check the InfluxDB add-on is running and try again."
+  echo ""
+  echo "ERROR: Cannot reach Chronograf through any URL."
+  echo "Make sure the InfluxDB add-on is running and try again."
   exit 1
 fi
 
-# ── Create dashboards ─────────────────────────────────────────────────────────
+echo "   Using: $CHRONOGRAF_API"
+
+# ── 5. Create dashboards ──────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 echo ""
-echo "Creating dashboards..."
+echo "5. Creating dashboards..."
 
 for f in "$SCRIPT_DIR"/0[0-9]-*.json; do
   [ -f "$f" ] || continue
   NAME=$(jq -r '.dashboard.name' "$f")
-  echo "  Creating: $NAME"
-  jq -c '.dashboard' "$f" | curl -sf -X POST "$CHRONOGRAF_API" \
-      -H "Content-Type: application/json" \
-      -H "$COOKIE" \
-      --data-binary @- > /dev/null
-  echo "  Done"
+  echo "   Creating: $NAME"
+  RESULT=$(jq -c '.dashboard' "$f" | curl -s -X POST "$CHRONOGRAF_API" \
+    -H "Content-Type: application/json" \
+    -H "$COOKIE" \
+    --data-binary @-)
+  if echo "$RESULT" | jq -e '.id' > /dev/null 2>&1; then
+    echo "   → OK (id: $(echo "$RESULT" | jq -r '.id'))"
+  else
+    echo "   → FAILED: ${RESULT:0:150}"
+  fi
 done
 
 echo ""
-echo "All dashboards created. Open Chronograf → Dashboards."
+echo "Done. Open Chronograf → Dashboards."
