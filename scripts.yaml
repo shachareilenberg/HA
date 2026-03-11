@@ -128,20 +128,27 @@ turn_off_all_lights_v2:
     exclude_entities:
       description: List of light entities to exclude
       example: light.kitchen, light.living_room
+      default: []
     exclude_areas:
       description: List of area names to exclude
       example: Bedroom, Living Room
+      default: []
     exclude_labels:
       description: List of labels to exclude
       example: Critical, Do not turn off
+      default: []
   sequence:
   - action: script.turn_off_all_by_domain
-    metadata: {}
     data:
       domain: light
-      exclude_entities: '{{ exclude_entities | default([], true) }}'
-      exclude_areas: '{{ exclude_areas | default([], true) }}'
-      exclude_labels: '{{ exclude_labels | default([], true) }}'
+      exclude_entities: '{% set permanent_ignore = [''light.browser_mod_d84bc37d_600ba656_screen'']
+        %} {% set user_ignore = exclude_entities if exclude_entities is list else
+        [exclude_entities] if exclude_entities | length > 0 else [] %} {{ user_ignore
+        + permanent_ignore }}
+
+        '
+      exclude_areas: '{{ exclude_areas }}'
+      exclude_labels: '{{ exclude_labels }}'
 turn_off_all_by_domain:
   alias: Turn off all by domain
   mode: queued
@@ -149,7 +156,6 @@ turn_off_all_by_domain:
   fields:
     domain:
       description: Domain to turn off (light, climate, switch, fan, etc.)
-      example: climate
     exclude_entities:
       description: Entities to exclude
       default: []
@@ -161,15 +167,22 @@ turn_off_all_by_domain:
       default: []
   sequence:
   - variables:
-      entities: "{% set all = states[domain] | map(attribute='entity_id') | list %}
-        {% set filtered = namespace(ids=[]) %} {% for e in all if states(e) not in
-        ['off', 'unavailable', 'unknown'] %}\n  {% set a = area_name(e) %}\n  {% set
-        l = labels(e) %}\n  {% if e not in exclude_entities and a not in exclude_areas
-        and not (l | select('in', exclude_labels) | list | count > 0) %}\n    {% set
-        filtered.ids = filtered.ids + [e] %}\n  {% endif %}\n{% endfor %} {{ filtered.ids
-        }}\n"
+      entities: "{% set domain_states = states[domain] | default([]) %} {% set ns
+        = namespace(result=[]) %} {# Ensure excludes are treated as lists even if
+        empty #} {% set ex_entities = exclude_entities | default([], true) %} {% set
+        ex_areas = exclude_areas | default([], true) %} {% set ex_labels = exclude_labels
+        | default([], true) %}\n{% for s in domain_states if s.state not in ['off',
+        'unavailable', 'unknown'] %}\n  {% set entity_id = s.entity_id %}\n  {# Provide
+        an empty string default if area_name is None #}\n  {% set a_name = area_name(entity_id)
+        | default('', true) %}\n  {% set e_labels = labels(entity_id) | default([],
+        true) %}\n  \n  {% set is_excluded_entity = entity_id in ex_entities %}\n
+        \ {% set is_excluded_area = a_name != '' and a_name in ex_areas %}\n  {% set
+        is_excluded_label = (e_labels | select('in', ex_labels) | list | count > 0)
+        %}\n  \n  {% if not is_excluded_entity and not is_excluded_area and not is_excluded_label
+        %}\n    {% set ns.result = ns.result + [entity_id] %}\n  {% endif %}\n{% endfor
+        %} {{ ns.result }}"
   - condition: template
-    value_template: '{{ entities | count > 0 }}'
+    value_template: '{{ entities is list and entities | count > 0 }}'
   - repeat:
       for_each: '{{ entities }}'
       sequence:
