@@ -9,7 +9,9 @@ log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [push] $*" >> "$LOG"; }
 log "--- run start ---"
 
 # ── fix HOME for HA's shell_command environment ───────────────────────────────
-for _H in /root /homeassistant /home/homeassistant; do
+# /config/.ssh/ is preferred — it's writable by the HA process regardless of user.
+# /root/.ssh/ is only accessible when shell_command runs as root.
+for _H in /config /root /homeassistant /home/homeassistant; do
   if [ -d "$_H/.ssh" ]; then
     export HOME="$_H"
     break
