@@ -582,10 +582,6 @@ views:
                 fill_container: true
 
               # ── Apps & Output ──────────────────────────────────────────────
-              # Yamaha: sets the TV audio output to the external ARC/receiver.
-              # To verify the entity and option: Developer Tools → States →
-              #   search "tv_2" → look for a select entity with sound/output in the name.
-              #   Common option values: "external_arc", "bt_soundbar", "tv_speaker"
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-template-card
@@ -597,11 +593,7 @@ views:
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: select.select_option
-                      target:
-                        entity_id: select.tv_2_sound_output
-                      data:
-                        option: "external_arc"
+                      service: script.tv_audio_yamaha
                   - type: custom:mushroom-template-card
                     primary: TV Speaker
                     secondary: Audio out
@@ -611,11 +603,7 @@ views:
                     fill_container: true
                     tap_action:
                       action: call-service
-                      service: select.select_option
-                      target:
-                        entity_id: select.tv_2_sound_output
-                      data:
-                        option: "tv_speaker"
+                      service: script.tv_audio_tv_speaker
                   - type: custom:mushroom-template-card
                     primary: YouTube
                     icon: mdi:youtube
@@ -662,6 +650,20 @@ views:
               - type: horizontal-stack
                 cards:
                   - type: custom:mushroom-template-card
+                    primary: Netflix
+                    icon: mdi:netflix
+                    icon_color: red
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "org.tizen.netflix-app"
+                  - type: custom:mushroom-template-card
                     primary: Apple TV
                     icon: mdi:apple
                     icon_color: grey
@@ -674,7 +676,7 @@ views:
                         entity_id: media_player.tv_2
                       data:
                         media_content_type: app
-                        media_content_id: "3201807018807"
+                        media_content_id: "com.samsung.tv.aria-video"
                   - type: custom:mushroom-template-card
                     primary: Prime
                     icon: mdi:amazon
@@ -688,7 +690,21 @@ views:
                         entity_id: media_player.tv_2
                       data:
                         media_content_type: app
-                        media_content_id: "3201601007230"
+                        media_content_id: "org.tizen.primevideo"
+                  - type: custom:mushroom-template-card
+                    primary: Disney+
+                    icon: mdi:alpha-d-box
+                    icon_color: indigo
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: media_player.play_media
+                      target:
+                        entity_id: media_player.tv_2
+                      data:
+                        media_content_type: app
+                        media_content_id: "Di0N6xZMEA.disneyplus"
 
               # ── Navigation remote ─────────────────────────────────────────
               # Keys work via the Samsung Smart TV / SamsungTV-Tizen integration.

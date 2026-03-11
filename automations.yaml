@@ -749,11 +749,15 @@
       entity_id:
       - cover.slvn_slvn_trys
       - cover.slvn_slvn_trys_khlvn
+<<<<<<< HEAD
   - action: select.select_option
     target:
       entity_id: select.tv_2_sound_output
     data:
       option: external_arc
+=======
+  - action: script.tv_audio_yamaha
+>>>>>>> 6176f1ac2e49c589d400cd5286bb8fb63dfd255b
   mode: single
 - id: '1773300000001'
   alias: Config Update — Pull from GitHub every 5 min
