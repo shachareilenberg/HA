@@ -340,11 +340,17 @@ tv_mute_toggle:
 
 tv_audio_yamaha:
   alias: TV Audio → Yamaha (Living Room Speakers On)
-  description: Turn on the living room speakers (Yamaha receiver).
+  description: Turn on the living room speakers and select TV as the source.
   sequence:
   - action: media_player.turn_on
     target:
       entity_id: media_player.living_room_2
+  - delay: "00:00:02"
+  - action: media_player.select_source
+    target:
+      entity_id: media_player.living_room_2
+    data:
+      source: "TV"
   mode: single
 
 tv_audio_tv_speaker:
