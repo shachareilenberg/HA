@@ -222,7 +222,7 @@ views:
                   {% set s = states('sensor.git_setup_status') %}
                   {% if s == 'git_not_found' %}Git not found
                   {% elif s == 'not_a_repo' %}Run ha-git-setup.sh
-                  {% elif s.startswith('ok:') %}Branch: {{ s[3:] }}
+                  {% elif s.startswith('ok:') %}Branch: {{ s[3:] | trim }}
                   {% else %}{{ s }}
                   {% endif %}
                 secondary: Git status
@@ -247,8 +247,9 @@ views:
                     layout: vertical
                     fill_container: true
                     tap_action:
-                      action: call-service
-                      service: shell_command.ha_pull_config
+                      action: perform-action
+                      perform_action: shell_command.ha_pull_config
+                      data: {}
                   - type: custom:mushroom-template-card
                     primary: Push
                     secondary: Commit & push
@@ -257,8 +258,9 @@ views:
                     layout: vertical
                     fill_container: true
                     tap_action:
-                      action: call-service
-                      service: shell_command.ha_push_config
+                      action: perform-action
+                      perform_action: shell_command.ha_push_config
+                      data: {}
 
               # ── Apps ──────────────────────────────
               # Tapping opens the baby monitor app via an iOS Shortcut.
@@ -693,6 +695,9 @@ views:
                               - type: vertical-stack
                                 cards:
 
+                                  - type: custom:mushroom-title-card
+                                    title: Apps & Audio
+
                                   # Audio output
                                   - type: horizontal-stack
                                     cards:
@@ -953,21 +958,21 @@ views:
                                       - type: custom:mushroom-template-card
                                         primary: >
                                           {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
-                                            Unmute
-                                          {% else %}
                                             Mute
+                                          {% else %}
+                                            Unmute
                                           {% endif %}
                                         icon: >
                                           {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
-                                            mdi:volume-off
-                                          {% else %}
                                             mdi:volume-mute
+                                          {% else %}
+                                            mdi:volume-off
                                           {% endif %}
                                         icon_color: >
                                           {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
-                                            red
+                                            black
                                           {% else %}
-                                            grey
+                                            red
                                           {% endif %}
                                         layout: vertical
                                         fill_container: true

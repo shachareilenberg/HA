@@ -325,6 +325,7 @@ good_night_event_25m_delayed:
   description: ''
   mode: queued
   max: 10
+
 tv_mute_toggle:
   alias: TV — Toggle Mute
   description: Sends KEY_MUTE hardware toggle (reliable regardless of attribute availability).
@@ -336,21 +337,27 @@ tv_mute_toggle:
       media_content_type: send_key
       media_content_id: KEY_MUTE
   mode: single
+
 tv_audio_yamaha:
-  alias: TV Audio → Yamaha (Living Room Speakers On)
-  description: Turn on the living room speakers (Yamaha receiver).
+  alias: "TV Audio - Yamaha (Living Room Speakers On)"
+  description: "Turn on the living room speakers and select TV as the source."
   sequence:
   - action: media_player.turn_on
     target:
-      entity_id:
-      - media_player.living_room_2
-    data: {}
+      entity_id: media_player.living_room_2
+  - delay: "00:00:02"
+  - action: media_player.select_source
+    target:
+      entity_id: media_player.living_room_2
+    data:
+      source: "TV"
   mode: single
+
 tv_audio_tv_speaker:
-  alias: TV Audio → TV Speaker (Living Room Speakers Off)
-  description: Turn off the living room speakers, routing audio back to TV speaker.
+  alias: "TV Audio - TV Speaker (Living Room Speakers Off)"
+  description: "Turn off the living room speakers, routing audio back to TV speaker."
   sequence:
   - action: media_player.turn_off
     target:
-      entity_id: media_player.living_room
+      entity_id: media_player.living_room_2
   mode: single

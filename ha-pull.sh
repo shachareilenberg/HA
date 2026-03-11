@@ -107,6 +107,7 @@ if ! "$GIT" pull --rebase origin "$BRANCH" 2>>"$GIT_TMP"; then
   log "ERROR: git pull --rebase failed (branch=$BRANCH behind=$BEHIND)"
   exit 1
 fi
+: > "$GIT_TMP"  # suppress successful pull output
 
 # Only signal a restart-worthy update if config files changed — not just ha-git.log
 CONFIG_CHANGED="$("$GIT" diff --name-only "$PREV_HEAD" HEAD 2>/dev/null | grep -v '^ha-git\.log$')"
