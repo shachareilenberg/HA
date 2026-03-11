@@ -3,377 +3,1209 @@
     "chronografVersion": "1.8.0"
   },
   "dashboard": {
-    "id": "",
-    "name": "HA — Lights Usage",
-        "cells": [
+    "name": "HA \u2014 Lights Usage",
+    "cells": [
+      {
+        "i": "c001",
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 3,
+        "minW": 2,
+        "minH": 2,
+        "name": "Living Room Lights",
+        "queries": [
           {
-            "i": "c001",
-            "x": 0, "y": 0, "w": 6, "h": 3,
-            "minW": 2, "minH": 2,
-            "name": "Living Room Lights",
-            "queries": [
-              {
-                "query": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
+            "query": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
               },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              }
-            ],
-            "axes": {
-              "x": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y": {"bounds": ["0", "1.2"], "label": "1=on  0=off", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y2": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"}
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
             },
-            "type": "line-stepplot",
-            "colors": [],
-            "legend": {"type": "static", "orientation": "bottom"},
-            "tableOptions": {"verticalTimeAxis": true, "sortBy": {"internalName": "time", "displayName": "", "visible": true}, "wrapping": "truncate", "fixFirstColumn": true},
-            "fieldOptions": [],
-            "timeFormat": "MM/DD/YYYY HH:mm:ss",
-            "decimalPlaces": {"isEnforced": false, "digits": 2},
-            "note": "",
-            "noteVisibility": "default"
+            "source": "",
+            "type": "influxql"
           },
           {
-            "i": "c002",
-            "x": 6, "y": 0, "w": 6, "h": 3,
-            "minW": 2, "minH": 2,
-            "name": "Kitchen & Entrance Lights",
-            "queries": [
-              {
-                "query": "SELECT LAST(\"value\") AS \"Kitchen strip\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Kitchen strip\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
+            "query": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
               },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Kitchen wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Kitchen wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Entrance wall\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Entrance wall\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Entrance spotlight\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_tvrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Entrance spotlight\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_tvrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              }
-            ],
-            "axes": {
-              "x": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y": {"bounds": ["0", "1.2"], "label": "1=on  0=off", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y2": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"}
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
             },
-            "type": "line-stepplot",
-            "colors": [],
-            "legend": {"type": "static", "orientation": "bottom"},
-            "tableOptions": {"verticalTimeAxis": true, "sortBy": {"internalName": "time", "displayName": "", "visible": true}, "wrapping": "truncate", "fixFirstColumn": true},
-            "fieldOptions": [],
-            "timeFormat": "MM/DD/YYYY HH:mm:ss",
-            "decimalPlaces": {"isEnforced": false, "digits": 2},
-            "note": "",
-            "noteVisibility": "default"
-          },
-          {
-            "i": "c003",
-            "x": 0, "y": 3, "w": 6, "h": 3,
-            "minW": 2, "minH": 2,
-            "name": "Office Lights",
-            "queries": [
-              {
-                "query": "SELECT LAST(\"value\") AS \"Ceiling\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Ceiling\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Window wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_qyr_khlvn' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Window wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_qyr_khlvn' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              }
-            ],
-            "axes": {
-              "x": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y": {"bounds": ["0", "1.2"], "label": "1=on  0=off", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y2": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"}
-            },
-            "type": "line-stepplot",
-            "colors": [],
-            "legend": {"type": "static", "orientation": "bottom"},
-            "tableOptions": {"verticalTimeAxis": true, "sortBy": {"internalName": "time", "displayName": "", "visible": true}, "wrapping": "truncate", "fixFirstColumn": true},
-            "fieldOptions": [],
-            "timeFormat": "MM/DD/YYYY HH:mm:ss",
-            "decimalPlaces": {"isEnforced": false, "digits": 2},
-            "note": "",
-            "noteVisibility": "default"
-          },
-          {
-            "i": "c004",
-            "x": 6, "y": 3, "w": 6, "h": 3,
-            "minW": 2, "minH": 2,
-            "name": "Bedroom Lights",
-            "queries": [
-              {
-                "query": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Entrance light\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_knysh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Entrance light\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_knysh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Right reading\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_qryh_ymyn' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Right reading\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_qryh_ymyn' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Left reading\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_qryh_shml' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Left reading\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_qryh_shml' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              }
-            ],
-            "axes": {
-              "x": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y": {"bounds": ["0", "1.2"], "label": "1=on  0=off", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y2": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"}
-            },
-            "type": "line-stepplot",
-            "colors": [],
-            "legend": {"type": "static", "orientation": "bottom"},
-            "tableOptions": {"verticalTimeAxis": true, "sortBy": {"internalName": "time", "displayName": "", "visible": true}, "wrapping": "truncate", "fixFirstColumn": true},
-            "fieldOptions": [],
-            "timeFormat": "MM/DD/YYYY HH:mm:ss",
-            "decimalPlaces": {"isEnforced": false, "digits": 2},
-            "note": "",
-            "noteVisibility": "default"
-          },
-          {
-            "i": "c005",
-            "x": 0, "y": 6, "w": 4, "h": 3,
-            "minW": 2, "minH": 2,
-            "name": "Kids Room Lights",
-            "queries": [
-              {
-                "query": "SELECT LAST(\"value\") AS \"Kids ceiling\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Kids ceiling\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              }
-            ],
-            "axes": {
-              "x": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y": {"bounds": ["0", "1.2"], "label": "1=on  0=off", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y2": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"}
-            },
-            "type": "line-stepplot",
-            "colors": [],
-            "legend": {"type": "static", "orientation": "bottom"},
-            "tableOptions": {"verticalTimeAxis": true, "sortBy": {"internalName": "time", "displayName": "", "visible": true}, "wrapping": "truncate", "fixFirstColumn": true},
-            "fieldOptions": [],
-            "timeFormat": "MM/DD/YYYY HH:mm:ss",
-            "decimalPlaces": {"isEnforced": false, "digits": 2},
-            "note": "",
-            "noteVisibility": "default"
-          },
-          {
-            "i": "c006",
-            "x": 4, "y": 6, "w": 4, "h": 3,
-            "minW": 2, "minH": 2,
-            "name": "Kids Bathroom Lights",
-            "queries": [
-              {
-                "query": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Night light\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_tvrt_lylh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Night light\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_tvrt_lylh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              }
-            ],
-            "axes": {
-              "x": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y": {"bounds": ["0", "1.2"], "label": "1=on  0=off", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y2": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"}
-            },
-            "type": "line-stepplot",
-            "colors": [],
-            "legend": {"type": "static", "orientation": "bottom"},
-            "tableOptions": {"verticalTimeAxis": true, "sortBy": {"internalName": "time", "displayName": "", "visible": true}, "wrapping": "truncate", "fixFirstColumn": true},
-            "fieldOptions": [],
-            "timeFormat": "MM/DD/YYYY HH:mm:ss",
-            "decimalPlaces": {"isEnforced": false, "digits": 2},
-            "note": "",
-            "noteVisibility": "default"
-          },
-          {
-            "i": "c007",
-            "x": 8, "y": 6, "w": 4, "h": 3,
-            "minW": 2, "minH": 2,
-            "name": "Hallway & Balcony Lights",
-            "queries": [
-              {
-                "query": "SELECT LAST(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Balcony\" FROM /.*/ WHERE \"entity_id\" = 'light.mrpst_mrpst_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Balcony\" FROM /.*/ WHERE \"entity_id\" = 'light.mrpst_mrpst_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              }
-            ],
-            "axes": {
-              "x": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y": {"bounds": ["0", "1.2"], "label": "1=on  0=off", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y2": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"}
-            },
-            "type": "line-stepplot",
-            "colors": [],
-            "legend": {"type": "static", "orientation": "bottom"},
-            "tableOptions": {"verticalTimeAxis": true, "sortBy": {"internalName": "time", "displayName": "", "visible": true}, "wrapping": "truncate", "fixFirstColumn": true},
-            "fieldOptions": [],
-            "timeFormat": "MM/DD/YYYY HH:mm:ss",
-            "decimalPlaces": {"isEnforced": false, "digits": 2},
-            "note": "",
-            "noteVisibility": "default"
-          },
-          {
-            "i": "c008",
-            "x": 0, "y": 9, "w": 12, "h": 5,
-            "minW": 2, "minH": 2,
-            "name": "Daily Light Activity — Toggle Events per Room (14 d)",
-            "queries": [
-              {
-                "query": "SELECT COUNT(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > now() - 14d GROUP BY time(1d) fill(0)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT COUNT(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > now() - 14d GROUP BY time(1d) fill(0)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT COUNT(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > now() - 14d GROUP BY time(1d) fill(0)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT COUNT(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > now() - 14d GROUP BY time(1d) fill(0)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT COUNT(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT COUNT(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT COUNT(\"value\") AS \"Kids\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT COUNT(\"value\") AS \"Kids\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT COUNT(\"value\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > now() - 14d GROUP BY time(1d) fill(0)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT COUNT(\"value\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > now() - 14d GROUP BY time(1d) fill(0)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT COUNT(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > now() - 14d GROUP BY time(1d) fill(0)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT COUNT(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > now() - 14d GROUP BY time(1d) fill(0)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              }
-            ],
-            "axes": {
-              "x": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y": {"bounds": ["0", ""], "label": "state change events", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y2": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"}
-            },
-            "type": "bar",
-            "colors": [],
-            "legend": {"type": "static", "orientation": "bottom"},
-            "tableOptions": {"verticalTimeAxis": true, "sortBy": {"internalName": "time", "displayName": "", "visible": true}, "wrapping": "truncate", "fixFirstColumn": true},
-            "fieldOptions": [],
-            "timeFormat": "MM/DD/YYYY",
-            "decimalPlaces": {"isEnforced": false, "digits": 0},
-            "note": "Counts state-change events per day. Correlates with usage frequency.",
-            "noteVisibility": "showWhenNoData"
-          },
-          {
-            "i": "c009",
-            "x": 0, "y": 14, "w": 12, "h": 4,
-            "minW": 2, "minH": 2,
-            "name": "Late-Night Activity — Lights on between midnight and 6 am",
-            "queries": [
-              {
-                "query": "SELECT LAST(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              },
-              {
-                "query": "SELECT LAST(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)",
-                "queryConfig": {"database": "ha_data", "measurement": "", "retentionPolicy": "autogen", "fields": [], "tags": {}, "groupBy": {"time": "", "tags": []}, "areTagsAccepted": false, "rawText": "SELECT LAST(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)", "range": null, "shifts": null},
-                "source": "",
-                "type": "influxql"
-              }
-            ],
-            "axes": {
-              "x": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y": {"bounds": ["0", "1.2"], "label": "1=on  0=off", "prefix": "", "suffix": "", "base": "10", "scale": "linear"},
-              "y2": {"bounds": ["", ""], "label": "", "prefix": "", "suffix": "", "base": "10", "scale": "linear"}
-            },
-            "type": "line-stepplot",
-            "colors": [],
-            "legend": {"type": "static", "orientation": "bottom"},
-            "tableOptions": {"verticalTimeAxis": true, "sortBy": {"internalName": "time", "displayName": "", "visible": true}, "wrapping": "truncate", "fixFirstColumn": true},
-            "fieldOptions": [],
-            "timeFormat": "MM/DD/YYYY HH:mm:ss",
-            "decimalPlaces": {"isEnforced": false, "digits": 2},
-            "note": "Set the dashboard time picker to midnight–6am to focus on late-night usage. Main lights only.",
-            "noteVisibility": "default"
+            "source": "",
+            "type": "influxql"
           }
         ],
-        "templates": [],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "c002",
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 3,
+        "minW": 2,
+        "minH": 2,
+        "name": "Kitchen & Entrance Lights",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Kitchen strip\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Kitchen strip\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Kitchen wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Kitchen wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Entrance wall\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Entrance wall\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Entrance spotlight\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_tvrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Entrance spotlight\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_tvrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "c003",
+        "x": 0,
+        "y": 3,
+        "w": 6,
+        "h": 3,
+        "minW": 2,
+        "minH": 2,
+        "name": "Office Lights",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Ceiling\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Ceiling\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Window wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_qyr_khlvn' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Window wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_qyr_khlvn' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "c004",
+        "x": 6,
+        "y": 3,
+        "w": 6,
+        "h": 3,
+        "minW": 2,
+        "minH": 2,
+        "name": "Bedroom Lights",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Entrance light\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_knysh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Entrance light\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_knysh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Right reading\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_qryh_ymyn' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Right reading\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_qryh_ymyn' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Left reading\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_qryh_shml' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Left reading\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_qryh_shml' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "c005",
+        "x": 0,
+        "y": 6,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 2,
+        "name": "Kids Room Lights",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Kids ceiling\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Kids ceiling\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "c006",
+        "x": 4,
+        "y": 6,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 2,
+        "name": "Kids Bathroom Lights",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Wall\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Night light\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_tvrt_lylh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Night light\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_tvrt_lylh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Spotlights\" FROM /.*/ WHERE \"entity_id\" = 'light.mqlkht_mqlkht_spvtym' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "c007",
+        "x": 8,
+        "y": 6,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 2,
+        "name": "Hallway & Balcony Lights",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Balcony\" FROM /.*/ WHERE \"entity_id\" = 'light.mrpst_mrpst_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Balcony\" FROM /.*/ WHERE \"entity_id\" = 'light.mrpst_mrpst_qyr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "c008",
+        "x": 0,
+        "y": 9,
+        "w": 12,
+        "h": 5,
+        "minW": 2,
+        "minH": 2,
+        "name": "Daily Light Activity \u2014 Toggle Events per Room (14 d)",
+        "queries": [
+          {
+            "query": "SELECT COUNT(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"value\") AS \"Kids\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"value\") AS \"Kids\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"value\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"value\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              ""
+            ],
+            "label": "state change events",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "bar",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 0
+        },
+        "note": "Counts state-change events per day. Correlates with usage frequency.",
+        "noteVisibility": "showWhenNoData"
+      },
+      {
+        "i": "c009",
+        "x": 0,
+        "y": 14,
+        "w": 12,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "Late-Night Activity \u2014 Lights on between midnight and 6 am",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "Set the dashboard time picker to midnight\u20136am to focus on late-night usage. Main lights only.",
+        "noteVisibility": "default"
+      }
+    ],
+    "templates": [],
     "links": {}
   }
 }

@@ -53,7 +53,12 @@ for f in "$SCRIPT_DIR"/0[0-9]-*.json; do
   [ -f "$f" ] || { echo "No files matched"; break; }
   NAME=$(python3 -c "import json; print(json.load(open('$f'))['dashboard']['name'])")
   echo "Creating: $NAME"
-  RESULT=$(python3 -c "import json,sys; d=json.load(open('$f')); sys.stdout.write(json.dumps(d['dashboard']))" \
+  RESULT=$(python3 -c "
+import json, sys
+d = json.load(open('$f'))['dashboard']
+d.pop('id', None)
+sys.stdout.write(json.dumps(d))
+" \
     | curl -s -w "\nHTTP:%{http_code}" -X POST "$CHRONOGRAF_API" \
       -H "Content-Type: application/json" -H "$COOKIE" \
       --data-binary @-)
