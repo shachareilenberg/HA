@@ -38,3 +38,8 @@ fatal: Could not read from remote repository.
 Please make sure you have the correct access rights
 and the repository exists.
 2026-03-11 10:56:45 [pull] ERROR: git fetch failed (check credentials / network). HOME=/root
+2026-03-11 11:00:00 [pull] --- run start ---
+2026-03-11 11:00:00 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git
+2026-03-11 11:00:00 [pull] DEBUG: remote=
+2026-03-11 11:00:00 [push] --- run start ---
+2026-03-11 11:00:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git
