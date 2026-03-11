@@ -920,3 +920,125 @@
       browser_id: REPLACE_WITH_IPAD_BROWSER_ID
       path: /ui-ipad
   mode: single
+
+##############################################################
+# SMART AWAY MODE — v3 additions
+#
+# Three layers:
+#  1. Auto ON  — when both persons leave and stay away 3+ min
+#  2. Auto OFF — when any person arrives home
+#  3. Auto OFF — when manual (non-automation) user activity
+#                is detected while Away is on AND someone is home
+##############################################################
+
+- id: away_mode_auto_on_all_away
+  alias: "Away Mode — Auto ON when everyone leaves"
+  description: >
+    Turns on Away Mode automatically after both persons have been
+    away for 3+ minutes. Guard against phone GPS jitter.
+  triggers:
+    - trigger: state
+      entity_id:
+        - person.shachar
+        - person.ariel
+      to: not_home
+      for: "00:03:00"
+  conditions:
+    - condition: state
+      entity_id: person.shachar
+      state: not_home
+      for: "00:03:00"
+    - condition: state
+      entity_id: person.ariel
+      state: not_home
+      for: "00:03:00"
+    - condition: state
+      entity_id: input_boolean.is_away_state
+      state: 'off'
+  actions:
+    - action: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.is_away_state
+  mode: single
+
+- id: away_mode_auto_off_arrival
+  alias: "Away Mode — Auto OFF when someone arrives"
+  description: >
+    Turns off Away Mode when any household member arrives home.
+  triggers:
+    - trigger: state
+      entity_id:
+        - person.shachar
+        - person.ariel
+      to: home
+  conditions:
+    - condition: state
+      entity_id: input_boolean.is_away_state
+      state: 'on'
+  actions:
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.is_away_state
+  mode: single
+
+- id: away_mode_auto_off_manual_activity
+  alias: "Away Mode — Auto OFF on manual user activity"
+  description: >
+    Clears Away Mode when a device (light / fan / heater / media)
+    is turned on by a direct user action (context.parent_id is None,
+    meaning it was NOT triggered by another automation or script).
+    Extra guard: only fires when at least one person is actually home,
+    preventing false clears from stale state reports.
+  triggers:
+    - trigger: state
+      entity_id:
+        # Living Room
+        - light.slvn_slvn_spvtym
+        - light.slvn_slvn_qyr
+        - fan.slvn_slvn_tqrh
+        # Kitchen
+        - light.mtbkh_mtbkh_ps
+        - light.mtbkh_mtbkh_qyr
+        - light.mtbkh_mtbkh_shvlkhn
+        - light.knysh_na
+        - light.mtbkh_mtbkh_y
+        # Entrance / Hallway / Balcony
+        - light.knysh_knysh_qyr
+        - light.knysh_knysh_tvrh
+        - light.msdrvn_msdrvn_ps
+        - light.mrpst_mrpst_qyr
+        - light.mrpst_mrpst_tqrh
+        # Office
+        - light.mshrd_mshrd_tqrh
+        - light.mshrd_mshrd_qyr_khlvn
+        - light.mshrd_mshrd_qyr
+        # Kids
+        - light.mm_d_mm_d_tqrh
+        - light.mqlkht_mqlkht_qyr
+        - switch.mqlkht_mqlkht_tnvr
+        # Bedroom
+        - light.hvrym_hvrym_spvtym
+        - light.hvrym_hvrym_knysh
+        - fan.hvrym_hvrym_tqrh
+        - switch.hvrym_hvrym_mqlkht_tnvr
+        # Media
+        - media_player.kitchen_s_echo
+        - media_player.living_room_2
+        - media_player.tv_2
+      to: "on"
+  conditions:
+    - condition: state
+      entity_id: input_boolean.is_away_state
+      state: 'on'
+    # Only a genuinely manual action (not fired by automation/script)
+    - condition: template
+      value_template: "{{ trigger.to_state.context.parent_id is none }}"
+    # At least one person must be home (GPS confirmed)
+    - condition: template
+      value_template: >
+        {{ is_state('person.shachar', 'home') or is_state('person.ariel', 'home') }}
+  actions:
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.is_away_state
+  mode: single

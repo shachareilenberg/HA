@@ -366,3 +366,69 @@ tv_audio_tv_speaker:
     target:
       entity_id: media_player.living_room_2
   mode: single
+
+##############################################################
+# ROUTINES — v3 additions
+##############################################################
+
+food_time_routine:
+  alias: Food Time — Kitchen Lights On
+  description: Turns on Kitchen LED strip and Kitchen spotlight for meal prep / dining.
+  sequence:
+    - action: light.turn_on
+      target:
+        entity_id:
+          - light.knysh_na
+          - light.mtbkh_mtbkh_ps
+  mode: single
+
+movie_time_lights_only:
+  alias: Movie Time — Lights Off Only
+  description: Turn off Living Room, Kitchen and Office lights using the iteration script.
+  sequence:
+    - action: script.iterate_entities_with_action
+      data:
+        action: light.turn_off
+        entities:
+          - light.slvn_slvn_spvtym
+          - light.slvn_slvn_qyr
+          - light.mtbkh_mtbkh_ps
+          - light.mtbkh_mtbkh_qyr
+          - light.mtbkh_mtbkh_shvlkhn
+          - light.knysh_na
+          - light.mtbkh_mtbkh_y
+          - light.mshrd_mshrd_tqrh
+          - light.mshrd_mshrd_qyr_khlvn
+          - light.mshrd_mshrd_qyr
+        wait_template: "{{ is_state(entity_id, 'off') }}"
+  mode: single
+
+movie_time_lights_and_blinds:
+  alias: Movie Time — Lights Off + Close Blinds
+  description: Turns off Living/Kitchen/Office lights and closes blinds in those areas.
+  sequence:
+    - parallel:
+        - action: script.iterate_entities_with_action
+          data:
+            action: light.turn_off
+            entities:
+              - light.slvn_slvn_spvtym
+              - light.slvn_slvn_qyr
+              - light.mtbkh_mtbkh_ps
+              - light.mtbkh_mtbkh_qyr
+              - light.mtbkh_mtbkh_shvlkhn
+              - light.knysh_na
+              - light.mtbkh_mtbkh_y
+              - light.mshrd_mshrd_tqrh
+              - light.mshrd_mshrd_qyr_khlvn
+              - light.mshrd_mshrd_qyr
+            wait_template: "{{ is_state(entity_id, 'off') }}"
+        - action: script.iterate_entities_with_action
+          data:
+            action: cover.close_cover
+            entities:
+              - cover.slvn_slvn_trys
+              - cover.slvn_slvn_trys_khlvn
+              - cover.mtbkh_mtbkh_trys
+              - cover.knysh_n4_1
+  mode: single
