@@ -649,6 +649,8 @@
   - if:
     - condition: time
       before: '19:30:00'
+    - condition: sun
+      after: sunrise
     then:
     - variables:
         current_vol: '{{ state_attr(''media_player.bedroom_echo_spot'', ''volume_level'')
@@ -727,4 +729,194 @@
   - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.oref_alert_was_active
+  mode: single
+- id: '1773200000010'
+  alias: Movie Mode
+  description: 'Turn off kitchen and living room lights, close living room blinds,
+    switch TV audio to Yamaha receiver.
+
+    '
+  triggers: []
+  conditions: []
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id:
+      - light.mtbkh_mtbkh_y
+      - light.mtbkh_mtbkh_ps
+  - action: cover.close_cover
+    target:
+      entity_id:
+      - cover.slvn_slvn_trys
+      - cover.slvn_slvn_trys_khlvn
+  - action: script.tv_audio_yamaha
+  mode: single
+- id: '1773300000001'
+  alias: Config Update — Pull then Push every 5 min
+  description: >
+    Every 5 minutes: pull from GitHub first (blocking), then push local changes.
+    Sequential order is guaranteed — shell_command blocks until each script finishes.
+    If a pull brought in new commits, sends an actionable push notification to the
+    iPad asking the user to approve a restart.
+  triggers:
+  - trigger: time_pattern
+    minutes: /5
+  conditions: []
+  actions:
+  - action: shell_command.ha_pull_config
+  - delay: "00:00:03"
+  - action: homeassistant.update_entity
+    target:
+      entity_id: binary_sensor.config_update_available
+  - action: shell_command.ha_push_config
+  - condition: state
+    entity_id: binary_sensor.config_update_available
+    state: 'on'
+  - action: notify.mobile_app_ipad_2
+    data:
+      title: Config Update Available
+      message: New configuration pulled from GitHub. Restart Home Assistant to apply?
+      data:
+        push:
+          sound: default
+        actions:
+        - action: RESTART_HA
+          title: Restart HA
+          destructive: true
+        - action: DISMISS_UPDATE
+          title: Later
+  mode: single
+- id: '1773300000002'
+  alias: Config Update — Restart HA on iPad approval
+  description: 'Fires when the user taps "Restart HA" in the push notification. Restarts
+    Home Assistant immediately.
+
+    '
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: RESTART_HA
+  conditions: []
+  actions:
+  - action: homeassistant.restart
+  mode: single
+- id: '1773300000005'
+  alias: Config Update — Dismiss on "Later"
+  description: 'Fires when the user taps "Later" in the push notification. Clears
+    the signal file so the dashboard banner disappears without restarting HA.
+
+    '
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: DISMISS_UPDATE
+  conditions: []
+  actions:
+  - action: shell_command.clear_update_flag
+  - action: homeassistant.update_entity
+    target:
+      entity_id: binary_sensor.config_update_available
+  mode: single
+- id: '1773300000004'
+  alias: Config Update — Clear flag after HA restarts
+  description: 'Runs once HA finishes starting after a restart. Removes the signal
+    file so the dashboard banner disappears automatically.
+
+    '
+  triggers:
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
+  - action: shell_command.clear_update_flag
+  mode: single
+# ── Git Setup — Diagnose on startup ───────────────────────────────────────────
+- id: '1773300000006'
+  alias: Git Setup — Diagnose & notify on startup
+  description: >
+    Fires 30 s after HA starts. Reads sensor.git_setup_status and sends a
+    persistent notification when git or the repo is missing, so you know exactly
+    what to fix. The notification is auto-dismissed once the repo is OK.
+  triggers:
+  - trigger: homeassistant
+    event: start
+  conditions: []
+  actions:
+  - delay: "00:00:30"
+  - action: homeassistant.update_entity
+    target:
+      entity_id: sensor.git_setup_status
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.git_setup_status
+        state: git_not_found
+      sequence:
+      - action: persistent_notification.create
+        data:
+          notification_id: git_setup_error
+          title: "Git Sync ⚠ git not found"
+          message: >
+            The `git` binary is not available in the HA environment.
+            Git auto-sync is disabled until git is installed.
+    - conditions:
+      - condition: state
+        entity_id: sensor.git_setup_status
+        state: not_a_repo
+      sequence:
+      - action: persistent_notification.create
+        data:
+          notification_id: git_setup_error
+          title: "Git Sync ⚠ repo not initialised"
+          message: >
+            /config is not a git repository.
+            SSH into the HA device and run: bash /config/ha-git-setup.sh
+            Then restart HA — this notification will clear automatically.
+    - conditions:
+      - condition: template
+        value_template: "{{ states('sensor.git_setup_status').startswith('ok:') }}"
+      sequence:
+      - action: persistent_notification.dismiss
+        data:
+          notification_id: git_setup_error
+  mode: single
+
+# ── Git Log — daily rotate ────────────────────────────────────────────────────
+- id: '1773300000007'
+  alias: Git Log — weekly rotate on Sunday at 03:00
+  description: >
+    Trims /config/ha-git.log to its 200 most-recent lines every Sunday at 03:00
+    so it never grows unbounded. The log is written by ha-pull.sh and ha-push.sh.
+  triggers:
+  - trigger: time
+    at: "03:00:00"
+  conditions:
+  - condition: time
+    weekday:
+      - sun
+  actions:
+  - action: shell_command.rotate_git_log
+  mode: single
+
+- id: '1773200000001'
+  alias: iPad — Navigate to iPad Dashboard on Connect
+  description: 'Redirects the registered iPad browser to the iPad landscape dashboard
+    (/ui-ipad) whenever it connects. Replace REPLACE_WITH_IPAD_BROWSER_ID with the
+    UUID shown in the browser_mod panel on the iPad.
+
+    '
+  triggers:
+  - trigger: event
+    event_type: browser_mod_connected
+    event_data:
+      browser_id: REPLACE_WITH_IPAD_BROWSER_ID
+  conditions: []
+  actions:
+  - delay: 00:00:01
+  - action: browser_mod.navigate
+    data:
+      browser_id: REPLACE_WITH_IPAD_BROWSER_ID
+      path: /ui-ipad
   mode: single

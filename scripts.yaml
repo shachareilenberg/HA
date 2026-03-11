@@ -128,18 +128,24 @@ turn_off_all_lights_v2:
     exclude_entities:
       description: List of light entities to exclude
       example: light.kitchen, light.living_room
+      default: []
     exclude_areas:
       description: List of area names to exclude
       example: Bedroom, Living Room
+      default: []
     exclude_labels:
       description: List of labels to exclude
       example: Critical, Do not turn off
+      default: []
   sequence:
   - action: script.turn_off_all_by_domain
     metadata: {}
     data:
       domain: light
-      exclude_entities: '{{ exclude_entities | default([], true) }}'
+      exclude_entities: '{% set permanent = [''light.browser_mod_d84bc37d_600ba656_screen'']
+        %} {% set manual = exclude_entities if exclude_entities is list else [exclude_entities]
+        if exclude_entities | length > 0 else [] %} {{ (manual + permanent) | unique
+        | list }}'
       exclude_areas: '{{ exclude_areas | default([], true) }}'
       exclude_labels: '{{ exclude_labels | default([], true) }}'
 turn_off_all_by_domain:
@@ -194,8 +200,6 @@ turn_off_all_by_domain:
               value_template: '{{ not is_state(entity_id, ''off'') }}'
             then:
             - delay: 00:00:01
-            else:
-            - stop: Entity turned off successfully
 close_all_blinds:
   alias: Close all blinds
   mode: queued
@@ -325,3 +329,40 @@ good_night_event_25m_delayed:
   description: ''
   mode: queued
   max: 10
+tv_mute_toggle:
+  alias: TV — Toggle Mute
+  description: Sends KEY_MUTE hardware toggle (reliable regardless of attribute availability).
+  sequence:
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.tv_2
+    data:
+      media_content_type: send_key
+      media_content_id: KEY_MUTE
+  mode: single
+tv_audio_yamaha:
+  alias: TV Audio - Yamaha (Living Room Speakers On)
+  description: Turn on the living room speakers and select TV as the source.
+  sequence:
+  - action: media_player.turn_on
+    target:
+      entity_id: media_player.living_room_2
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - action: media_player.select_source
+    target:
+      entity_id: media_player.living_room_2
+    data:
+      source: TV
+  mode: single
+tv_audio_tv_speaker:
+  alias: TV Audio - TV Speaker (Living Room Speakers Off)
+  description: Turn off the living room speakers, routing audio back to TV speaker.
+  sequence:
+  - action: media_player.turn_off
+    target:
+      entity_id: media_player.living_room_2
+  mode: single

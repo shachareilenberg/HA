@@ -6,6 +6,59 @@ default_config:
 frontend:
   themes: !include_dir_merge_named themes
 
+# Register the iPad YAML dashboard alongside the default UI-managed dashboards.
+# The main lovelace stays in storage mode (UI editor works normally).
+# Visit /ui-ipad on the iPad after restarting HA.
+lovelace:
+  mode: storage
+  dashboards:
+    ui-ipad:
+      mode: yaml
+      title: iPad Home
+      icon: mdi:tablet
+      show_in_sidebar: true
+      filename: ui-ipad-dashboard.yaml
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+
+# ── Config-update detection ───────────────────────────────────────────────────
+# ha-pull.sh writes /config/.ha-update-flag on a successful pull.
+# Storing the flag inside /config/ ensures it survives container reboots.
+# ha-git.log (also in /config/) records all git operations — readable via
+# the File Editor add-on when diagnosing problems.
+command_line:
+  - binary_sensor:
+      name: "Config Update Available"
+      unique_id: config_update_available
+      command: "test -f /config/.ha-update-flag && echo 1 || echo 0"
+      payload_on: "1"
+      payload_off: "0"
+      scan_interval: 30
+
+  - sensor:
+      name: "Git Setup Status"
+      unique_id: git_setup_status
+      command: >-
+        GIT="";
+        for P in /usr/bin/git /usr/local/bin/git /bin/git; do [ -x "$P" ] && GIT="$P" && break; done;
+        [ -z "$GIT" ] && command -v git >/dev/null 2>&1 && GIT="git";
+        [ -z "$GIT" ] && echo "git_not_found" && exit 0;
+        cd /config 2>/dev/null || { echo "no_config_dir"; exit 0; };
+        test -d .git || { echo "not_a_repo"; exit 0; };
+        B="$(cat /config/.git/HEAD 2>/dev/null | sed 's|ref: refs/heads/||' | tr -d '[:space:]')";
+        [ -z "$B" ] && B="unknown";
+        echo "ok:$B"
+      scan_interval: 120
+
+shell_command:
+  ha_pull_config: "/bin/bash /config/ha-pull.sh"
+  ha_push_config: "/bin/bash /config/ha-push.sh"
+  clear_update_flag: "rm -f /config/.ha-update-flag"
+  # Keeps the 200 most-recent lines so the log never grows unbounded.
+  # Triggered daily at 03:00 by the "Git Log — daily rotate" automation.
+  rotate_git_log: >-
+    LOG=/config/ha-git.log;
+    [ -f "$LOG" ] || exit 0;
+    tail -200 "$LOG" > "$LOG.tmp" && mv "$LOG.tmp" "$LOG"

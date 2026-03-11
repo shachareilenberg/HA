@@ -1,0 +1,997 @@
+##############################################################
+# iPad Landscape Dashboard — ui-ipad-dashboard.yaml
+# v2
+#
+# HOW TO REGISTER:
+#   Settings → Dashboards → Add Dashboard
+#   Title: iPad Home  |  Icon: mdi:tablet  |  URL: /ui-ipad
+#   Mode: YAML  →  point to this file path
+#
+# ── REQUIRED HACS FRONTEND CARDS (all pre-installed) ──────
+#  ✓ lovelace-mushroom        (Mushroom Cards v5+)
+#  ✓ lovelace-card-mod        (CSS overrides)
+#  ✓ lovelace-layout-card     (Grid Layout engine)
+#  ✓ browser_mod              (Smart popups v2+)
+#  ✓ clock-weather-card       (Sidebar clock + weather)
+#
+# ── SAMSUNG TV NOTE ────────────────────────────────────────
+#  TV entity: media_player.tv_2
+#  Yamaha receiver source name: RX-V6A
+#  D-pad navigation (send_key) requires the SamsungTV or
+#  SamsungTV-Tizen integration (not SmartThings alone).
+#  HACS: "SamsungTV Smart" adds full remote + app control.
+#
+# ── THEME ──────────────────────────────────────────────────
+#  "Frosted Glass Dark" — installed in themes/
+#  Provides automatic glassmorphism on all ha-card elements
+##############################################################
+
+title: iPad Home
+
+views:
+  - title: Home
+    path: home
+    theme: "Frosted Glass Dark"
+    panel: true
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: "280px minmax(0, 1fr)"
+          grid-template-areas: |
+            "sidebar main"
+          grid-gap: "10px"
+          padding: "10px"
+
+        cards:
+
+          # ╔═══════════════════════════════╗
+          # ║           SIDEBAR             ║
+          # ╚═══════════════════════════════╝
+          - view_layout:
+              grid-area: sidebar
+            type: vertical-stack
+            cards:
+
+              # ── Clock + Weather ──────────────────
+              # If weather.forecast_home shows an error, try weather.home
+              - type: custom:clock-weather-card
+                entity: weather.forecast_home
+                time_format: 24
+                animated_icon: true
+                forecast_rows: 3
+
+              # ── Presence ─────────────────────────
+              - type: custom:mushroom-title-card
+                title: Presence
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 4px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-person-card
+                    entity: person.shachar
+                    name: Shachar
+                    layout: vertical
+                    fill_container: true
+                  - type: custom:mushroom-person-card
+                    entity: person.ariel
+                    name: Ariel
+                    layout: vertical
+                    fill_container: true
+
+              # ── Routines ─────────────────────────
+              - type: custom:mushroom-title-card
+                title: Routines
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Good Night
+                    secondary: Routine
+                    icon: mdi:weather-night
+                    icon_color: indigo
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.good_night_event
+                  - type: custom:mushroom-template-card
+                    primary: Good Morning
+                    secondary: Routine
+                    icon: mdi:weather-sunny
+                    icon_color: amber
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.good_morning_event
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Exit Home
+                    secondary: Away
+                    icon: mdi:exit-run
+                    icon_color: orange
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.exit_home_event
+                  - type: custom:mushroom-template-card
+                    primary: Welcome Home
+                    secondary: Arrival
+                    icon: mdi:home-import-outline
+                    icon_color: green
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.welcome_home_event_trigger
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Lights Off
+                    secondary: All
+                    icon: mdi:lightbulb-off-outline
+                    icon_color: yellow
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.turn_off_all_lights_v2
+                  - type: custom:mushroom-template-card
+                    primary: Close Blinds
+                    secondary: All
+                    icon: mdi:blinds
+                    icon_color: blue
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.close_all_blinds
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: ACs Off
+                    secondary: All Units
+                    icon: mdi:air-conditioner
+                    icon_color: blue-grey
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.1766497466499
+                  - type: custom:mushroom-template-card
+                    entity: cover.4g600204913
+                    primary: Garage Gate
+                    secondary: >
+                      {{ 'Open' if is_state('cover.4g600204913', 'open') else 'Closed' }}
+                    icon: mdi:garage
+                    icon_color: >
+                      {{ 'green' if is_state('cover.4g600204913', 'open') else 'grey' }}
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: more-info
+
+              # ── Good Night Mode State ─────────────
+              - type: custom:mushroom-entity-card
+                entity: input_boolean.good_night_state
+                name: Good Night Mode
+                icon: mdi:sleep
+                icon_color: indigo
+                toggle: true
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              # ── Git Sync ──────────────────────────
+              # Manual pull / push — use when automated sync isn't working.
+              # Check /config/ha-git.log in File Editor to diagnose errors.
+              - type: custom:mushroom-title-card
+                title: Git Sync
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              # Status badge — shows git_not_found / not_a_repo / ok:branch
+              - type: custom:mushroom-template-card
+                primary: >
+                  {% set s = states('sensor.git_setup_status') %}
+                  {% if s == 'git_not_found' %}Git not found
+                  {% elif s == 'not_a_repo' %}Run ha-git-setup.sh
+                  {% elif s.startswith('ok:') %}Branch: {{ s[3:] | trim }}
+                  {% else %}{{ s }}
+                  {% endif %}
+                secondary: Git status
+                icon: >
+                  {% set s = states('sensor.git_setup_status') %}
+                  {% if s.startswith('ok:') %}mdi:source-branch-check
+                  {% else %}mdi:alert-circle-outline
+                  {% endif %}
+                icon_color: >
+                  {% set s = states('sensor.git_setup_status') %}
+                  {% if s.startswith('ok:') %}green{% else %}red{% endif %}
+                layout: horizontal
+                fill_container: true
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Pull
+                    secondary: Check & pull
+                    icon: mdi:cloud-download-outline
+                    icon_color: blue
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: perform-action
+                      perform_action: shell_command.ha_pull_config
+                  - type: custom:mushroom-template-card
+                    primary: Push
+                    secondary: Commit & push
+                    icon: mdi:cloud-upload-outline
+                    icon_color: green
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: perform-action
+                      perform_action: shell_command.ha_push_config
+
+              # ── Apps ──────────────────────────────
+              # Tapping opens the baby monitor app via an iOS Shortcut.
+              # Setup: on the iPad, create a Shortcut named exactly
+              # "Baby Monitor+" with one action: Open App → Philips Baby Monitor+
+              - type: custom:mushroom-title-card
+                title: Apps
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              - type: custom:mushroom-template-card
+                primary: Baby Monitor
+                secondary: Philips Avent
+                icon: mdi:baby-face-outline
+                icon_color: pink
+                layout: vertical
+                fill_container: true
+                tap_action:
+                  action: url
+                  url_path: "shortcuts://x-callback-url/run-shortcut?name=Baby%20Monitor"
+
+
+          # ╔═══════════════════════════════╗
+          # ║          MAIN AREA            ║
+          # ╚═══════════════════════════════╝
+          - view_layout:
+              grid-area: main
+            type: vertical-stack
+            cards:
+
+              # ── UPDATE BANNER (hidden until a git pull delivers new commits) ──
+              - type: conditional
+                conditions:
+                  - condition: state
+                    entity: binary_sensor.config_update_available
+                    state: 'on'
+                card:
+                  type: custom:mushroom-template-card
+                  primary: Config Update Available
+                  secondary: Check your iPad notification to approve restart · Hold to dismiss
+                  icon: mdi:update
+                  icon_color: amber
+                  fill_container: true
+                  tap_action:
+                    action: perform-action
+                    perform_action: homeassistant.restart
+                  hold_action:
+                    action: perform-action
+                    perform_action: shell_command.clear_update_flag
+                  card_mod:
+                    style: |
+                      ha-card {
+                        border: 1px solid rgba(255,180,0,0.6) !important;
+                        background: rgba(255,180,0,0.12) !important;
+                        margin-bottom: 6px !important;
+                      }
+
+              # ── STATUS BAR ────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: >
+                      {% set s = states('sensor.oref_alert') %}
+                      {% if s == 'alert' %}Red Alert Active!{% elif s == 'pre_alert' %}Pre-Alert Warning{% else %}Area Secure{% endif %}
+                    secondary: >
+                      {% set s = states('sensor.oref_alert') %}
+                      {% if s == 'alert' %}Seek shelter now{% elif s == 'pre_alert' %}Prepare for alert{% else %}No active alerts{% endif %}
+                    icon: >
+                      {% set s = states('sensor.oref_alert') %}
+                      {% if s in ['alert', 'pre_alert'] %}mdi:alert-circle{% else %}mdi:shield-check{% endif %}
+                    icon_color: >
+                      {% set s = states('sensor.oref_alert') %}
+                      {% if s == 'alert' %}red{% elif s == 'pre_alert' %}orange{% else %}green{% endif %}
+                    fill_container: true
+                    tap_action:
+                      action: more-info
+                      entity: sensor.oref_alert
+
+                  - type: custom:mushroom-entity-card
+                    entity: input_boolean.is_away_state
+                    name: Away Mode
+                    icon: mdi:home-lock
+                    toggle: true
+                    fill_container: true
+
+                  - type: custom:mushroom-number-card
+                    entity: number.mqlkht_dvd_countdown
+                    name: Boiler Timer
+                    icon: mdi:water-boiler
+                    icon_color: deep-orange
+                    display_mode: slider
+                    fill_container: true
+
+
+              # ══════════════════════════════════════
+              # CLIMATE
+              # ══════════════════════════════════════
+              - type: custom:mushroom-title-card
+                title: Climate
+                subtitle: Air Conditioning
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              # Row 1: Kitchen 1 | Kitchen 2 | Office
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-climate-card
+                    entity: climate.l8_101
+                    name: Kitchen 1
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
+                    fill_container: true
+
+                  - type: custom:mushroom-climate-card
+                    entity: climate.l8_102
+                    name: Kitchen 2
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
+                    fill_container: true
+
+                  - type: custom:mushroom-climate-card
+                    entity: climate.l8_103
+                    name: Office
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
+                    fill_container: true
+
+              # Row 2: Kids | Bedroom
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-climate-card
+                    entity: climate.l8_104
+                    name: Kids
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
+                    fill_container: true
+
+                  - type: custom:mushroom-climate-card
+                    entity: climate.l8_105
+                    name: Bedroom
+                    hvac_modes:
+                      - "off"
+                      - cool
+                      - heat
+                      - fan_only
+                      - dry
+                    show_temperature_control: true
+                    fill_container: true
+
+
+              # ══════════════════════════════════════
+              # LIGHTING
+              # ══════════════════════════════════════
+              # LIGHTING
+              # ══════════════════════════════════════
+              - type: custom:mushroom-title-card
+                title: Lighting
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              # ── Living Room ───────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.slvn_slvn_spvtym
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.slvn_slvn_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Kitchen ───────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mtbkh_mtbkh_ps
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mtbkh_mtbkh_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mtbkh_mtbkh_shvlkhn
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.knysh_na
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mtbkh_mtbkh_y
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Office ────────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mshrd_mshrd_tqrh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Entrance ──────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.knysh_knysh_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.knysh_knysh_tvrh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Hallway ───────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.msdrvn_msdrvn_ps
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+              # ── Balcony ───────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.mrpst_mrpst_qyr
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+                  - type: custom:mushroom-light-card
+                    entity: light.mrpst_mrpst_tqrh
+                    fill_container: true
+                    tap_action:
+                      action: toggle
+
+
+              # ══════════════════════════════════════
+              # BLINDS
+              # ══════════════════════════════════════
+              - type: custom:mushroom-title-card
+                title: Blinds
+                subtitle: Position Control
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              # Row: Living Room + Kitchen + Office
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-cover-card
+                    entity: cover.slvn_slvn_trys
+                    name: Living Room
+                    show_position_control: true
+                    show_buttons_control: true
+                    fill_container: true
+                    tap_action:
+                      action: more-info
+
+                  - type: custom:mushroom-cover-card
+                    entity: cover.mtbkh_mtbkh_trys
+                    name: Kitchen
+                    show_position_control: true
+                    show_buttons_control: true
+                    fill_container: true
+                    tap_action:
+                      action: more-info
+
+                  - type: custom:mushroom-cover-card
+                    entity: cover.knysh_n4_1
+                    name: Office
+                    show_position_control: true
+                    show_buttons_control: true
+                    fill_container: true
+                    tap_action:
+                      action: more-info
+
+
+              # ══════════════════════════════════════
+              # MEDIA
+              # ══════════════════════════════════════
+              - type: custom:mushroom-title-card
+                title: Media
+                subtitle: Alexa & Music
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+
+              # Row: Alexa Echoes + Play Everywhere
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-media-player-card
+                    entity: media_player.kitchen_s_echo
+                    name: Kitchen Echo
+                    volume_controls:
+                      - volume_set
+                      - volume_mute
+                    media_controls:
+                      - on_off
+                      - play_pause_stop
+                    fill_container: true
+
+                  - type: custom:mushroom-media-player-card
+                    entity: media_player.bedroom_echo_spot
+                    name: Bedroom Echo
+                    volume_controls:
+                      - volume_set
+                      - volume_mute
+                    media_controls:
+                      - on_off
+                      - play_pause_stop
+                    fill_container: true
+
+                  - type: custom:mushroom-template-card
+                    primary: Play Everywhere
+                    secondary: Music Assistant
+                    icon: mdi:music-note-plus
+                    icon_color: purple
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.play_music_everywhere
+
+
+
+              # ══════════════════════════════════════
+              # ENTERTAINMENT
+              # Tap the TV card to open full controls popup.
+              # ══════════════════════════════════════
+              - type: custom:mushroom-title-card
+                title: Entertainment
+                subtitle: Samsung TV · Yamaha RX-V6A
+                card_mod:
+                  style: |
+                    ha-card { margin-top: 8px !important; }
+           
+              # ── Tap to open full TV controls popup ────────────────────────
+              - type: custom:mushroom-media-player-card
+                entity: media_player.tv_2
+                name: Samsung TV
+                use_media_info: true
+                volume_controls:
+                  - volume_set
+                  - volume_mute
+                media_controls:
+                  - on_off
+                  - play_pause_stop
+                  - previous
+                  - next
+                fill_container: true
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      title: Samsung TV Controls
+                      size: fullscreen
+                      content:
+                        type: vertical-stack
+                        cards:
+
+                          # Full player (volume + playback)
+                          - type: custom:mushroom-media-player-card
+                            entity: media_player.tv_2
+                            name: Samsung TV
+                            use_media_info: true
+                            volume_controls:
+                              - volume_set
+                              - volume_mute
+                            media_controls:
+                              - on_off
+                              - play_pause_stop
+                              - previous
+                              - next
+                            fill_container: true
+
+                          # ── 2-column: left = audio+apps  |  right = remote ─
+                          - type: horizontal-stack
+                            cards:
+
+                              # ── LEFT COLUMN ─────────────────────────────────
+                              - type: vertical-stack
+                                cards:
+
+                                  - type: custom:mushroom-title-card
+                                    title: Apps & Audio
+
+                                  # Audio output
+                                  - type: horizontal-stack
+                                    cards:
+                                      - type: custom:mushroom-template-card
+                                        primary: Yamaha
+                                        icon: mdi:audio-video
+                                        icon_color: deep-orange
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: script.tv_audio_yamaha
+                                      - type: custom:mushroom-template-card
+                                        primary: TV Speaker
+                                        icon: mdi:television-speaker
+                                        icon_color: blue
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: script.tv_audio_tv_speaker
+
+                                  # Apps row 1
+                                  - type: horizontal-stack
+                                    cards:
+                                      - type: custom:mushroom-template-card
+                                        primary: Netflix
+                                        icon: mdi:netflix
+                                        icon_color: red
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: app
+                                            media_content_id: "org.tizen.netflix-app"
+                                      - type: custom:mushroom-template-card
+                                        primary: Apple TV
+                                        icon: mdi:apple
+                                        icon_color: grey
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: app
+                                            media_content_id: "com.samsung.tv.aria-video"
+                                      - type: custom:mushroom-template-card
+                                        primary: Prime
+                                        picture: /local/icons/prime_video.png
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: app
+                                            media_content_id: "org.tizen.primevideo"
+                                      - type: custom:mushroom-template-card
+                                        primary: Disney+
+                                        picture: /local/icons/disney_plus.png
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: app
+                                            media_content_id: "Di0N6xZMEA.disneyplus"
+
+                                  # Apps row 2
+                                  - type: horizontal-stack
+                                    cards:
+                                      - type: custom:mushroom-template-card
+                                        primary: YouTube
+                                        icon: mdi:youtube
+                                        icon_color: red
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: app
+                                            media_content_id: "111299001912"
+                                      - type: custom:mushroom-template-card
+                                        primary: Spotify
+                                        icon: mdi:spotify
+                                        icon_color: green
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: app
+                                            media_content_id: "3201606009684"
+                                      - type: custom:mushroom-template-card
+                                        primary: Stingtv
+                                        picture: /local/icons/stingtv.png
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: app
+                                            media_content_id: "xNjDbgVJeT.stingtv"
+
+
+                              # ── RIGHT COLUMN — Navigation remote ────────────
+                              - type: vertical-stack
+                                cards:
+                                  - type: custom:mushroom-title-card
+                                    title: Remote
+
+                                  # Row 1: Back · Up · Home
+                                  - type: horizontal-stack
+                                    cards:
+                                      - type: custom:mushroom-template-card
+                                        primary: Back
+                                        icon: mdi:keyboard-backspace
+                                        icon_color: black
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: send_key
+                                            media_content_id: KEY_RETURN
+                                      - type: custom:mushroom-template-card
+                                        primary: ""
+                                        icon: mdi:chevron-up
+                                        icon_color: black
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: send_key
+                                            media_content_id: KEY_UP
+                                      - type: custom:mushroom-template-card
+                                        primary: Home
+                                        icon: mdi:home-outline
+                                        icon_color: black
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: send_key
+                                            media_content_id: KEY_HOME
+
+                                  # Row 2: Left · OK · Right
+                                  - type: horizontal-stack
+                                    cards:
+                                      - type: custom:mushroom-template-card
+                                        primary: ""
+                                        icon: mdi:chevron-left
+                                        icon_color: black
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: send_key
+                                            media_content_id: KEY_LEFT
+                                      - type: custom:mushroom-template-card
+                                        primary: OK
+                                        icon: mdi:circle-outline
+                                        icon_color: black
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: send_key
+                                            media_content_id: KEY_ENTER
+                                      - type: custom:mushroom-template-card
+                                        primary: ""
+                                        icon: mdi:chevron-right
+                                        icon_color: black
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: send_key
+                                            media_content_id: KEY_RIGHT
+
+                                  # Row 3: Menu · Down · Mute (smart toggle)
+                                  - type: horizontal-stack
+                                    cards:
+                                      - type: custom:mushroom-template-card
+                                        primary: Menu
+                                        icon: mdi:menu
+                                        icon_color: black
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: send_key
+                                            media_content_id: KEY_MENU
+                                      - type: custom:mushroom-template-card
+                                        primary: ""
+                                        icon: mdi:chevron-down
+                                        icon_color: black
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: send_key
+                                            media_content_id: KEY_DOWN
+                                      - type: custom:mushroom-template-card
+                                        primary: >
+                                          {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
+                                            Mute
+                                          {% else %}
+                                            Unmute
+                                          {% endif %}
+                                        icon: >
+                                          {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
+                                            mdi:volume-mute
+                                          {% else %}
+                                            mdi:volume-off
+                                          {% endif %}
+                                        icon_color: >
+                                          {% if state_attr('media_player.tv_2', 'is_volume_muted') == True %}
+                                            black
+                                          {% else %}
+                                            red
+                                          {% endif %}
+                                        layout: vertical
+                                        fill_container: true
+                                        tap_action:
+                                          action: call-service
+                                          service: media_player.play_media
+                                          target:
+                                            entity_id: media_player.tv_2
+                                          data:
+                                            media_content_type: send_key
+                                            media_content_id: KEY_MUTE
+         
+              # ── Yamaha speakers ───────────────────────────────────────────
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-media-player-card
+                    entity: media_player.living_room_2
+                    name: Living Room
+                    volume_controls:
+                      - volume_set
+                      - volume_mute
+                    media_controls:
+                      - on_off
+                    fill_container: true
+                  - type: custom:mushroom-media-player-card
+                    entity: media_player.living_room_zone2
+                    name: Kitchen
+                    volume_controls:
+                      - volume_set
+                      - volume_mute
+                    media_controls:
+                      - on_off
+                    fill_container: true
+
