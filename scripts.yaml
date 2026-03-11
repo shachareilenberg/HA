@@ -339,8 +339,8 @@ tv_mute_toggle:
   mode: single
 
 tv_audio_yamaha:
-  alias: TV Audio → Yamaha (Living Room Speakers On)
-  description: Turn on the living room speakers and select TV as the source.
+  alias: "TV Audio - Yamaha (Living Room Speakers On)"
+  description: "Turn on the living room speakers and select TV as the source."
   sequence:
   - action: media_player.turn_on
     target:
@@ -354,8 +354,8 @@ tv_audio_yamaha:
   mode: single
 
 tv_audio_tv_speaker:
-  alias: TV Audio → TV Speaker (Living Room Speakers Off)
-  description: Turn off the living room speakers, routing audio back to TV speaker.
+  alias: "TV Audio - TV Speaker (Living Room Speakers Off)"
+  description: "Turn off the living room speakers, routing audio back to TV speaker."
   sequence:
   - action: media_player.turn_off
     target:
