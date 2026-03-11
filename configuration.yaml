@@ -47,7 +47,9 @@ command_line:
         [ -z "$GIT" ] && echo "git_not_found" && exit 0;
         cd /config 2>/dev/null || { echo "no_config_dir"; exit 0; };
         test -d .git || { echo "not_a_repo"; exit 0; };
-        echo "ok:$($GIT branch --show-current 2>/dev/null)"
+        B="$($GIT branch --show-current 2>/dev/null)";
+        [ -z "$B" ] && B="$($GIT rev-parse --abbrev-ref HEAD 2>/dev/null)";
+        echo "ok:$B"
       scan_interval: 120
 
 shell_command:
