@@ -387,3 +387,9 @@ From github.com:shachareilenberg/HA
    d035d1e..b0ae325  ipad-dashboard -> origin/ipad-dashboard
 2026-03-11 12:25:01 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=0
 2026-03-11 12:25:01 [pull] SKIP: uncommitted changes — skipping pull
+2026-03-11 12:27:51 [pull] --- run start ---
+2026-03-11 12:27:51 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+From github.com:shachareilenberg/HA
+   af0cadf..d811d54  ipad-dashboard -> origin/ipad-dashboard
+2026-03-11 12:27:52 [pull] DEBUG: branch=ipad-dashboard  behind=1  ahead=0
+2026-03-11 12:27:52 [pull] INFO: uncommitted changes — committing before pull
