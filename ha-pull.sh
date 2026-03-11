@@ -11,8 +11,6 @@ log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [pull] $*" >> "$LOG"; }
 log "--- run start ---"
 
 # ── fix HOME for HA's shell_command environment ───────────────────────────────
-# HA's process may have HOME unset or pointing to the wrong directory.
-# Scan known homes so SSH can find ~/.ssh/id_* and known_hosts.
 for _H in /root /homeassistant /home/homeassistant; do
   if [ -d "$_H/.ssh" ]; then
     export HOME="$_H"
@@ -31,13 +29,23 @@ if [ -z "$GIT" ]; then
   exit 1
 fi
 
-# Ensure SSH uses the correct known_hosts (prevents host key verification failure)
-export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
-# Prevent any interactive prompts or editor windows when running non-interactively
+# ── locate SSH private key ────────────────────────────────────────────────────
+SSH_KEY=""
+for K in "${HOME}/.ssh/id_ed25519" "${HOME}/.ssh/id_rsa" "${HOME}/.ssh/id_ecdsa" \
+         "${HOME}/.ssh/id_ecdsa_sk" "${HOME}/.ssh/id_ed25519_sk"; do
+  [ -f "$K" ] && SSH_KEY="$K" && break
+done
+if [ -z "$SSH_KEY" ]; then
+  log "ERROR: no SSH private key found in ${HOME}/.ssh/ — run ssh-keygen first."
+  exit 1
+fi
+
+# Explicitly pass key + known_hosts so the non-interactive environment works
+export GIT_SSH_COMMAND="ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
 export GIT_TERMINAL_PROMPT=0
 export GIT_EDITOR=true
 
-log "DEBUG: HOME=$HOME  GIT=$GIT  remote=$(\"$GIT\" -C /config remote get-url origin 2>/dev/null)"
+log "DEBUG: HOME=$HOME  GIT=$GIT  KEY=$SSH_KEY"
 
 # ── sanity checks ─────────────────────────────────────────────────────────────
 cd /config || { log "ERROR: cannot cd to /config"; exit 1; }
@@ -55,7 +63,7 @@ fi
 
 # ── fetch ─────────────────────────────────────────────────────────────────────
 if ! "$GIT" fetch origin 2>> "$LOG"; then
-  log "ERROR: git fetch failed (check SSH key / network). HOME=$HOME"
+  log "ERROR: git fetch failed (check SSH key / network). HOME=$HOME  KEY=$SSH_KEY"
   exit 1
 fi
 
