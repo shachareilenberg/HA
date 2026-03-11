@@ -175,3 +175,51 @@ fatal: Could not read from remote repository.
 Please make sure you have the correct access rights
 and the repository exists.
 2026-03-11 12:03:28 [pull] ERROR: git fetch failed (check SSH key / network). HOME=/root  KEY=
+2026-03-11 12:05:00 [pull] --- run start ---
+2026-03-11 12:05:00 [pull] WARN: no standard SSH key found — relying on /root/.ssh/config
+2026-03-11 12:05:00 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git  KEY=from_config
+2026-03-11 12:05:00 [push] --- run start ---
+2026-03-11 12:05:00 [push] WARN: no standard SSH key found — relying on /root/.ssh/config
+2026-03-11 12:05:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git  KEY=from_config
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 12:05:01 [pull] ERROR: git fetch failed (check SSH key / network). HOME=/root  KEY=
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 12:05:01 [push] WARN: push failed — commit undone, will retry next run. KEY=
+2026-03-11 12:09:57 [pull] --- run start ---
+2026-03-11 12:09:57 [pull] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 11:18 .|drwx------    1 root     root          4096 Mar 11 11:18 ..|-rw-r--r--    1 root     root            92 Mar 11 11:18 known_hosts|
+2026-03-11 12:09:57 [pull] WARN: no standard SSH key found — relying on /root/.ssh/config
+2026-03-11 12:09:57 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git  KEY=from_config
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 12:09:57 [pull] ERROR: git fetch failed (check SSH key / network). HOME=/root  KEY=
+2026-03-11 12:10:00 [pull] --- run start ---
+2026-03-11 12:10:00 [pull] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 11:18 .|drwx------    1 root     root          4096 Mar 11 11:18 ..|-rw-r--r--    1 root     root            92 Mar 11 11:18 known_hosts|
+2026-03-11 12:10:00 [pull] WARN: no standard SSH key found — relying on /root/.ssh/config
+2026-03-11 12:10:00 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git  KEY=from_config
+2026-03-11 12:10:00 [push] --- run start ---
+2026-03-11 12:10:00 [push] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 11:18 .|drwx------    1 root     root          4096 Mar 11 11:18 ..|-rw-r--r--    1 root     root            92 Mar 11 11:18 known_hosts|
+2026-03-11 12:10:00 [push] WARN: no standard SSH key found — relying on /root/.ssh/config
+2026-03-11 12:10:00 [push] DEBUG: HOME=/root  GIT=/usr/bin/git  KEY=from_config
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 12:10:00 [pull] ERROR: git fetch failed (check SSH key / network). HOME=/root  KEY=
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 12:10:01 [push] WARN: push failed — commit undone, will retry next run. KEY=
