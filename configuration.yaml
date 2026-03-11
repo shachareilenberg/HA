@@ -55,14 +55,16 @@ command_line:
 ##############################################################
 # InfluxDB v1 activity logging (TICK stack add-on)
 #
-# Database "ha_data" must be created first in Chronograf:
-#   Admin → Databases → Create Database → ha_data
+# Pre-requisites (one-time setup in Chronograf UI):
+#   1. InfluxDB Admin → Databases → Create Database → ha_data
+#   2. InfluxDB Admin → Users → create user "homeassistant"
+#      with ALL permissions on ha_data (only if add-on auth=true)
 #
-# No authentication needed by default (add-on runs locally).
-# To visualise: open Chronograf → Explore → select ha_data.
 ##############################################################
 influxdb:
-  host: localhost
+  host: a0d7b954-influxdb
+  username: homeassistant
+  password: z2jEz4XiLc^mS@
   port: 8086
   database: ha_data
   tags:

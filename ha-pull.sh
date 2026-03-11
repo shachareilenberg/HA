@@ -79,6 +79,11 @@ if [ -f .git/index.lock ]; then
   exit 0  # another git op in progress — skip silently
 fi
 
+# ── abort any stuck rebase from a previous failed run ─────────────────────────
+if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
+  "$GIT" rebase --abort 2>/dev/null
+fi
+
 # ── fetch ─────────────────────────────────────────────────────────────────────
 if ! "$GIT" fetch origin 2>>"$GIT_TMP"; then
   log "ERROR: git fetch failed (SSH/network). KEY=${SSH_KEY:-none}"
@@ -100,14 +105,20 @@ if [ -n "$("$GIT" status --porcelain 2>/dev/null)" ]; then
   "$GIT" commit -m "auto: save local changes before pull $(date '+%Y-%m-%d %H:%M')" 2>/dev/null
 fi
 
-# ── pull with rebase ──────────────────────────────────────────────────────────
+# ── pull with rebase (prefer incoming/remote on conflicts) ────────────────────
 PREV_HEAD="$("$GIT" rev-parse HEAD 2>/dev/null)"
 
-if ! "$GIT" pull --rebase origin "$BRANCH" 2>>"$GIT_TMP"; then
-  log "ERROR: git pull --rebase failed (branch=$BRANCH behind=$BEHIND)"
-  exit 1
+if ! "$GIT" pull --rebase -X ours origin "$BRANCH" 2>>"$GIT_TMP"; then
+  # Rebase still failed — abort and hard-reset to remote as a last resort
+  "$GIT" rebase --abort 2>/dev/null
+  log "WARN: rebase failed, force-resetting to origin/$BRANCH"
+  : > "$GIT_TMP"
+  if ! "$GIT" reset --hard "origin/$BRANCH" 2>>"$GIT_TMP"; then
+    log "ERROR: force-reset also failed (branch=$BRANCH behind=$BEHIND)"
+    exit 1
+  fi
+  : > "$GIT_TMP"
 fi
-: > "$GIT_TMP"  # suppress successful pull output
 
 # Only signal a restart-worthy update if config files changed — not just ha-git.log
 CONFIG_CHANGED="$("$GIT" diff --name-only "$PREV_HEAD" HEAD 2>/dev/null | grep -v '^ha-git\.log$')"

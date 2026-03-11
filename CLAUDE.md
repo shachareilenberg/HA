@@ -160,14 +160,20 @@ Manual overrides: `script.exit_home_event` (forces ON) and `script.welcome_home_
 
 ---
 
-## InfluxDB Activity Logging (planned / setup required)
+## InfluxDB Activity Logging
 
-When enabled, all relevant state changes are streamed to InfluxDB for Grafana analytics.
+InfluxDB v1 (TICK stack add-on) is active. `influxdb:` block is in `configuration.yaml`.
 
-- Install **InfluxDB** add-on via HA Supervisor UI (Settings → Add-ons)
-- Create org `homeassistant`, bucket `ha_data`, and an API token
-- Add the `influxdb:` block to `configuration.yaml` (see plan file)
-- Install **Grafana** add-on and connect to the InfluxDB data source
+**One-time setup (Chronograf UI):**
+1. InfluxDB Admin → Databases → Create Database → `ha_data`
+2. If add-on `auth: true`: Admin → Users → create user `homeassistant` with ALL on `ha_data`,
+   then add `username:` / `password:` to the `influxdb:` block in `configuration.yaml`
+
+**Correct host for HA → InfluxDB:** `a0d7b954-influxdb` (not `localhost`)
+
+**Chronograf dashboards:** `chronograf/` directory contains 4 JSON dashboard files.
+Create them via `bash /config/chronograf/create-dashboards.sh` (run via SSH on HA device).
+The file-import UI is broken through the HA ingress proxy.
 
 ---
 
