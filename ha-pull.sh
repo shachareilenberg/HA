@@ -3,29 +3,28 @@
 # Fetches from GitHub via SSH; if behind, rebases and writes a flag
 # that the binary_sensor watches. All paths under /config/ are persistent.
 #
-# Log buffering: all output is collected in memory and flushed to ha-git.log
-# only at script exit. This keeps ha-git.log unmodified during git operations,
-# so the working tree stays clean and rebase/pull never see unstaged changes.
+# Logging: only errors and actual pull events are written to ha-git.log.
+# Log buffering: all output collected in memory, flushed at exit so
+# ha-git.log is never modified during git operations (clean working tree).
 
 LOG="/config/ha-git.log"
 FLAG="/config/.ha-update-flag"
 GIT_TMP="$(mktemp)"
 
 LOG_BUFFER=""
-log() { LOG_BUFFER+="$(date '+%Y-%m-%d %H:%M:%S') [pull] $*"$'\n'; }
+log()  { LOG_BUFFER+="$(date '+%Y-%m-%d %H:%M:%S') [pull] $*"$'\n'; }
+# Only flush if there is something worth logging (errors or a real pull)
 flush_log() {
   local git_out
   git_out="$(cat "$GIT_TMP" 2>/dev/null)"
-  { printf '%s' "$LOG_BUFFER"; [ -n "$git_out" ] && printf '%s\n' "$git_out"; } >> "$LOG"
+  if [ -n "$LOG_BUFFER" ] || [ -n "$git_out" ]; then
+    { printf '%s' "$LOG_BUFFER"; [ -n "$git_out" ] && printf '%s\n' "$git_out"; } >> "$LOG"
+  fi
   rm -f "$GIT_TMP"
 }
 trap flush_log EXIT
 
-log "--- run start ---"
-
 # ── fix HOME for HA's shell_command environment ───────────────────────────────
-# /config/.ssh/ is preferred — it's writable by the HA process regardless of user.
-# /root/.ssh/ is only accessible when shell_command runs as root.
 for _H in /config /root /homeassistant /home/homeassistant; do
   if [ -d "$_H/.ssh" ]; then
     export HOME="$_H"
@@ -40,7 +39,7 @@ for P in /usr/bin/git /usr/local/bin/git /bin/git; do
 done
 [ -z "$GIT" ] && command -v git >/dev/null 2>&1 && GIT="$(command -v git)"
 if [ -z "$GIT" ]; then
-  log "ERROR: git not found."
+  log "ERROR: git not found"
   exit 1
 fi
 
@@ -50,7 +49,6 @@ for K in "${HOME}/.ssh/id_ed25519" "${HOME}/.ssh/id_rsa" "${HOME}/.ssh/id_ecdsa"
          "${HOME}/.ssh/id_ecdsa_sk" "${HOME}/.ssh/id_ed25519_sk"; do
   [ -f "$K" ] && SSH_KEY="$K" && break
 done
-# If no standard key found, also scan for any private key file in ~/.ssh/
 if [ -z "$SSH_KEY" ]; then
   for K in "${HOME}/.ssh/"*; do
     case "$K" in
@@ -60,65 +58,53 @@ if [ -z "$SSH_KEY" ]; then
   done
 fi
 
-# Build GIT_SSH_COMMAND — use explicit key if found, else fall back to SSH config
 if [ -n "$SSH_KEY" ]; then
   export GIT_SSH_COMMAND="ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
 else
   export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
-  log "WARN: no standard SSH key found — relying on ${HOME}/.ssh/config"
+  log "WARN: no SSH key found in ${HOME}/.ssh/ — relying on SSH config"
 fi
 export GIT_TERMINAL_PROMPT=0
 export GIT_EDITOR=true
-
-log "DEBUG: HOME=$HOME  GIT=$GIT  KEY=${SSH_KEY:-from_config}"
 
 # ── sanity checks ─────────────────────────────────────────────────────────────
 cd /config || { log "ERROR: cannot cd to /config"; exit 1; }
 
 if [ ! -d .git ]; then
-  log "ERROR: /config is not a git repository. Run ha-git-setup.sh first via SSH."
+  log "ERROR: /config is not a git repo — run ha-git-setup.sh via SSH"
   exit 1
 fi
 
-# ── skip if another git operation is running ──────────────────────────────────
 if [ -f .git/index.lock ]; then
-  log "index.lock present — skipping"
-  exit 0
+  exit 0  # another git op in progress — skip silently
 fi
 
 # ── fetch ─────────────────────────────────────────────────────────────────────
 if ! "$GIT" fetch origin 2>>"$GIT_TMP"; then
-  log "ERROR: git fetch failed (check SSH key / network). HOME=$HOME  KEY=$SSH_KEY"
+  log "ERROR: git fetch failed (SSH/network). KEY=${SSH_KEY:-none}"
   exit 1
 fi
+# Discard fetch progress output — not useful in the log
+: > "$GIT_TMP"
 
 BRANCH="$("$GIT" branch --show-current 2>/dev/null)"
 BEHIND="$("$GIT" rev-list "HEAD..origin/$BRANCH" --count 2>/dev/null || echo 0)"
-AHEAD="$("$GIT"  rev-list "origin/$BRANCH..HEAD"  --count 2>/dev/null || echo 0)"
-
-log "DEBUG: branch=$BRANCH  behind=$BEHIND  ahead=$AHEAD"
 
 if [ "$BEHIND" -eq 0 ]; then
-  log "OK: already up to date"
-  exit 0
+  exit 0  # already up to date — log nothing
 fi
 
 # ── commit any local changes before rebase ────────────────────────────────────
-# Safe to do here: ha-git.log is buffered so nothing new is written after this
-# commit — the working tree stays clean for the rebase that follows.
 if [ -n "$("$GIT" status --porcelain 2>/dev/null)" ]; then
-  log "INFO: committing local changes before pull"
   "$GIT" add -A
-  "$GIT" commit -m "auto: save local changes before pull $(date '+%Y-%m-%d %H:%M')" 2>>"$GIT_TMP"
+  "$GIT" commit -m "auto: save local changes before pull $(date '+%Y-%m-%d %H:%M')" 2>/dev/null
 fi
 
-# ── pull with rebase — handles ff-only and diverged branches ─────────────────
+# ── pull with rebase ──────────────────────────────────────────────────────────
 if ! "$GIT" pull --rebase origin "$BRANCH" 2>>"$GIT_TMP"; then
-  log "ERROR: git pull --rebase failed"
+  log "ERROR: git pull --rebase failed (branch=$BRANCH behind=$BEHIND)"
   exit 1
 fi
 
-log "OK: pulled $BEHIND new commit(s) from origin/$BRANCH"
-
-# Signal the binary sensor (flag lives in /config/ — survives reboots)
+log "OK: pulled $BEHIND commit(s) from origin/$BRANCH"
 touch "$FLAG"
