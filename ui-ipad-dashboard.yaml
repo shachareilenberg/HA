@@ -734,6 +734,29 @@ views:
                               - previous
                               - next
                             fill_container: true
+                          # Dynamic Yamaha volume inside popup: same logic as main view card.
+                          - type: conditional
+                            conditions:
+                              - condition: template
+                                value_template: >
+                                  {{ not is_state('media_player.living_room_2', 'off')
+                                     and state_attr('media_player.living_room_2', 'source') == 'TV' }}
+                            card:
+                              type: custom:mushroom-media-player-card
+                              entity: media_player.living_room_2
+                              name: "Yamaha (TV Audio — volume controls speakers)"
+                              volume_controls:
+                                - volume_set
+                                - volume_mute
+                              media_controls:
+                                - on_off
+                              fill_container: true
+                              card_mod:
+                                style: |
+                                  ha-card {
+                                    border: 1px solid rgba(255,120,0,0.5) !important;
+                                    background: rgba(255,120,0,0.08) !important;
+                                  }
                           - type: horizontal-stack
                             cards:
                               - type: vertical-stack
@@ -1003,11 +1026,10 @@ views:
               # volume control prominently so the user controls the right device.
               - type: conditional
                 conditions:
-                  - condition: state
-                    entity: media_player.living_room_2
-                    state: "on"
                   - condition: template
-                    value_template: "{{ state_attr('media_player.living_room_2', 'source') == 'TV' }}"
+                    value_template: >
+                      {{ not is_state('media_player.living_room_2', 'off')
+                         and state_attr('media_player.living_room_2', 'source') == 'TV' }}
                 card:
                   type: custom:mushroom-media-player-card
                   entity: media_player.living_room_2
