@@ -292,3 +292,14 @@ hint: its remote counterpart. If you want to integrate the remote changes,
 hint: use 'git pull' before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 2026-03-11 12:18:11 [push] WARN: push failed — commit undone, will retry next run. KEY=/config/.ssh/id_ed25519
+2026-03-11 12:19:11 [pull] --- run start ---
+2026-03-11 12:19:11 [pull] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 12:11 .|drwxr-xr-x   12 root     root          4096 Mar 11 12:18 ..|-rw-------    1 root     root           399 Mar 11 12:11 id_ed25519|-rw-------    1 root     root          3104 Mar 11 12:11 known_hosts|
+2026-03-11 12:19:11 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:19:13 [pull] DEBUG: branch=ipad-dashboard  behind=0  ahead=0
+2026-03-11 12:19:13 [pull] OK: already up to date
+2026-03-11 12:20:00 [pull] --- run start ---
+2026-03-11 12:20:00 [pull] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 12:11 .|drwxr-xr-x   12 root     root          4096 Mar 11 12:18 ..|-rw-------    1 root     root           399 Mar 11 12:11 id_ed25519|-rw-------    1 root     root          3104 Mar 11 12:11 known_hosts|
+2026-03-11 12:20:00 [pull] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
+2026-03-11 12:20:00 [push] --- run start ---
+2026-03-11 12:20:00 [push] DEBUG: .ssh contents: total 16|drwx------    2 root     root          4096 Mar 11 12:11 .|drwxr-xr-x   12 root     root          4096 Mar 11 12:18 ..|-rw-------    1 root     root           399 Mar 11 12:11 id_ed25519|-rw-------    1 root     root          3104 Mar 11 12:11 known_hosts|
+2026-03-11 12:20:00 [push] DEBUG: HOME=/config  GIT=/usr/bin/git  KEY=/config/.ssh/id_ed25519
