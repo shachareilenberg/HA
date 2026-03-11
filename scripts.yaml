@@ -139,67 +139,67 @@ turn_off_all_lights_v2:
       default: []
   sequence:
   - action: script.turn_off_all_by_domain
+    metadata: {}
     data:
       domain: light
-      exclude_entities: '{% set permanent_ignore = [''light.browser_mod_d84bc37d_600ba656_screen'']
-        %} {% set user_ignore = exclude_entities if exclude_entities is list else
-        [exclude_entities] if exclude_entities | length > 0 else [] %} {{ user_ignore
-        + permanent_ignore }}
-
-        '
-      exclude_areas: '{{ exclude_areas }}'
-      exclude_labels: '{{ exclude_labels }}'
+      exclude_entities: '{% set permanent = [''light.browser_mod_d84bc37d_600ba656_screen'']
+        %} {% set manual = exclude_entities if exclude_entities is list else [exclude_entities]
+        if exclude_entities | length > 0 else [] %} {{ (manual + permanent) | unique
+        | list }}'
+      exclude_areas: '{{ exclude_areas | default([], true) }}'
+      exclude_labels: '{{ exclude_labels | default([], true) }}'
 turn_off_all_by_domain:
   alias: Turn off all by domain
   mode: queued
   max: 10
   fields:
     domain:
-      description: Domain to turn off (light, climate, switch, fan, etc.)
+      description: Domain to turn off (light / climate / switch / fan, etc.)
+      example: climate
     exclude_entities:
       description: Entities to exclude
-      default: []
+      example: climate.living_room, climate.bedroom
     exclude_areas:
       description: Area names to exclude
-      default: []
+      example: Bedroom, Living Room
     exclude_labels:
       description: Label names to exclude
-      default: []
+      example: Do not turn off, Critical
   sequence:
   - variables:
-      entities: "{% set domain_states = states[domain] | default([]) %} {% set ns
-        = namespace(result=[]) %} {# Ensure excludes are treated as lists even if
-        empty #} {% set ex_entities = exclude_entities | default([], true) %} {% set
-        ex_areas = exclude_areas | default([], true) %} {% set ex_labels = exclude_labels
-        | default([], true) %}\n{% for s in domain_states if s.state not in ['off',
-        'unavailable', 'unknown'] %}\n  {% set entity_id = s.entity_id %}\n  {# Provide
-        an empty string default if area_name is None #}\n  {% set a_name = area_name(entity_id)
-        | default('', true) %}\n  {% set e_labels = labels(entity_id) | default([],
-        true) %}\n  \n  {% set is_excluded_entity = entity_id in ex_entities %}\n
-        \ {% set is_excluded_area = a_name != '' and a_name in ex_areas %}\n  {% set
-        is_excluded_label = (e_labels | select('in', ex_labels) | list | count > 0)
-        %}\n  \n  {% if not is_excluded_entity and not is_excluded_area and not is_excluded_label
-        %}\n    {% set ns.result = ns.result + [entity_id] %}\n  {% endif %}\n{% endfor
-        %} {{ ns.result }}"
+      excluded_entities: '{{ exclude_entities | default([], true) }}'
+      excluded_areas: '{{ exclude_areas | default([], true) }}'
+      excluded_labels: '{{ exclude_labels | default([], true) }}'
+      entities: "{% set ns = namespace(result=[]) %} {% for s in states[domain] %}\n
+        \ {% set entity_id = s.entity_id %}\n  {% set area_name_value = area_name(entity_id)
+        %}\n  {% set labels_value = labels(entity_id) | default([], true) %}\n\n  {%
+        if s.state not in ['off', 'unavailable', 'unknown'] %}\n    {% if entity_id
+        not in excluded_entities %}\n      {% if area_name_value not in excluded_areas
+        %}\n        {% if not (labels_value | select('in', excluded_labels) | list
+        | count > 0) %}\n          {% set ns.result = ns.result + [entity_id] %}\n
+        \       {% endif %}\n      {% endif %}\n    {% endif %}\n  {% endif %}\n{%
+        endfor %} {{ ns.result }}"
   - condition: template
-    value_template: '{{ entities is list and entities | count > 0 }}'
+    value_template: '{{ entities | count > 0 }}'
   - repeat:
       for_each: '{{ entities }}'
       sequence:
+      - variables:
+          entity_id: '{{ repeat.item }}'
       - repeat:
-          until:
-          - condition: or
-            conditions:
-            - condition: template
-              value_template: '{{ is_state(repeat.item, ''off'') }}'
-            - condition: template
-              value_template: '{{ repeat.index >= 3 }}'
+          count: 3
           sequence:
           - action: '{{ domain }}.turn_off'
             target:
-              entity_id: '{{ repeat.item }}'
-          - wait_template: '{{ is_state(repeat.item, ''off'') }}'
+              entity_id: '{{ entity_id }}'
+          - wait_template: '{{ is_state(entity_id, ''off'') }}'
             timeout: 00:00:05
+            continue_on_timeout: true
+          - if:
+            - condition: template
+              value_template: '{{ not is_state(entity_id, ''off'') }}'
+            then:
+            - delay: 00:00:01
 close_all_blinds:
   alias: Close all blinds
   mode: queued
