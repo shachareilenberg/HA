@@ -166,3 +166,12 @@ and the repository exists.
 2026-03-11 12:00:00 [push] ERROR: no SSH private key found in /root/.ssh/ — run ssh-keygen first.
 2026-03-11 12:02:59 [pull] --- run start ---
 2026-03-11 12:02:59 [pull] ERROR: no SSH private key found in /root/.ssh/ — run ssh-keygen first.
+2026-03-11 12:03:27 [pull] --- run start ---
+2026-03-11 12:03:27 [pull] WARN: no standard SSH key found — relying on /root/.ssh/config
+2026-03-11 12:03:27 [pull] DEBUG: HOME=/root  GIT=/usr/bin/git  KEY=from_config
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-11 12:03:28 [pull] ERROR: git fetch failed (check SSH key / network). HOME=/root  KEY=
