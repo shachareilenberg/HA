@@ -643,3 +643,192 @@ If that is not the case, please
 	rm -fr ".git/rebase-merge"
 and run me again.  I am stopping in case you still have something
 valuable there.
+2026-03-11 18:30:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 18:35:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 18:40:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 18:45:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 18:50:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 18:55:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:00:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:05:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:10:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:15:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:20:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:25:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:30:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:35:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:40:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:45:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:50:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 19:55:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 20:00:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 20:05:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-03-11 20:10:07 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: error: GH006: Protected branch update failed for refs/heads/main.        
+remote: 
+remote: - Changes must be made through a pull request.        
+remote: 
+remote: - Cannot change this locked branch        
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] main -> main (protected branch hook declined)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
