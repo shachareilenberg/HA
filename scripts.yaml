@@ -401,7 +401,7 @@ movie_time_lights_only:
   mode: single
 baby_sleep_time:
   alias: Baby Sleep Time
-  description: Play "Baby sleep time" playlist on bedroom Echo Spot.
+  description: Play "Baby sleep time" playlist on bedroom Echo Spot, looping endlessly.
   sequence:
   - action: media_player.play_media
     target:
@@ -409,6 +409,13 @@ baby_sleep_time:
     data:
       media_content_id: Baby sleep time
       media_content_type: AMAZON_MUSIC
+  - delay:
+      seconds: 2
+  - action: media_player.repeat_set
+    target:
+      entity_id: media_player.bedroom_echo_spot
+    data:
+      repeat: all
   mode: single
 movie_time_lights_and_blinds:
   alias: Movie Time — Lights Off + Close Blinds
