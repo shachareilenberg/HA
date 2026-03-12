@@ -399,6 +399,17 @@ movie_time_lights_only:
       - light.mshrd_mshrd_qyr
       wait_template: '{{ is_state(entity_id, ''off'') }}'
   mode: single
+baby_sleep_time:
+  alias: Baby Sleep Time
+  description: Play "Baby sleep time" playlist on bedroom Echo Spot.
+  sequence:
+  - action: media_player.play_media
+    target:
+      entity_id: media_player.bedroom_echo_spot
+    data:
+      media_content_id: Baby sleep time
+      media_content_type: AMAZON_MUSIC
+  mode: single
 movie_time_lights_and_blinds:
   alias: Movie Time — Lights Off + Close Blinds
   description: Turns off Living/Kitchen/Office lights and closes blinds in those areas.

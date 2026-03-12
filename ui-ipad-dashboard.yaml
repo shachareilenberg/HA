@@ -265,6 +265,21 @@ views:
                                       service_data:
                                         entity_id: script.movie_time_lights_and_blinds
 
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Baby Sleep
+                    secondary: Bedroom Echo
+                    icon: mdi:baby-face-outline
+                    icon_color: indigo
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.baby_sleep_time
+
               # ── Good Night Mode State ─────────────
               - type: custom:mushroom-entity-card
                 entity: input_boolean.good_night_state
@@ -1294,6 +1309,21 @@ views:
                     fill_container: true
                     tap_action:
                       action: toggle
+
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Baby Sleep Time
+                    secondary: Bedroom Echo
+                    icon: mdi:baby-face-outline
+                    icon_color: indigo
+                    layout: vertical
+                    fill_container: true
+                    tap_action:
+                      action: call-service
+                      service: script.turn_on
+                      service_data:
+                        entity_id: script.baby_sleep_time
 
               # ════════════════════
               # KIDS BATHROOM
