@@ -753,21 +753,25 @@
   mode: single
 - id: '1773300000001'
   alias: Config Update — Pull then Push every 5 min
-  description: >
-    Every 5 minutes: pull from GitHub first (blocking), then push local changes.
-    Sequential order is guaranteed — shell_command blocks until each script finishes.
-    If a pull brought in new commits, sends an actionable push notification to the
-    iPad asking the user to approve a restart.
+  description: 'Every 5 minutes: pull from GitHub first (blocking), then push local
+    changes. Sequential order is guaranteed — shell_command blocks until each script
+    finishes. If a pull brought in new commits, sends an actionable push notification
+    to the iPad asking the user to approve a restart.
+
+    '
   triggers:
   - trigger: time_pattern
     minutes: /5
   conditions: []
   actions:
   - action: shell_command.ha_pull_config
-  - delay: "00:00:03"
+  - delay: 00:00:03
   - action: homeassistant.update_entity
     target:
       entity_id: binary_sensor.config_update_available
+    data:
+      entity_id:
+      - binary_sensor.config_update_available
   - action: shell_command.ha_push_config
   - condition: state
     entity_id: binary_sensor.config_update_available
@@ -832,19 +836,19 @@
   actions:
   - action: shell_command.clear_update_flag
   mode: single
-# ── Git Setup — Diagnose on startup ───────────────────────────────────────────
 - id: '1773300000006'
   alias: Git Setup — Diagnose & notify on startup
-  description: >
-    Fires 30 s after HA starts. Reads sensor.git_setup_status and sends a
-    persistent notification when git or the repo is missing, so you know exactly
+  description: 'Fires 30 s after HA starts. Reads sensor.git_setup_status and sends
+    a persistent notification when git or the repo is missing, so you know exactly
     what to fix. The notification is auto-dismissed once the repo is OK.
+
+    '
   triggers:
   - trigger: homeassistant
     event: start
   conditions: []
   actions:
-  - delay: "00:00:30"
+  - delay: 00:00:30
   - action: homeassistant.update_entity
     target:
       entity_id: sensor.git_setup_status
@@ -857,10 +861,11 @@
       - action: persistent_notification.create
         data:
           notification_id: git_setup_error
-          title: "Git Sync ⚠ git not found"
-          message: >
-            The `git` binary is not available in the HA environment.
-            Git auto-sync is disabled until git is installed.
+          title: Git Sync ⚠ git not found
+          message: 'The `git` binary is not available in the HA environment. Git auto-sync
+            is disabled until git is installed.
+
+            '
     - conditions:
       - condition: state
         entity_id: sensor.git_setup_status
@@ -869,37 +874,37 @@
       - action: persistent_notification.create
         data:
           notification_id: git_setup_error
-          title: "Git Sync ⚠ repo not initialised"
-          message: >
-            /config is not a git repository.
-            SSH into the HA device and run: bash /config/ha-git-setup.sh
-            Then restart HA — this notification will clear automatically.
+          title: Git Sync ⚠ repo not initialised
+          message: '/config is not a git repository. SSH into the HA device and run:
+            bash /config/ha-git-setup.sh Then restart HA — this notification will
+            clear automatically.
+
+            '
     - conditions:
       - condition: template
-        value_template: "{{ states('sensor.git_setup_status').startswith('ok:') }}"
+        value_template: '{{ states(''sensor.git_setup_status'').startswith(''ok:'')
+          }}'
       sequence:
       - action: persistent_notification.dismiss
         data:
           notification_id: git_setup_error
   mode: single
-
-# ── Git Log — daily rotate ────────────────────────────────────────────────────
 - id: '1773300000007'
   alias: Git Log — weekly rotate on Sunday at 03:00
-  description: >
-    Trims /config/ha-git.log to its 200 most-recent lines every Sunday at 03:00
-    so it never grows unbounded. The log is written by ha-pull.sh and ha-push.sh.
+  description: 'Trims /config/ha-git.log to its 200 most-recent lines every Sunday
+    at 03:00 so it never grows unbounded. The log is written by ha-pull.sh and ha-push.sh.
+
+    '
   triggers:
   - trigger: time
-    at: "03:00:00"
+    at: 03:00:00
   conditions:
   - condition: time
     weekday:
-      - sun
+    - sun
   actions:
   - action: shell_command.rotate_git_log
   mode: single
-
 - id: '1773200000001'
   alias: iPad — Navigate to iPad Dashboard on Connect
   description: 'Redirects the registered iPad browser to the iPad landscape dashboard
@@ -920,123 +925,102 @@
       browser_id: REPLACE_WITH_IPAD_BROWSER_ID
       path: /ui-ipad
   mode: single
-
-##############################################################
-# SMART AWAY MODE — v3 additions
-#
-# Three layers:
-#  1. Auto ON  — when both persons leave and stay away 3+ min
-#  2. Auto OFF — when any person arrives home
-#  3. Auto OFF — when manual (non-automation) user activity
-#                is detected while Away is on AND someone is home
-##############################################################
-
 - id: away_mode_auto_on_all_away
-  alias: "Away Mode — Auto ON when everyone leaves"
-  description: >
-    Turns on Away Mode automatically after both persons have been
-    away for 3+ minutes. Guard against phone GPS jitter.
-  triggers:
-    - trigger: state
-      entity_id:
-        - person.shachar
-        - person.ariel
-      to: not_home
-      for: "00:03:00"
-  conditions:
-    - condition: state
-      entity_id: person.shachar
-      state: not_home
-      for: "00:03:00"
-    - condition: state
-      entity_id: person.ariel
-      state: not_home
-      for: "00:03:00"
-    - condition: state
-      entity_id: input_boolean.is_away_state
-      state: 'off'
-  actions:
-    - action: input_boolean.turn_on
-      target:
-        entity_id: input_boolean.is_away_state
-  mode: single
+  alias: Away Mode — Auto ON when everyone leaves
+  description: 'Turns on Away Mode automatically after both persons have been away
+    for 3+ minutes. Guard against phone GPS jitter.
 
+    '
+  triggers:
+  - trigger: state
+    entity_id:
+    - person.shachar
+    - person.ariel
+    to: not_home
+    for: 00:03:00
+  conditions:
+  - condition: state
+    entity_id: person.shachar
+    state: not_home
+    for: 00:03:00
+  - condition: state
+    entity_id: person.ariel
+    state: not_home
+    for: 00:03:00
+  - condition: state
+    entity_id: input_boolean.is_away_state
+    state: 'off'
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.is_away_state
+  mode: single
 - id: away_mode_auto_off_arrival
-  alias: "Away Mode — Auto OFF when someone arrives"
-  description: >
-    Turns off Away Mode when any household member arrives home.
-  triggers:
-    - trigger: state
-      entity_id:
-        - person.shachar
-        - person.ariel
-      to: home
-  conditions:
-    - condition: state
-      entity_id: input_boolean.is_away_state
-      state: 'on'
-  actions:
-    - action: input_boolean.turn_off
-      target:
-        entity_id: input_boolean.is_away_state
-  mode: single
+  alias: Away Mode — Auto OFF when someone arrives
+  description: 'Turns off Away Mode when any household member arrives home.
 
-- id: away_mode_auto_off_manual_activity
-  alias: "Away Mode — Auto OFF on manual user activity"
-  description: >
-    Clears Away Mode when a device (light / fan / heater / media)
-    is turned on by a direct user action (context.parent_id is None,
-    meaning it was NOT triggered by another automation or script).
-    Extra guard: only fires when at least one person is actually home,
-    preventing false clears from stale state reports.
+    '
   triggers:
-    - trigger: state
-      entity_id:
-        # Living Room
-        - light.slvn_slvn_spvtym
-        - light.slvn_slvn_qyr
-        - fan.slvn_slvn_tqrh
-        # Kitchen
-        - light.mtbkh_mtbkh_ps
-        - light.mtbkh_mtbkh_qyr
-        - light.mtbkh_mtbkh_shvlkhn
-        - light.knysh_na
-        - light.mtbkh_mtbkh_y
-        # Entrance / Hallway / Balcony
-        - light.knysh_knysh_qyr
-        - light.knysh_knysh_tvrh
-        - light.msdrvn_msdrvn_ps
-        - light.mrpst_mrpst_qyr
-        - light.mrpst_mrpst_tqrh
-        # Office
-        - light.mshrd_mshrd_tqrh
-        - light.mshrd_mshrd_qyr_khlvn
-        - light.mshrd_mshrd_qyr
-        # Kids
-        - light.mm_d_mm_d_tqrh
-        - light.mqlkht_mqlkht_qyr
-        - switch.mqlkht_mqlkht_tnvr
-        # Bedroom
-        - light.hvrym_hvrym_spvtym
-        - light.hvrym_hvrym_knysh
-        - fan.hvrym_hvrym_tqrh
-        - switch.hvrym_hvrym_mqlkht_tnvr
-        # Media
-        - media_player.kitchen_s_echo
-        - media_player.living_room_2
-        - media_player.tv_2
-      to: "on"
+  - trigger: state
+    entity_id:
+    - person.shachar
+    - person.ariel
+    to: home
   conditions:
-    - condition: state
-      entity_id: input_boolean.is_away_state
-      state: 'on'
-    # Only a genuinely manual action (not fired by automation/script).
-    # Intentionally no person-GPS guard: phone tracking may lag behind reality,
-    # so a manual light/device action is sufficient evidence someone is home.
-    - condition: template
-      value_template: "{{ trigger.to_state.context.parent_id is none }}"
+  - condition: state
+    entity_id: input_boolean.is_away_state
+    state: 'on'
   actions:
-    - action: input_boolean.turn_off
-      target:
-        entity_id: input_boolean.is_away_state
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.is_away_state
+  mode: single
+- id: away_mode_auto_off_manual_activity
+  alias: Away Mode — Auto OFF on manual user activity
+  description: 'Clears Away Mode when a device (light / fan / heater / media) is turned
+    on by a direct user action (context.parent_id is None, meaning it was NOT triggered
+    by another automation or script). Extra guard: only fires when at least one person
+    is actually home, preventing false clears from stale state reports.
+
+    '
+  triggers:
+  - trigger: state
+    entity_id:
+    - light.slvn_slvn_spvtym
+    - light.slvn_slvn_qyr
+    - fan.slvn_slvn_tqrh
+    - light.mtbkh_mtbkh_ps
+    - light.mtbkh_mtbkh_qyr
+    - light.mtbkh_mtbkh_shvlkhn
+    - light.knysh_na
+    - light.mtbkh_mtbkh_y
+    - light.knysh_knysh_qyr
+    - light.knysh_knysh_tvrh
+    - light.msdrvn_msdrvn_ps
+    - light.mrpst_mrpst_qyr
+    - light.mrpst_mrpst_tqrh
+    - light.mshrd_mshrd_tqrh
+    - light.mshrd_mshrd_qyr_khlvn
+    - light.mshrd_mshrd_qyr
+    - light.mm_d_mm_d_tqrh
+    - light.mqlkht_mqlkht_qyr
+    - switch.mqlkht_mqlkht_tnvr
+    - light.hvrym_hvrym_spvtym
+    - light.hvrym_hvrym_knysh
+    - fan.hvrym_hvrym_tqrh
+    - switch.hvrym_hvrym_mqlkht_tnvr
+    - media_player.kitchen_s_echo
+    - media_player.living_room_2
+    - media_player.tv_2
+    to: 'on'
+  conditions:
+  - condition: state
+    entity_id: input_boolean.is_away_state
+    state: 'on'
+  - condition: template
+    value_template: '{{ trigger.to_state.context.parent_id is none }}'
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.is_away_state
   mode: single
