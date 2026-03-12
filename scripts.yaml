@@ -407,10 +407,10 @@ baby_sleep_time:
     target:
       entity_id: media_player.bedroom_echo_spot
     data:
-      media_content_id: Baby sleep time
-      media_content_type: AMAZON_MUSIC
+      media_content_id: play my Baby sleep time playlist from Amazon Music
+      media_content_type: custom
   - delay:
-      seconds: 2
+      seconds: 5
   - action: media_player.repeat_set
     target:
       entity_id: media_player.bedroom_echo_spot
