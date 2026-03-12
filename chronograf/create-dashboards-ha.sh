@@ -49,6 +49,19 @@ SCRIPT_DIR="/config/chronograf"
 echo "Looking for JSON files in: $SCRIPT_DIR"
 ls "$SCRIPT_DIR"/0[0-9]-*.json 2>&1
 
+# ── Delete existing dashboards ────────────────────────────────────────────────
+echo "Deleting existing dashboards..."
+EXISTING=$(curl -s "$CHRONOGRAF_API" -H "$COOKIE" | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+for d in data.get('dashboards', []):
+    print(d['id'])
+" 2>/dev/null)
+for DID in $EXISTING; do
+  curl -s -X DELETE "${CHRONOGRAF_API%/dashboards}/dashboards/${DID}" -H "$COOKIE" > /dev/null
+  echo "  Deleted dashboard id=$DID"
+done
+
 for f in "$SCRIPT_DIR"/0[0-9]-*.json; do
   [ -f "$f" ] || { echo "No files matched"; break; }
   NAME=$(python3 -c "import json; print(json.load(open('$f'))['dashboard']['name'])")

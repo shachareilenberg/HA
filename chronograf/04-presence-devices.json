@@ -3,7 +3,7 @@
     "chronografVersion": "1.8.0"
   },
   "dashboard": {
-    "name": "HA \u2014 Presence & Devices",
+    "name": "HA — Presence & Devices",
     "cells": [
       {
         "i": "d001",
@@ -16,7 +16,7 @@
         "name": "Away Mode Timeline",
         "queries": [
           {
-            "query": "SELECT LAST(\"value\") AS \"Away Mode\" FROM /.*/ WHERE \"entity_id\" = 'input_boolean.is_away_state' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Away Mode\" FROM \"input_boolean.is_away_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -28,7 +28,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Away Mode\" FROM /.*/ WHERE \"entity_id\" = 'input_boolean.is_away_state' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Away Mode\" FROM \"input_boolean.is_away_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -107,7 +107,7 @@
         "name": "Good Night Mode Timeline",
         "queries": [
           {
-            "query": "SELECT LAST(\"value\") AS \"Good Night\" FROM /.*/ WHERE \"entity_id\" = 'input_boolean.good_night_state' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Good Night\" FROM \"input_boolean.good_night_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -119,7 +119,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Good Night\" FROM /.*/ WHERE \"entity_id\" = 'input_boolean.good_night_state' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Good Night\" FROM \"input_boolean.good_night_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -195,10 +195,10 @@
         "h": 4,
         "minW": 2,
         "minH": 2,
-        "name": "Fan State \u2014 Living Room & Bedroom",
+        "name": "Fan State — Living Room & Bedroom",
         "queries": [
           {
-            "query": "SELECT LAST(\"value\") AS \"Living Room fan\" FROM /.*/ WHERE \"entity_id\" = 'fan.slvn_slvn_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Living Room fan\" FROM \"fan.slvn_slvn_tqrh\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -210,7 +210,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Living Room fan\" FROM /.*/ WHERE \"entity_id\" = 'fan.slvn_slvn_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Living Room fan\" FROM \"fan.slvn_slvn_tqrh\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -218,7 +218,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Bedroom fan\" FROM /.*/ WHERE \"entity_id\" = 'fan.hvrym_hvrym_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Bedroom fan\" FROM \"fan.hvrym_hvrym_tqrh\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -230,7 +230,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Bedroom fan\" FROM /.*/ WHERE \"entity_id\" = 'fan.hvrym_hvrym_tqrh' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Bedroom fan\" FROM \"fan.hvrym_hvrym_tqrh\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -309,7 +309,7 @@
         "name": "Fan Activity per Day (14 d)",
         "queries": [
           {
-            "query": "SELECT COUNT(\"value\") AS \"Living Room fan\" FROM /.*/ WHERE \"entity_id\" = 'fan.slvn_slvn_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "query": "SELECT COUNT(\"value\") AS \"Living Room fan\" FROM \"fan.slvn_slvn_tqrh\" WHERE time > now() - 14d GROUP BY time(1d) fill(0)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -321,7 +321,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT COUNT(\"value\") AS \"Living Room fan\" FROM /.*/ WHERE \"entity_id\" = 'fan.slvn_slvn_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "rawText": "SELECT COUNT(\"value\") AS \"Living Room fan\" FROM \"fan.slvn_slvn_tqrh\" WHERE time > now() - 14d GROUP BY time(1d) fill(0)",
               "range": null,
               "shifts": null
             },
@@ -329,7 +329,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT COUNT(\"value\") AS \"Bedroom fan\" FROM /.*/ WHERE \"entity_id\" = 'fan.hvrym_hvrym_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "query": "SELECT COUNT(\"value\") AS \"Bedroom fan\" FROM \"fan.hvrym_hvrym_tqrh\" WHERE time > now() - 14d GROUP BY time(1d) fill(0)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -341,7 +341,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT COUNT(\"value\") AS \"Bedroom fan\" FROM /.*/ WHERE \"entity_id\" = 'fan.hvrym_hvrym_tqrh' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "rawText": "SELECT COUNT(\"value\") AS \"Bedroom fan\" FROM \"fan.hvrym_hvrym_tqrh\" WHERE time > now() - 14d GROUP BY time(1d) fill(0)",
               "range": null,
               "shifts": null
             },
@@ -420,7 +420,7 @@
         "name": "TV & Yamaha State",
         "queries": [
           {
-            "query": "SELECT LAST(\"value\") AS \"Samsung TV\" FROM /.*/ WHERE \"entity_id\" = 'media_player.tv_2' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Samsung TV\" FROM \"media_player.tv_2\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -432,7 +432,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Samsung TV\" FROM /.*/ WHERE \"entity_id\" = 'media_player.tv_2' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Samsung TV\" FROM \"media_player.tv_2\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -440,7 +440,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Yamaha AVR\" FROM /.*/ WHERE \"entity_id\" = 'media_player.living_room_2' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Yamaha AVR\" FROM \"media_player.living_room_2\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -452,7 +452,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Yamaha AVR\" FROM /.*/ WHERE \"entity_id\" = 'media_player.living_room_2' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Yamaha AVR\" FROM \"media_player.living_room_2\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -528,10 +528,10 @@
         "h": 4,
         "minW": 2,
         "minH": 2,
-        "name": "Media State Table \u2014 TV & Yamaha (current)",
+        "name": "Media State Table — TV & Yamaha (current)",
         "queries": [
           {
-            "query": "SELECT LAST(\"state\") AS \"state\", LAST(\"volume_level\") AS \"volume\" FROM /.*/ WHERE \"entity_id\" =~ /^media_player\\.(tv_2|living_room_2)$/ AND time > now() - 24h GROUP BY \"entity_id\"",
+            "query": "SELECT LAST(\"state\") AS \"state\", LAST(\"volume_level\") AS \"volume\" FROM /^media_player\\.(tv_2|living_room_2)$/ WHERE time > now() - 24h GROUP BY \"entity_id\"",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -543,7 +543,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"state\") AS \"state\", LAST(\"volume_level\") AS \"volume\" FROM /.*/ WHERE \"entity_id\" =~ /^media_player\\.(tv_2|living_room_2)$/ AND time > now() - 24h GROUP BY \"entity_id\"",
+              "rawText": "SELECT LAST(\"state\") AS \"state\", LAST(\"volume_level\") AS \"volume\" FROM /^media_player\\.(tv_2|living_room_2)$/ WHERE time > now() - 24h GROUP BY \"entity_id\"",
               "range": null,
               "shifts": null
             },
@@ -637,10 +637,10 @@
         "h": 4,
         "minW": 2,
         "minH": 2,
-        "name": "Boiler \u2014 Hot Water (switch.mqlkht_dvd)",
+        "name": "Boiler — Hot Water (switch.mqlkht_dvd)",
         "queries": [
           {
-            "query": "SELECT LAST(\"value\") AS \"Boiler\" FROM /.*/ WHERE \"entity_id\" = 'switch.mqlkht_dvd' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Boiler\" FROM \"switch.mqlkht_dvd\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -652,7 +652,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Boiler\" FROM /.*/ WHERE \"entity_id\" = 'switch.mqlkht_dvd' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Boiler\" FROM \"switch.mqlkht_dvd\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -731,7 +731,7 @@
         "name": "Kids Bathroom Heater (switch.mqlkht_mqlkht_tnvr)",
         "queries": [
           {
-            "query": "SELECT LAST(\"value\") AS \"Heater\" FROM /.*/ WHERE \"entity_id\" = 'switch.mqlkht_mqlkht_tnvr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Heater\" FROM \"switch.mqlkht_mqlkht_tnvr\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -743,7 +743,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Heater\" FROM /.*/ WHERE \"entity_id\" = 'switch.mqlkht_mqlkht_tnvr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Heater\" FROM \"switch.mqlkht_mqlkht_tnvr\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },

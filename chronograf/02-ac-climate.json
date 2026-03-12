@@ -3,7 +3,7 @@
     "chronografVersion": "1.8.0"
   },
   "dashboard": {
-    "name": "HA \u2014 AC & Climate",
+    "name": "HA — AC & Climate",
     "cells": [
       {
         "i": "b001",
@@ -13,10 +13,10 @@
         "h": 5,
         "minW": 2,
         "minH": 2,
-        "name": "Temperature Trends \u2014 All ACs",
+        "name": "Temperature Trends — All ACs",
         "queries": [
           {
-            "query": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_101' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1\" FROM \"climate.l8_101\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -28,7 +28,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_101' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1\" FROM \"climate.l8_101\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -36,7 +36,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 2\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_102' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 2\" FROM \"climate.l8_102\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -48,7 +48,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 2\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_102' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 2\" FROM \"climate.l8_102\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -56,7 +56,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT MEAN(\"current_temperature\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_103' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Office\" FROM \"climate.l8_103\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -68,7 +68,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_103' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Office\" FROM \"climate.l8_103\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -76,7 +76,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT MEAN(\"current_temperature\") AS \"Kids\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_104' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kids\" FROM \"climate.l8_104\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -88,7 +88,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kids\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_104' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kids\" FROM \"climate.l8_104\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -96,7 +96,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT MEAN(\"current_temperature\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_105' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Bedroom\" FROM \"climate.l8_105\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -108,7 +108,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_105' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Bedroom\" FROM \"climate.l8_105\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -133,9 +133,9 @@
               "",
               ""
             ],
-            "label": "\u00b0C",
+            "label": "°C",
             "prefix": "",
-            "suffix": "\u00b0C",
+            "suffix": "°C",
             "base": "10",
             "scale": "linear"
           },
@@ -184,10 +184,10 @@
         "h": 4,
         "minW": 2,
         "minH": 2,
-        "name": "AC Current States \u2014 Mode, Temperature & Setpoint",
+        "name": "AC Current States — Mode, Temperature & Setpoint",
         "queries": [
           {
-            "query": "SELECT LAST(\"state\") AS \"mode\", LAST(\"current_temperature\") AS \"temp\", LAST(\"temperature\") AS \"setpoint\" FROM /.*/ WHERE \"domain\" = 'climate' AND time > now() - 24h GROUP BY \"entity_id\"",
+            "query": "SELECT LAST(\"state\") AS \"mode\", LAST(\"current_temperature\") AS \"temp\", LAST(\"temperature\") AS \"setpoint\" FROM /^climate\\./ WHERE time > now() - 24h GROUP BY \"entity_id\"",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -199,7 +199,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"state\") AS \"mode\", LAST(\"current_temperature\") AS \"temp\", LAST(\"temperature\") AS \"setpoint\" FROM /.*/ WHERE \"domain\" = 'climate' AND time > now() - 24h GROUP BY \"entity_id\"",
+              "rawText": "SELECT LAST(\"state\") AS \"mode\", LAST(\"current_temperature\") AS \"temp\", LAST(\"temperature\") AS \"setpoint\" FROM /^climate\\./ WHERE time > now() - 24h GROUP BY \"entity_id\"",
               "range": null,
               "shifts": null
             },
@@ -268,12 +268,12 @@
           },
           {
             "internalName": "temp",
-            "displayName": "Temp \u00b0C",
+            "displayName": "Temp °C",
             "visible": true
           },
           {
             "internalName": "setpoint",
-            "displayName": "Setpoint \u00b0C",
+            "displayName": "Setpoint °C",
             "visible": true
           },
           {
@@ -298,10 +298,10 @@
         "h": 5,
         "minW": 2,
         "minH": 2,
-        "name": "Setpoint vs Actual Temperature \u2014 All ACs",
+        "name": "Setpoint vs Actual Temperature — All ACs",
         "queries": [
           {
-            "query": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1 actual\", MEAN(\"temperature\") AS \"Kitchen 1 set\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_101' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1 actual\", MEAN(\"temperature\") AS \"Kitchen 1 set\" FROM \"climate.l8_101\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -313,7 +313,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1 actual\", MEAN(\"temperature\") AS \"Kitchen 1 set\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_101' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1 actual\", MEAN(\"temperature\") AS \"Kitchen 1 set\" FROM \"climate.l8_101\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -321,7 +321,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT MEAN(\"current_temperature\") AS \"Office actual\", MEAN(\"temperature\") AS \"Office set\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_103' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Office actual\", MEAN(\"temperature\") AS \"Office set\" FROM \"climate.l8_103\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -333,7 +333,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Office actual\", MEAN(\"temperature\") AS \"Office set\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_103' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Office actual\", MEAN(\"temperature\") AS \"Office set\" FROM \"climate.l8_103\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -341,7 +341,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT MEAN(\"current_temperature\") AS \"Kids actual\", MEAN(\"temperature\") AS \"Kids set\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_104' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kids actual\", MEAN(\"temperature\") AS \"Kids set\" FROM \"climate.l8_104\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -353,7 +353,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kids actual\", MEAN(\"temperature\") AS \"Kids set\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_104' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kids actual\", MEAN(\"temperature\") AS \"Kids set\" FROM \"climate.l8_104\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -361,7 +361,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT MEAN(\"current_temperature\") AS \"Bedroom actual\", MEAN(\"temperature\") AS \"Bedroom set\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_105' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Bedroom actual\", MEAN(\"temperature\") AS \"Bedroom set\" FROM \"climate.l8_105\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -373,7 +373,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Bedroom actual\", MEAN(\"temperature\") AS \"Bedroom set\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_105' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Bedroom actual\", MEAN(\"temperature\") AS \"Bedroom set\" FROM \"climate.l8_105\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -398,9 +398,9 @@
               "",
               ""
             ],
-            "label": "\u00b0C",
+            "label": "°C",
             "prefix": "",
-            "suffix": "\u00b0C",
+            "suffix": "°C",
             "base": "10",
             "scale": "linear"
           },
@@ -449,10 +449,10 @@
         "h": 5,
         "minW": 2,
         "minH": 2,
-        "name": "AC Activity Events per Day (14 d) \u2014 state changes while not off",
+        "name": "AC Activity Events per Day (14 d) — state changes while not off",
         "queries": [
           {
-            "query": "SELECT COUNT(\"state\") AS \"Kitchen 1\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_101' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "query": "SELECT COUNT(\"state\") AS \"Kitchen 1\" FROM \"climate.l8_101\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -464,7 +464,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT COUNT(\"state\") AS \"Kitchen 1\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_101' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "rawText": "SELECT COUNT(\"state\") AS \"Kitchen 1\" FROM \"climate.l8_101\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
               "range": null,
               "shifts": null
             },
@@ -472,7 +472,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT COUNT(\"state\") AS \"Kitchen 2\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_102' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "query": "SELECT COUNT(\"state\") AS \"Kitchen 2\" FROM \"climate.l8_102\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -484,7 +484,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT COUNT(\"state\") AS \"Kitchen 2\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_102' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "rawText": "SELECT COUNT(\"state\") AS \"Kitchen 2\" FROM \"climate.l8_102\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
               "range": null,
               "shifts": null
             },
@@ -492,7 +492,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT COUNT(\"state\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_103' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "query": "SELECT COUNT(\"state\") AS \"Office\" FROM \"climate.l8_103\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -504,7 +504,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT COUNT(\"state\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_103' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "rawText": "SELECT COUNT(\"state\") AS \"Office\" FROM \"climate.l8_103\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
               "range": null,
               "shifts": null
             },
@@ -512,7 +512,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT COUNT(\"state\") AS \"Kids\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_104' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "query": "SELECT COUNT(\"state\") AS \"Kids\" FROM \"climate.l8_104\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -524,7 +524,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT COUNT(\"state\") AS \"Kids\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_104' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "rawText": "SELECT COUNT(\"state\") AS \"Kids\" FROM \"climate.l8_104\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
               "range": null,
               "shifts": null
             },
@@ -532,7 +532,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT COUNT(\"state\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_105' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "query": "SELECT COUNT(\"state\") AS \"Bedroom\" FROM \"climate.l8_105\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -544,7 +544,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT COUNT(\"state\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'climate.l8_105' AND \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "rawText": "SELECT COUNT(\"state\") AS \"Bedroom\" FROM \"climate.l8_105\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
               "range": null,
               "shifts": null
             },

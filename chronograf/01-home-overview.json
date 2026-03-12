@@ -3,7 +3,7 @@
     "chronografVersion": "1.8.0"
   },
   "dashboard": {
-    "name": "HA \u2014 Home Overview",
+    "name": "HA — Home Overview",
     "cells": [
       {
         "i": "a001",
@@ -13,10 +13,10 @@
         "h": 4,
         "minW": 2,
         "minH": 2,
-        "name": "AC Status \u2014 All Rooms",
+        "name": "AC Status — All Rooms",
         "queries": [
           {
-            "query": "SELECT LAST(\"current_temperature\") AS \"temp\", LAST(\"state\") AS \"mode\", LAST(\"temperature\") AS \"setpoint\" FROM /.*/ WHERE \"domain\" = 'climate' AND time > now() - 24h GROUP BY \"entity_id\"",
+            "query": "SELECT LAST(\"current_temperature\") AS \"temp\", LAST(\"state\") AS \"mode\", LAST(\"temperature\") AS \"setpoint\" FROM /^climate\\./ WHERE time > now() - 24h GROUP BY \"entity_id\"",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -28,7 +28,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"current_temperature\") AS \"temp\", LAST(\"state\") AS \"mode\", LAST(\"temperature\") AS \"setpoint\" FROM /.*/ WHERE \"domain\" = 'climate' AND time > now() - 24h GROUP BY \"entity_id\"",
+              "rawText": "SELECT LAST(\"current_temperature\") AS \"temp\", LAST(\"state\") AS \"mode\", LAST(\"temperature\") AS \"setpoint\" FROM /^climate\\./ WHERE time > now() - 24h GROUP BY \"entity_id\"",
               "range": null,
               "shifts": null
             },
@@ -97,7 +97,7 @@
           },
           {
             "internalName": "temp",
-            "displayName": "Temp \u00b0C",
+            "displayName": "Temp °C",
             "visible": true
           },
           {
@@ -127,10 +127,10 @@
         "h": 4,
         "minW": 2,
         "minH": 2,
-        "name": "Home State \u2014 Away & Good Night",
+        "name": "Home State — Away & Good Night",
         "queries": [
           {
-            "query": "SELECT LAST(\"value\") AS \"Away\" FROM /.*/ WHERE \"entity_id\" = 'input_boolean.is_away_state' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Away\" FROM \"input_boolean.is_away_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -142,7 +142,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Away\" FROM /.*/ WHERE \"entity_id\" = 'input_boolean.is_away_state' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Away\" FROM \"input_boolean.is_away_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -150,7 +150,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Good Night\" FROM /.*/ WHERE \"entity_id\" = 'input_boolean.good_night_state' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Good Night\" FROM \"input_boolean.good_night_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -162,7 +162,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Good Night\" FROM /.*/ WHERE \"entity_id\" = 'input_boolean.good_night_state' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Good Night\" FROM \"input_boolean.good_night_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -241,7 +241,7 @@
         "name": "Boiler & Kids Bathroom Heater",
         "queries": [
           {
-            "query": "SELECT LAST(\"value\") AS \"Boiler\" FROM /.*/ WHERE \"entity_id\" = 'switch.mqlkht_dvd' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Boiler\" FROM \"switch.mqlkht_dvd\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -253,7 +253,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Boiler\" FROM /.*/ WHERE \"entity_id\" = 'switch.mqlkht_dvd' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Boiler\" FROM \"switch.mqlkht_dvd\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -261,7 +261,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Heater\" FROM /.*/ WHERE \"entity_id\" = 'switch.mqlkht_mqlkht_tnvr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "query": "SELECT LAST(\"value\") AS \"Heater\" FROM \"switch.mqlkht_mqlkht_tnvr\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -273,7 +273,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Heater\" FROM /.*/ WHERE \"entity_id\" = 'switch.mqlkht_mqlkht_tnvr' AND time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "rawText": "SELECT LAST(\"value\") AS \"Heater\" FROM \"switch.mqlkht_mqlkht_tnvr\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
               "range": null,
               "shifts": null
             },
@@ -349,10 +349,10 @@
         "h": 4,
         "minW": 2,
         "minH": 2,
-        "name": "Lights \u2014 Current Snapshot (1 = on)",
+        "name": "Lights — Current Snapshot (1 = on)",
         "queries": [
           {
-            "query": "SELECT LAST(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > now() - 24h",
+            "query": "SELECT LAST(\"value\") AS \"Living Room\" FROM \"light.slvn_slvn_spvtym\" WHERE time > now() - 24h",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -364,7 +364,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Living Room\" FROM /.*/ WHERE \"entity_id\" = 'light.slvn_slvn_spvtym' AND time > now() - 24h",
+              "rawText": "SELECT LAST(\"value\") AS \"Living Room\" FROM \"light.slvn_slvn_spvtym\" WHERE time > now() - 24h",
               "range": null,
               "shifts": null
             },
@@ -372,7 +372,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > now() - 24h",
+            "query": "SELECT LAST(\"value\") AS \"Kitchen\" FROM \"light.mtbkh_mtbkh_ps\" WHERE time > now() - 24h",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -384,7 +384,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Kitchen\" FROM /.*/ WHERE \"entity_id\" = 'light.mtbkh_mtbkh_ps' AND time > now() - 24h",
+              "rawText": "SELECT LAST(\"value\") AS \"Kitchen\" FROM \"light.mtbkh_mtbkh_ps\" WHERE time > now() - 24h",
               "range": null,
               "shifts": null
             },
@@ -392,7 +392,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Entrance\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_qyr' AND time > now() - 24h",
+            "query": "SELECT LAST(\"value\") AS \"Entrance\" FROM \"light.knysh_knysh_qyr\" WHERE time > now() - 24h",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -404,7 +404,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Entrance\" FROM /.*/ WHERE \"entity_id\" = 'light.knysh_knysh_qyr' AND time > now() - 24h",
+              "rawText": "SELECT LAST(\"value\") AS \"Entrance\" FROM \"light.knysh_knysh_qyr\" WHERE time > now() - 24h",
               "range": null,
               "shifts": null
             },
@@ -412,7 +412,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > now() - 24h",
+            "query": "SELECT LAST(\"value\") AS \"Office\" FROM \"light.mshrd_mshrd_tqrh\" WHERE time > now() - 24h",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -424,7 +424,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Office\" FROM /.*/ WHERE \"entity_id\" = 'light.mshrd_mshrd_tqrh' AND time > now() - 24h",
+              "rawText": "SELECT LAST(\"value\") AS \"Office\" FROM \"light.mshrd_mshrd_tqrh\" WHERE time > now() - 24h",
               "range": null,
               "shifts": null
             },
@@ -432,7 +432,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Kids Room\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > now() - 24h",
+            "query": "SELECT LAST(\"value\") AS \"Kids Room\" FROM \"light.mm_d_mm_d_tqrh\" WHERE time > now() - 24h",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -444,7 +444,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Kids Room\" FROM /.*/ WHERE \"entity_id\" = 'light.mm_d_mm_d_tqrh' AND time > now() - 24h",
+              "rawText": "SELECT LAST(\"value\") AS \"Kids Room\" FROM \"light.mm_d_mm_d_tqrh\" WHERE time > now() - 24h",
               "range": null,
               "shifts": null
             },
@@ -452,7 +452,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > now() - 24h",
+            "query": "SELECT LAST(\"value\") AS \"Bedroom\" FROM \"light.hvrym_hvrym_spvtym\" WHERE time > now() - 24h",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -464,7 +464,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Bedroom\" FROM /.*/ WHERE \"entity_id\" = 'light.hvrym_hvrym_spvtym' AND time > now() - 24h",
+              "rawText": "SELECT LAST(\"value\") AS \"Bedroom\" FROM \"light.hvrym_hvrym_spvtym\" WHERE time > now() - 24h",
               "range": null,
               "shifts": null
             },
@@ -472,7 +472,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > now() - 24h",
+            "query": "SELECT LAST(\"value\") AS \"Hallway\" FROM \"light.msdrvn_msdrvn_ps\" WHERE time > now() - 24h",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -484,7 +484,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Hallway\" FROM /.*/ WHERE \"entity_id\" = 'light.msdrvn_msdrvn_ps' AND time > now() - 24h",
+              "rawText": "SELECT LAST(\"value\") AS \"Hallway\" FROM \"light.msdrvn_msdrvn_ps\" WHERE time > now() - 24h",
               "range": null,
               "shifts": null
             },
@@ -492,7 +492,7 @@
             "type": "influxql"
           },
           {
-            "query": "SELECT LAST(\"value\") AS \"Balcony\" FROM /.*/ WHERE \"entity_id\" = 'light.mrpst_mrpst_qyr' AND time > now() - 24h",
+            "query": "SELECT LAST(\"value\") AS \"Balcony\" FROM \"light.mrpst_mrpst_qyr\" WHERE time > now() - 24h",
             "queryConfig": {
               "database": "ha_data",
               "measurement": "",
@@ -504,7 +504,7 @@
                 "tags": []
               },
               "areTagsAccepted": false,
-              "rawText": "SELECT LAST(\"value\") AS \"Balcony\" FROM /.*/ WHERE \"entity_id\" = 'light.mrpst_mrpst_qyr' AND time > now() - 24h",
+              "rawText": "SELECT LAST(\"value\") AS \"Balcony\" FROM \"light.mrpst_mrpst_qyr\" WHERE time > now() - 24h",
               "range": null,
               "shifts": null
             },
