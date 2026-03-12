@@ -375,6 +375,7 @@ food_time_routine:
       entity_id:
       - light.knysh_na
       - light.mtbkh_mtbkh_y
+      - light.mtbkh_mtbkh_ps
     data: {}
   mode: single
 movie_time_lights_only:
