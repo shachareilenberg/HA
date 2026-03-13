@@ -383,21 +383,22 @@ movie_time_lights_only:
   description: Turn off Living Room, Kitchen and Office lights using the iteration
     script.
   sequence:
-  - action: script.iterate_entities_with_action
-    data:
-      action: light.turn_off
-      entities:
-      - light.slvn_slvn_spvtym
-      - light.slvn_slvn_qyr
-      - light.mtbkh_mtbkh_ps
-      - light.mtbkh_mtbkh_qyr
-      - light.mtbkh_mtbkh_shvlkhn
-      - light.knysh_na
-      - light.mtbkh_mtbkh_y
-      - light.mshrd_mshrd_tqrh
-      - light.mshrd_mshrd_qyr_khlvn
-      - light.mshrd_mshrd_qyr
-      wait_template: '{{ is_state(entity_id, ''off'') }}'
+  - parallel:
+    - action: script.iterate_entities_with_action
+      data:
+        action: light.turn_off
+        entities:
+        - light.slvn_slvn_spvtym
+        - light.slvn_slvn_qyr
+        - light.mtbkh_mtbkh_ps
+        - light.mtbkh_mtbkh_qyr
+        - light.mtbkh_mtbkh_shvlkhn
+        - light.knysh_na
+        - light.mtbkh_mtbkh_y
+        - light.mshrd_mshrd_tqrh
+        - light.mshrd_mshrd_qyr_khlvn
+        - light.mshrd_mshrd_qyr
+        wait_template: '{{ is_state(entity_id, ''off'') }}'
   mode: single
 baby_sleep_time:
   alias: Baby Sleep Time
