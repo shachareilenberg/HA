@@ -142,10 +142,13 @@ turn_off_all_lights_v2:
     metadata: {}
     data:
       domain: light
-      exclude_entities: '{% set permanent = [''light.browser_mod_d84bc37d_600ba656_screen'']
-        %} {% set manual = exclude_entities if exclude_entities is list else [exclude_entities]
-        if exclude_entities | length > 0 else [] %} {{ (manual + permanent) | unique
-        | list }}'
+      exclude_entities: "{# Collect manual exclusions from the field #} {% set manual
+        = exclude_entities if exclude_entities is list else [exclude_entities] if
+        (exclude_entities | length > 0) else [] %}\n{# Dynamically find all lights
+        belonging to browser_mod #} {% set browser_lights = states.light \n  | selectattr('entity_id',
+        'search', 'browser_mod') \n  | map(attribute='entity_id') | list %}\n  \n{#
+        Combine lists and remove duplicates #} {{ (manual + browser_lights) | unique
+        | list }}"
       exclude_areas: '{{ exclude_areas | default([], true) }}'
       exclude_labels: '{{ exclude_labels | default([], true) }}'
 turn_off_all_by_domain:
