@@ -916,13 +916,13 @@
   - trigger: event
     event_type: browser_mod_connected
     event_data:
-      browser_id: REPLACE_WITH_IPAD_BROWSER_ID
+      browser_id: ipad
   conditions: []
   actions:
   - delay: 00:00:01
   - action: browser_mod.navigate
     data:
-      browser_id: REPLACE_WITH_IPAD_BROWSER_ID
+      browser_id: ipad
       path: /ui-ipad
   mode: single
 - id: away_mode_auto_on_all_away
