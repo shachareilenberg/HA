@@ -411,8 +411,9 @@ baby_sleep_time:
     target:
       entity_id: media_player.bedroom_echo_spot
     data:
-      media_content_id: play my Baby sleep time playlist from Amazon Music
-      media_content_type: custom
+      media:
+        media_content_id: play white noise baby sleep from spotify on repeat
+        metadata: {}
   - delay:
       seconds: 5
   - action: media_player.repeat_set
