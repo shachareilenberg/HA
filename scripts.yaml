@@ -405,21 +405,21 @@ movie_time_lights_only:
   mode: single
 baby_sleep_time:
   alias: Baby Sleep Time
-  description: Wake Spotify and play white noise on bedroom Echo Spot
+  description: Play specific "White noise baby sleep" playlist on bedroom Echo Spot
   sequence:
   - action: media_player.select_source
     target:
-      entity_id: media_player.spotify
+      entity_id: media_player.spotify_your_account
     data:
-      source: bedroom echo spot
+      source: Bedroom Echo Spot
   - delay:
       seconds: 1
   - action: media_player.play_media
     target:
-      entity_id: media_player.bedroom_echo_spot
+      entity_id: media_player.spotify_your_account
     data:
-      media_content_id: play white noise baby sleep
-      media_content_type: custom
+      media_content_id: spotify:playlist:4u6S06O7qB046tQf8hK7hD
+      media_content_type: playlist
   - delay:
       seconds: 2
   - action: media_player.play_media
