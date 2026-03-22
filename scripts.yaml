@@ -416,16 +416,10 @@ baby_sleep_time:
     target:
       entity_id: media_player.bedroom_echo_spot
     data:
-      media_content_id: play the playlist white noise baby sleep by heavenly noise
-      media_content_type: custom
-  - delay:
-      seconds: 3
-  - action: media_player.play_media
-    target:
-      entity_id: media_player.bedroom_echo_spot
-    data:
-      media_content_id: loop on
-      media_content_type: custom
+      media:
+        media_content_id: play the playlist white noise baby sleep by heavenly noise
+        media_content_type: custom
+        metadata: {}
   mode: single
 movie_time_lights_and_blinds:
   alias: Movie Time — Lights Off + Close Blinds
