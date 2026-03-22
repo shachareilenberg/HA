@@ -412,8 +412,9 @@ baby_sleep_time:
       entity_id: media_player.bedroom_echo_spot
     data:
       media:
-        media_content_id: play white noise baby sleep from spotify on repeat
+        media_content_id: white noise baby sleep
         metadata: {}
+        media_content_type: 'Playlist '
   - delay:
       seconds: 5
   - action: media_player.repeat_set
