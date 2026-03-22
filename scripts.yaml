@@ -405,23 +405,21 @@ movie_time_lights_only:
   mode: single
 baby_sleep_time:
   alias: Baby Sleep Time
-  description: Play specific "White noise baby sleep" playlist on bedroom Echo Spot
+  description: Play specific Heavenly Noise playlist on Alexa's own account
   sequence:
-  - action: media_player.select_source
+  - action: media_player.volume_set
     target:
-      entity_id: media_player.spotify_your_account
+      entity_id: media_player.bedroom_echo_spot
     data:
-      source: Bedroom Echo Spot
-  - delay:
-      seconds: 1
+      volume_level: 0.3
   - action: media_player.play_media
     target:
-      entity_id: media_player.spotify_your_account
+      entity_id: media_player.bedroom_echo_spot
     data:
-      media_content_id: spotify:playlist:4u6S06O7qB046tQf8hK7hD
-      media_content_type: playlist
+      media_content_id: play the playlist white noise baby sleep by heavenly noise
+      media_content_type: custom
   - delay:
-      seconds: 2
+      seconds: 3
   - action: media_player.play_media
     target:
       entity_id: media_player.bedroom_echo_spot
