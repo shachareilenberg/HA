@@ -622,6 +622,11 @@
     data:
       message: In a few minutes, there will probably be a siren.
       title: "\U0001F6A8 Pre alert"
+  - action: notify.mobile_app_h_iphone_shl_ariel
+    metadata: {}
+    data:
+      message: In a few minutes, there will probably be a siren.
+      title: "\U0001F6A8 Pre alert"
   - delay: 00:00:08
   - action: media_player.volume_set
     target:
