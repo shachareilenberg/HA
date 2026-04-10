@@ -1029,3 +1029,28 @@
     target:
       entity_id: input_boolean.is_away_state
   mode: single
+- id: '1775859342110'
+  alias: Ariel Birthday Good Morning
+  description: Play Birthday Song on April 11th
+  triggers:
+  - trigger: event
+    event_type: Good morning
+  conditions:
+  - condition: template
+    value_template: '{{ now().month == 4 and now().day == 11 }}'
+  actions:
+  - target:
+      entity_id: media_player.kitchen_s_echo
+    data:
+      volume_level: 0.6
+    action: media_player.volume_set
+  - target:
+      entity_id: media_player.kitchen_s_echo
+    data:
+      media:
+        media_content_id: יום הולדת by Eden Band
+        media_content_type: AMAZON_MUSIC
+        metadata: {}
+    action: media_player.play_media
+  mode: queued
+  max: 10
