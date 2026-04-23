@@ -22,3 +22,9 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
+2026-04-23 19:30:06 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+ERROR: internal error performing authentication
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
