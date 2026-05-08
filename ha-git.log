@@ -40,3 +40,15 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
+2026-05-08 23:30:10 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+ssh: Could not resolve hostname github.com: Try again
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-05-08 23:30:23 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+ssh: Could not resolve hostname github.com: Try again
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
