@@ -466,11 +466,11 @@
     action: input_select.select_option
   mode: restart
 - id: '1771140236537'
-  alias: 9:30 Turn off bedroom AC
+  alias: 10:30 Turn off bedroom AC
   description: ''
   triggers:
   - trigger: time
-    at: 09:30:00
+    at: '10:30:00'
   conditions: []
   actions:
   - action: climate.turn_off
