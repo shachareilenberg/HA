@@ -52,3 +52,22 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
+2026-05-25 12:05:06 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-05-25 12:05:13 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-05-25 12:10:29 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: Internal Server Error        
+remote: Request ID 32d3dfbc2a324e77b18f2bf4aa965a0e        
+remote: Time 2026-05-25T09:10:29Z
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] room-tabs -> room-tabs (Internal Server Error)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
