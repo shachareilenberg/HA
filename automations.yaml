@@ -389,11 +389,6 @@
     target:
       entity_id: light.mm_d_mm_d_tqrh
     data: {}
-  - action: light.turn_on
-    metadata: {}
-    target:
-      entity_id: light.mqlkht_mqlkht_qyr
-    data: {}
   - action: notify.alexa_media
     data:
       target:
