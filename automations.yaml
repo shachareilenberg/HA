@@ -594,6 +594,7 @@
   - if:
     - condition: time
       before: '19:30:00'
+      after: '10:00:00'
     then:
     - action: media_player.volume_set
       target:
