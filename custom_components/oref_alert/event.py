@@ -9,7 +9,6 @@ from homeassistant.const import Platform
 from homeassistant.core import callback
 from homeassistant.util import slugify
 
-from .classifier import RECORDS_SCHEMA
 from .const import (
     ATTR_RECORD,
     CONF_AREAS,
@@ -17,6 +16,7 @@ from .const import (
     OREF_ALERT_UNIQUE_ID,
     Record,
     RecordAndMetadata,
+    RecordType,
 )
 from .entity import OrefAlertCoordinatorEntity
 from .metadata.areas import AREAS
@@ -61,7 +61,7 @@ class AlertEvent(OrefAlertCoordinatorEntity, EventEntity):
     ) -> None:
         """Initialize object with defaults."""
         super().__init__(config_entry)
-        self._attr_event_types = list(RECORDS_SCHEMA.keys())
+        self._attr_event_types = list(RecordType)
         self._area = area
         if not name:
             self.use_device_name = True
@@ -80,7 +80,7 @@ class AlertEvent(OrefAlertCoordinatorEntity, EventEntity):
         if (last_state := await self.async_get_last_state()) and (
             record := last_state.attributes.get(ATTR_RECORD)
         ):
-            self._record = self._config_entry.runtime_data.classifier.add_metadata(
+            self._record = self._config_entry.runtime_data.coordinator.add_metadata(
                 Record(**record)
             )
 

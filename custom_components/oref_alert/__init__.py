@@ -9,24 +9,27 @@ from typing import TYPE_CHECKING, Final, cast
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from attr import dataclass
-from homeassistant.config_entries import ConfigEntry, ConfigEntryState
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_ENTITY_ID,
     CONF_NAME,
     EVENT_HOMEASSISTANT_STOP,
     Platform,
 )
-from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady
+from homeassistant.exceptions import (
+    ConfigEntryNotReady,
+    IntegrationError,
+)
 from homeassistant.helpers import entity_registry, selector
 from homeassistant.helpers import issue_registry as ir
 from homeassistant.helpers.entity_platform import async_get_platforms
 from homeassistant.helpers.service import async_register_admin_service
 
-from custom_components.oref_alert.classifier import Classifier
 from custom_components.oref_alert.custom_cards import publish_cards
 
 from .areas_checker import AreasChecker
 from .bus_events import OrefAlertBusEventManager
+from .helpers import get_config_entry
 from .metadata.areas_and_groups import AREAS_AND_GROUPS
 from .pushy import PushyNotifications
 from .template import inject_template_extensions
@@ -45,15 +48,13 @@ if TYPE_CHECKING:
 
     from .binary_sensor import AlertSensor
 
-from homeassistant.core import (
-    SupportsResponse,
-    callback,
-)
+from homeassistant.core import SupportsResponse
 
 from .config_flow import AREAS_CONFIG
 from .const import (
     ADD_AREAS,
     ADD_SENSOR_ACTION,
+    AREAS_STATUS_ACTION,
     CATEGORY_FIELD,
     CONF_AREA,
     CONF_AREAS,
@@ -61,6 +62,7 @@ from .const import (
     CONF_SENSORS,
     DOMAIN,
     EDIT_SENSOR_ACTION,
+    LAST_UPDATE_ACTION,
     LOGGER,
     MANUAL_EVENT_END_ACTION,
     REMOVE_AREAS,
@@ -69,8 +71,9 @@ from .const import (
     TIME_TO_SHELTER_ID_SUFFIX,
     TITLE,
     TITLE_FIELD,
+    RecordType,
 )
-from .coordinator import OrefAlertCoordinatorUpdater, OrefAlertDataUpdateCoordinator
+from .coordinator import OrefAlertDataUpdateCoordinator
 from .metadata.areas import AREAS
 
 CONFIG_SCHEMA: Final = cv.config_entry_only_config_schema(DOMAIN)
@@ -139,27 +142,23 @@ MANUAL_EVENT_END_SCHEMA: Final = vol.Schema(
     extra=vol.ALLOW_EXTRA,
 )
 
+AREAS_STATUS_SCHEMA: Final = vol.Schema({}, extra=vol.ALLOW_EXTRA)
+
 
 @dataclass
 class OrefAlertRuntimeData:
     """Oref Alert runtime data dataclass."""
 
     coordinator: OrefAlertDataUpdateCoordinator
-    updater: OrefAlertCoordinatorUpdater
     areas_checker: AreasChecker
-    unload_template_extensions: Callable[[], None]
     pushy: PushyNotifications
     tzevaadom: TzevaAdomNotifications
-    classifier: Classifier
     bus_events: OrefAlertBusEventManager
 
     async def stop(self) -> None:
         """Stop background managers and release resources."""
         self.areas_checker.stop()
-        self.updater.stop()
-        self.unload_template_extensions()
         self.bus_events.stop()
-        self.classifier.stop()
         await asyncio.gather(
             self.coordinator.async_save(),
             self.bus_events.async_save(),
@@ -174,25 +173,12 @@ type OrefAlertConfigEntry = ConfigEntry[OrefAlertRuntimeData]
 
 async def async_setup(hass: HomeAssistant, _config: ConfigType) -> bool:  # noqa: PLR0915
     """Set up custom actions."""
-    await publish_cards(hass)
-
-    def get_config_entry() -> OrefAlertConfigEntry:
-        """Get the integration's config first (and only) entry."""
-        config_entries = hass.config_entries.async_entries(DOMAIN)
-        if not config_entries:
-            raise ConfigEntryError(
-                translation_domain=DOMAIN,
-                translation_key="no_config_entry",
-            )
-        if config_entries[0].state is not ConfigEntryState.LOADED:
-            raise ConfigEntryNotReady(
-                translation_domain=DOMAIN, translation_key="config_entry_not_loaded"
-            )
-        return config_entries[0]
+    version = await publish_cards(hass)
+    await inject_template_extensions(hass)
 
     async def add_sensor(service_call: ServiceCall) -> None:
         """Add an additional sensor (different areas)."""
-        config_entry = get_config_entry()
+        config_entry = get_config_entry(hass)
         sensors = {**config_entry.options.get(CONF_SENSORS, {})}
         sensors[service_call.data[CONF_NAME]] = service_call.data[CONF_AREAS]
         hass.config_entries.async_update_entry(
@@ -224,7 +210,7 @@ async def async_setup(hass: HomeAssistant, _config: ConfigType) -> bool:  # noqa
         entity_reg = entity_registry.async_get(hass)
         entity_id = service_call.data[CONF_ENTITY_ID]
         sensor_key = _get_sensor_key(entity_id)
-        config_entry = get_config_entry()
+        config_entry = get_config_entry(hass)
         sensors = {
             name: areas
             for name, areas in config_entry.options.get(CONF_SENSORS, {}).items()
@@ -256,8 +242,8 @@ async def async_setup(hass: HomeAssistant, _config: ConfigType) -> bool:  # noqa
         """Edit sensor."""
         entity_id = service_call.data[CONF_ENTITY_ID]
         sensor_key = _get_sensor_key(entity_id)
-        config_entry = get_config_entry()
-        sensors = {**get_config_entry().options.get(CONF_SENSORS, {})}
+        config_entry = get_config_entry(hass)
+        sensors = {**config_entry.options.get(CONF_SENSORS, {})}
         if areas := sensors.get(sensor_key):
             sensors[sensor_key] = [
                 area
@@ -281,12 +267,50 @@ async def async_setup(hass: HomeAssistant, _config: ConfigType) -> bool:  # noqa
         SupportsResponse.OPTIONAL,
     )
 
+    async def areas_status(_: ServiceCall) -> ServiceResponse:
+        """Return current pre-alert and alert areas."""
+        try:
+            return get_config_entry(hass).runtime_data.coordinator.get_areas_status(
+                [RecordType.PRE_ALERT, RecordType.ALERT]
+            )  # type: ignore[return-value]
+        except IntegrationError:
+            return {}
+
+    hass.services.async_register(
+        DOMAIN,
+        AREAS_STATUS_ACTION,
+        areas_status,
+        schema=AREAS_STATUS_SCHEMA,
+        supports_response=SupportsResponse.ONLY,
+    )
+
+    async def last_update(_: ServiceCall) -> ServiceResponse:
+        """Return current backend update token."""
+        try:
+            last_update = get_config_entry(
+                hass
+            ).runtime_data.coordinator.get_last_update()
+        except IntegrationError:
+            last_update = None
+        return {
+            "last_update": last_update,
+            "version": version,
+        }
+
+    hass.services.async_register(
+        DOMAIN,
+        LAST_UPDATE_ACTION,
+        last_update,
+        schema=AREAS_STATUS_SCHEMA,
+        supports_response=SupportsResponse.ONLY,
+    )
+
     async def synthetic_alert(service_call: ServiceCall) -> None:
         """Add a synthetic alert for testing purposes."""
-        get_config_entry().runtime_data.coordinator.add_synthetic_alert(
+        get_config_entry(hass).runtime_data.coordinator.add_synthetic_alert(
             service_call.data
         )
-        await get_config_entry().runtime_data.coordinator.async_refresh()
+        await get_config_entry(hass).runtime_data.coordinator.async_refresh()
 
     async_register_admin_service(
         hass,
@@ -298,10 +322,10 @@ async def async_setup(hass: HomeAssistant, _config: ConfigType) -> bool:  # noqa
 
     async def manual_event_end(service_call: ServiceCall) -> None:
         """Mark active alerts as ended manually."""
-        get_config_entry().runtime_data.coordinator.add_manual_event_end(
+        get_config_entry(hass).runtime_data.coordinator.add_manual_event_end(
             service_call.data.get(CONF_AREA)
         )
-        await get_config_entry().runtime_data.coordinator.async_refresh()
+        await get_config_entry(hass).runtime_data.coordinator.async_refresh()
 
     async_register_admin_service(
         hass,
@@ -359,30 +383,36 @@ async def async_setup_entry(hass: HomeAssistant, entry: OrefAlertConfigEntry) ->
 
     entry.runtime_data = OrefAlertRuntimeData(
         coordinator,
-        OrefAlertCoordinatorUpdater(hass, coordinator),
         AreasChecker(hass),
-        await inject_template_extensions(hass, entry),
         pushy,
         tzevaadom,
-        Classifier(hass),
         OrefAlertBusEventManager(hass, entry),
     )
 
-    @callback
-    def _handle_shutdown(*_: object) -> None:
-        """Persist coordinator state on Home Assistant shutdown."""
-        hass.async_create_task(entry.runtime_data.coordinator.async_save())
-        hass.async_create_task(entry.runtime_data.bus_events.async_save())
+    unsub_shutdown: Callable[[], None] | None = None
 
-    entry.async_on_unload(
-        hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, _handle_shutdown)
+    async def _handle_shutdown(*_: object) -> None:
+        """Persist state and stop background managers on Home Assistant shutdown."""
+        nonlocal unsub_shutdown
+        unsub_shutdown = None
+        await entry.runtime_data.stop()
+
+    unsub_shutdown = hass.bus.async_listen_once(
+        EVENT_HOMEASSISTANT_STOP, _handle_shutdown
     )
+
+    def _unsub_shutdown() -> None:
+        """Unsubscribe shutdown listener if it has not already fired."""
+        nonlocal unsub_shutdown
+        if unsub_shutdown is not None:
+            unsub_shutdown()
+            unsub_shutdown = None
+
+    entry.async_on_unload(_unsub_shutdown)
 
     entry.runtime_data.bus_events.start()
 
     try:
-        await entry.runtime_data.classifier.load()
-
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
         await asyncio.gather(
@@ -398,8 +428,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: OrefAlertConfigEntry) ->
         LOGGER.exception(f"Error loading {DOMAIN} config entry. Will retry later.")
         await entry.runtime_data.stop()
         raise ConfigEntryNotReady from exc
-
-    entry.runtime_data.updater.start()
 
     return True
 

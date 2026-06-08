@@ -5,7 +5,6 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
-import logging
 import ssl
 from collections import deque
 from datetime import timedelta
@@ -32,7 +31,6 @@ from .const import (
     RecordAndMetadata,
     RecordSource,
 )
-from .metadata import PUSHY_TEST_SEGMENTS
 from .metadata.area_info import AREA_INFO
 from .metadata.segment_to_area import SEGMENT_TO_AREA
 
@@ -192,8 +190,6 @@ class PushyNotifications:
             )
             if area in AREA_INFO and AREA_INFO[area]["segment"]
         ]
-        if LOGGER.isEnabledFor(logging.DEBUG):
-            topics.extend(PUSHY_TEST_SEGMENTS)
 
         previous_topics: list[str] = []
         if PUSHY_TOPICS_KEY not in self._config_entry.data:
@@ -308,7 +304,7 @@ class PushyNotifications:
                     if int(segment) in SEGMENT_TO_AREA
                 ]:
                     self.alerts.append(
-                        self._config_entry.runtime_data.classifier.add_metadata(
+                        self._config_entry.runtime_data.coordinator.add_metadata(
                             Record(
                                 alertDate=alert_date,
                                 title=content[TITLE_FIELD],
@@ -344,3 +340,4 @@ class PushyNotifications:
         if self._mqtt:
             await self._hass.async_add_executor_job(self._mqtt.disconnect)
             await self._hass.async_add_executor_job(self._mqtt.loop_stop)
+            self._mqtt = None

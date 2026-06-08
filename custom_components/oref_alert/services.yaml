@@ -10,6 +10,7 @@ remove_sensor:
           filter:
           - integration: oref_alert
             domain: binary_sensor
+last_update: null
 add_sensor:
   fields:
     name:
@@ -221,7 +222,6 @@ add_sensor:
           - בועיינה-נוג'ידאת
           - בוקעתא
           - בורגתה
-          - בחלק מהאזורים בארץ
           - בחן
           - בטחה
           - בי"ס כרמים בנימינה
@@ -1521,6 +1521,7 @@ edit_sensor:
       example: גבעתיים
       required: false
       selector: *id002
+areas_status: null
 synthetic_alert:
   fields:
     area:
@@ -1725,7 +1726,6 @@ synthetic_alert:
           - בועיינה-נוג'ידאת
           - בוקעתא
           - בורגתה
-          - בחלק מהאזורים בארץ
           - בחן
           - בטחה
           - בי"ס כרמים בנימינה
