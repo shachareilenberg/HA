@@ -315,8 +315,7 @@ car_home_arrival:
     - action: light.turn_on
       metadata: {}
       target:
-        entity_id:
-        - light.knysh_knysh_tvrh
+        entity_id: light.mtbkh_mtbkh_qyr
       data: {}
   mode: single
 good_night_event_25m_delayed:
