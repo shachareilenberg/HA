@@ -220,17 +220,16 @@
   - action: input_boolean.turn_off
     target:
       entity_id: input_boolean.good_night_state
+  - action: switch.turn_off
+    target:
+      entity_id:
+      - switch.msdrvn_msdrvn_tvrt_lylh
+      - switch.mqlkht_mqlkht_tvrt_lylh
   - parallel:
-    - action: switch.turn_off
-      target:
-        entity_id:
-        - switch.msdrvn_msdrvn_tvrt_lylh
-        - switch.mqlkht_mqlkht_tvrt_lylh
     - action: script.iterate_entities_with_action
       data:
         action: cover.set_cover_position
         entities:
-        - cover.slvn_slvn_trys_khlvn
         - cover.knysh_n4_1
         - cover.mtbkh_mtbkh_trys
         - cover.slvn_slvn_trys
@@ -240,6 +239,12 @@
       target:
         device_id: d11bd43721d6c7352acc8f1c20581c2b
       enabled: false
+  - action: cover.set_cover_position
+    metadata: {}
+    target:
+      entity_id: cover.slvn_slvn_trys_khlvn
+    data:
+      position: 60
   mode: queued
   max: 10
 - id: '1769691868798'
