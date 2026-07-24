@@ -71,3 +71,22 @@ remote: Time 2026-05-25T09:10:29Z
 To github.com:shachareilenberg/HA.git
  ! [remote rejected] room-tabs -> room-tabs (Internal Server Error)
 error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-07-24 19:10:02 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-07-24 19:10:08 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: Internal Server Error        
+remote: Request ID e6be914bb95bbe824ce56e451a9efe09        
+remote: Time 2026-07-24T16:10:08Z
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] room-tabs -> room-tabs (Internal Server Error)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-07-24 19:15:24 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
