@@ -470,7 +470,7 @@
   description: ''
   triggers:
   - trigger: time
-    at: '10:30:00'
+    at: '11:00:00'
   conditions: []
   actions:
   - action: climate.turn_off
