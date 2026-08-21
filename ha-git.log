@@ -103,3 +103,15 @@ remote: Time 2026-08-13T14:40:11Z
 To github.com:shachareilenberg/HA.git
  ! [remote rejected] room-tabs -> room-tabs (Internal Server Error)
 error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-08-21 17:05:01 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+Connection closed by 20.217.135.5 port 22
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-08-21 17:05:06 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+Connection closed by 20.217.135.5 port 22
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
