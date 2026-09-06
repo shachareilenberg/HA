@@ -1056,3 +1056,20 @@
     action: media_player.play_media
   mode: queued
   max: 10
+- id: '1788710097310'
+  alias: 'Turn on AC in evening '
+  description: ''
+  triggers:
+  - trigger: time
+    at: '20:00:00'
+  conditions: []
+  actions:
+  - action: climate.set_hvac_mode
+    metadata: {}
+    target:
+      entity_id:
+      - climate.l8_104
+      - climate.l8_101
+    data:
+      hvac_mode: cool
+  mode: single
