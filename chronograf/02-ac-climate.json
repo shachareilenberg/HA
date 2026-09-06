@@ -1,0 +1,619 @@
+{
+  "meta": {
+    "chronografVersion": "1.8.0"
+  },
+  "dashboard": {
+    "name": "HA — AC & Climate",
+    "cells": [
+      {
+        "i": "b001",
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 5,
+        "minW": 2,
+        "minH": 2,
+        "name": "Temperature Trends — All ACs",
+        "queries": [
+          {
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1\" FROM \"climate.l8_101\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1\" FROM \"climate.l8_101\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 2\" FROM \"climate.l8_102\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 2\" FROM \"climate.l8_102\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Office\" FROM \"climate.l8_103\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Office\" FROM \"climate.l8_103\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kids\" FROM \"climate.l8_104\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kids\" FROM \"climate.l8_104\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Bedroom\" FROM \"climate.l8_105\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Bedroom\" FROM \"climate.l8_105\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "°C",
+            "prefix": "",
+            "suffix": "°C",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": true,
+          "digits": 1
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "b002",
+        "x": 0,
+        "y": 5,
+        "w": 12,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "AC Current States — Mode, Temperature & Setpoint",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"state\") AS \"mode\", LAST(\"current_temperature\") AS \"temp\", LAST(\"temperature\") AS \"setpoint\" FROM /^climate\\./ WHERE time > now() - 24h GROUP BY \"entity_id\"",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"state\") AS \"mode\", LAST(\"current_temperature\") AS \"temp\", LAST(\"temperature\") AS \"setpoint\" FROM /^climate\\./ WHERE time > now() - 24h GROUP BY \"entity_id\"",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "table",
+        "colors": [],
+        "legend": {},
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "entity_id",
+            "displayName": "AC",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": false
+        },
+        "fieldOptions": [
+          {
+            "internalName": "entity_id",
+            "displayName": "AC",
+            "visible": true
+          },
+          {
+            "internalName": "mode",
+            "displayName": "Mode",
+            "visible": true
+          },
+          {
+            "internalName": "temp",
+            "displayName": "Temp °C",
+            "visible": true
+          },
+          {
+            "internalName": "setpoint",
+            "displayName": "Setpoint °C",
+            "visible": true
+          },
+          {
+            "internalName": "time",
+            "displayName": "Updated",
+            "visible": true
+          }
+        ],
+        "timeFormat": "HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": true,
+          "digits": 1
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "b003",
+        "x": 0,
+        "y": 9,
+        "w": 12,
+        "h": 5,
+        "minW": 2,
+        "minH": 2,
+        "name": "Setpoint vs Actual Temperature — All ACs",
+        "queries": [
+          {
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1 actual\", MEAN(\"temperature\") AS \"Kitchen 1 set\" FROM \"climate.l8_101\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kitchen 1 actual\", MEAN(\"temperature\") AS \"Kitchen 1 set\" FROM \"climate.l8_101\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Office actual\", MEAN(\"temperature\") AS \"Office set\" FROM \"climate.l8_103\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Office actual\", MEAN(\"temperature\") AS \"Office set\" FROM \"climate.l8_103\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Kids actual\", MEAN(\"temperature\") AS \"Kids set\" FROM \"climate.l8_104\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Kids actual\", MEAN(\"temperature\") AS \"Kids set\" FROM \"climate.l8_104\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT MEAN(\"current_temperature\") AS \"Bedroom actual\", MEAN(\"temperature\") AS \"Bedroom set\" FROM \"climate.l8_105\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT MEAN(\"current_temperature\") AS \"Bedroom actual\", MEAN(\"temperature\") AS \"Bedroom set\" FROM \"climate.l8_105\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "°C",
+            "prefix": "",
+            "suffix": "°C",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": true,
+          "digits": 1
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "b004",
+        "x": 0,
+        "y": 14,
+        "w": 12,
+        "h": 5,
+        "minW": 2,
+        "minH": 2,
+        "name": "AC Activity Events per Day (14 d) — state changes while not off",
+        "queries": [
+          {
+            "query": "SELECT COUNT(\"state\") AS \"Kitchen 1\" FROM \"climate.l8_101\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"state\") AS \"Kitchen 1\" FROM \"climate.l8_101\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"state\") AS \"Kitchen 2\" FROM \"climate.l8_102\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"state\") AS \"Kitchen 2\" FROM \"climate.l8_102\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"state\") AS \"Office\" FROM \"climate.l8_103\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"state\") AS \"Office\" FROM \"climate.l8_103\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"state\") AS \"Kids\" FROM \"climate.l8_104\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"state\") AS \"Kids\" FROM \"climate.l8_104\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"state\") AS \"Bedroom\" FROM \"climate.l8_105\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"state\") AS \"Bedroom\" FROM \"climate.l8_105\" WHERE \"state\" != 'off' AND time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              ""
+            ],
+            "label": "state change events",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "bar",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 0
+        },
+        "note": "Counts state-change events (not minutes). Higher = more active. HA writes data on state transitions, not every second.",
+        "noteVisibility": "showWhenNoData"
+      }
+    ],
+    "templates": [],
+    "links": {}
+  }
+}
