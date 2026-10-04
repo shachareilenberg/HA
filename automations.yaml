@@ -1073,3 +1073,21 @@
     data:
       hvac_mode: cool
   mode: single
+- id: '1791109097733'
+  alias: Garage Door Open On Webhook
+  description: ''
+  triggers:
+  - trigger: webhook
+    allowed_methods:
+    - POST
+    - GET
+    local_only: false
+    webhook_id: gate_web_trigger
+  conditions: []
+  actions:
+  - action: cover.open_cover
+    metadata: {}
+    target:
+      entity_id: cover.4g600204913
+    data: {}
+  mode: single
