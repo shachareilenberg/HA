@@ -408,26 +408,27 @@ baby_sleep_time:
   sequence:
   - action: media_player.volume_set
     target:
-      entity_id: media_player.kitchen_kitchen_s_echo
+      entity_id: media_player.bedroom_bedroom_echo_spot
     data:
-      volume_level: 0.5
+      volume_level: 0
   - action: media_player.play_media
     target:
-      entity_id: media_player.kitchen_kitchen_s_echo
+      entity_id: media_player.bedroom_bedroom_echo_spot
     data:
       media:
         media_content_id: Whispering White Noise Wind by Eijra
         media_content_type: SPOTIFY
         metadata: {}
   - delay: 00:00:03
-  - action: media_player.play_media
-    target:
-      entity_id: media_player.kitchen_kitchen_s_echo
+  - action: alexa_devices.send_text_command
     data:
-      media:
-        media_content_type: custom
-        media_content_id: repeat this song
-        metadata: {}
+      device_id: '{{ device_id(''media_player.bedroom_bedroom_echo_spot'') }}'
+      text_command: repeat this song
+  - action: media_player.volume_set
+    target:
+      entity_id: media_player.bedroom_bedroom_echo_spot
+    data:
+      volume_level: 0.5
   mode: single
 movie_time_lights_and_blinds:
   alias: Movie Time — Lights Off + Close Blinds
