@@ -408,12 +408,12 @@ baby_sleep_time:
   sequence:
   - action: media_player.volume_set
     target:
-      entity_id: media_player.kitchen_echo_spot
+      entity_id: media_player.kitchen_kitchen_s_echo
     data:
       volume_level: 0.5
   - action: media_player.play_media
     target:
-      entity_id: media_player.kitchen_echo_spot
+      entity_id: media_player.kitchen_kitchen_s_echo
     data:
       media:
         media_content_id: Whispering White Noise Wind by Eijra
@@ -422,7 +422,7 @@ baby_sleep_time:
   - delay: 00:00:03
   - action: media_player.play_media
     target:
-      entity_id: media_player.kitchen_echo_spot
+      entity_id: media_player.kitchen_kitchen_s_echo
     data:
       media:
         media_content_type: custom
@@ -457,4 +457,13 @@ movie_time_lights_and_blinds:
         - cover.slvn_slvn_trys_khlvn
         - cover.mtbkh_mtbkh_trys
         - cover.knysh_n4_1
+  mode: single
+repeat_this_song:
+  alias: Repeat this song
+  description: Play specific Heavenly Noise playlist on Alexa's own account
+  sequence:
+  - action: alexa_devices.send_text_command
+    data:
+      device_id: '{{ device_id(''media_player.kitchen_kitchen_s_echo'') }}'
+      text_command: repeat this song
   mode: single
