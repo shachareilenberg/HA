@@ -458,12 +458,3 @@ movie_time_lights_and_blinds:
         - cover.mtbkh_mtbkh_trys
         - cover.knysh_n4_1
   mode: single
-repeat_this_song:
-  alias: Repeat this song
-  description: Play specific Heavenly Noise playlist on Alexa's own account
-  sequence:
-  - action: alexa_devices.send_text_command
-    data:
-      device_id: '{{ device_id(''media_player.kitchen_kitchen_s_echo'') }}'
-      text_command: repeat this song
-  mode: single
