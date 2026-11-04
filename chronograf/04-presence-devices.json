@@ -1,0 +1,818 @@
+{
+  "meta": {
+    "chronografVersion": "1.8.0"
+  },
+  "dashboard": {
+    "name": "HA — Presence & Devices",
+    "cells": [
+      {
+        "i": "d001",
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "Away Mode Timeline",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Away Mode\" FROM \"input_boolean.is_away_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Away Mode\" FROM \"input_boolean.is_away_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=away  0=home",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "d002",
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "Good Night Mode Timeline",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Good Night\" FROM \"input_boolean.good_night_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Good Night\" FROM \"input_boolean.good_night_state\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=good night active",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "d003",
+        "x": 0,
+        "y": 4,
+        "w": 6,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "Fan State — Living Room & Bedroom",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Living Room fan\" FROM \"fan.slvn_slvn_tqrh\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Living Room fan\" FROM \"fan.slvn_slvn_tqrh\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Bedroom fan\" FROM \"fan.hvrym_hvrym_tqrh\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Bedroom fan\" FROM \"fan.hvrym_hvrym_tqrh\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "d004",
+        "x": 6,
+        "y": 4,
+        "w": 6,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "Fan Activity per Day (14 d)",
+        "queries": [
+          {
+            "query": "SELECT COUNT(\"value\") AS \"Living Room fan\" FROM \"fan.slvn_slvn_tqrh\" WHERE time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"value\") AS \"Living Room fan\" FROM \"fan.slvn_slvn_tqrh\" WHERE time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT COUNT(\"value\") AS \"Bedroom fan\" FROM \"fan.hvrym_hvrym_tqrh\" WHERE time > now() - 14d GROUP BY time(1d) fill(0)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT COUNT(\"value\") AS \"Bedroom fan\" FROM \"fan.hvrym_hvrym_tqrh\" WHERE time > now() - 14d GROUP BY time(1d) fill(0)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              ""
+            ],
+            "label": "state change events",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "bar",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 0
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "d005",
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "TV & Yamaha State",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Samsung TV\" FROM \"media_player.tv_2\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Samsung TV\" FROM \"media_player.tv_2\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          },
+          {
+            "query": "SELECT LAST(\"value\") AS \"Yamaha AVR\" FROM \"media_player.living_room_2\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Yamaha AVR\" FROM \"media_player.living_room_2\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "Samsung TV state: 1=on, 0=off. Yamaha state: 1=on, 0=off. States 'idle' and 'playing' are treated as on (STATE_FILTER maps them only if the raw state is exactly 'on'/'off').",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "d006",
+        "x": 0,
+        "y": 12,
+        "w": 12,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "Media State Table — TV & Yamaha (current)",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"state\") AS \"state\", LAST(\"volume_level\") AS \"volume\" FROM /^media_player\\.(tv_2|living_room_2)$/ WHERE time > now() - 24h GROUP BY \"entity_id\"",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"state\") AS \"state\", LAST(\"volume_level\") AS \"volume\" FROM /^media_player\\.(tv_2|living_room_2)$/ WHERE time > now() - 24h GROUP BY \"entity_id\"",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "table",
+        "colors": [],
+        "legend": {},
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "entity_id",
+            "displayName": "Device",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": false
+        },
+        "fieldOptions": [
+          {
+            "internalName": "entity_id",
+            "displayName": "Device",
+            "visible": true
+          },
+          {
+            "internalName": "state",
+            "displayName": "State",
+            "visible": true
+          },
+          {
+            "internalName": "volume",
+            "displayName": "Volume",
+            "visible": true
+          },
+          {
+            "internalName": "time",
+            "displayName": "Updated",
+            "visible": true
+          }
+        ],
+        "timeFormat": "HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": true,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "d007",
+        "x": 0,
+        "y": 16,
+        "w": 6,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "Boiler — Hot Water (switch.mqlkht_dvd)",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Boiler\" FROM \"switch.mqlkht_dvd\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Boiler\" FROM \"switch.mqlkht_dvd\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      },
+      {
+        "i": "d008",
+        "x": 6,
+        "y": 16,
+        "w": 6,
+        "h": 4,
+        "minW": 2,
+        "minH": 2,
+        "name": "Kids Bathroom Heater (switch.mqlkht_mqlkht_tnvr)",
+        "queries": [
+          {
+            "query": "SELECT LAST(\"value\") AS \"Heater\" FROM \"switch.mqlkht_mqlkht_tnvr\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+            "queryConfig": {
+              "database": "ha_data",
+              "measurement": "",
+              "retentionPolicy": "autogen",
+              "fields": [],
+              "tags": {},
+              "groupBy": {
+                "time": "",
+                "tags": []
+              },
+              "areTagsAccepted": false,
+              "rawText": "SELECT LAST(\"value\") AS \"Heater\" FROM \"switch.mqlkht_mqlkht_tnvr\" WHERE time > :dashboardTime: GROUP BY time(:interval:) fill(previous)",
+              "range": null,
+              "shifts": null
+            },
+            "source": "",
+            "type": "influxql"
+          }
+        ],
+        "axes": {
+          "x": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y": {
+            "bounds": [
+              "0",
+              "1.2"
+            ],
+            "label": "1=on  0=off",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          },
+          "y2": {
+            "bounds": [
+              "",
+              ""
+            ],
+            "label": "",
+            "prefix": "",
+            "suffix": "",
+            "base": "10",
+            "scale": "linear"
+          }
+        },
+        "type": "line-stepplot",
+        "colors": [],
+        "legend": {
+          "type": "static",
+          "orientation": "bottom"
+        },
+        "tableOptions": {
+          "verticalTimeAxis": true,
+          "sortBy": {
+            "internalName": "time",
+            "displayName": "",
+            "visible": true
+          },
+          "wrapping": "truncate",
+          "fixFirstColumn": true
+        },
+        "fieldOptions": [],
+        "timeFormat": "MM/DD/YYYY HH:mm:ss",
+        "decimalPlaces": {
+          "isEnforced": false,
+          "digits": 2
+        },
+        "note": "",
+        "noteVisibility": "default"
+      }
+    ],
+    "templates": [],
+    "links": {}
+  }
+}

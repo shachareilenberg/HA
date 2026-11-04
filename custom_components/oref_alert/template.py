@@ -5,19 +5,17 @@
 from __future__ import annotations
 
 import inspect
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.template import (
     Template,
     TemplateEnvironment,
 )
-from homeassistant.helpers.template import (
-    distance as distance_func,
-)
 
-from . import const
 from .categories import category_to_emoji, category_to_icon
 from .const import (
+    ALERTS_TEMPLATE_FUNCTION,
     AREAS_TEMPLATE_FUNCTION,
     COORDINATE_TEMPLATE_FUNCTION,
     DISTANCE_TEMPLATE_FUNCTION,
@@ -29,6 +27,7 @@ from .const import (
     POLYGON_TEMPLATE_FUNCTION,
     SHELTER_TEMPLATE_FUNCTION,
 )
+from .helpers import get_config_entry
 from .metadata.area_info import AREA_INFO
 from .metadata.area_to_district import AREA_TO_DISTRICT
 from .metadata.area_to_migun_time import AREA_TO_MIGUN_TIME
@@ -41,22 +40,49 @@ from .metadata.areas import AREAS
 from .metadata.areas_and_groups import AREAS_AND_GROUPS
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Generator
 
     from homeassistant.core import HomeAssistant
 
 _template_environment_init_signature = inspect.signature(TemplateEnvironment.__init__)
 
 
-async def inject_template_extensions(hass: HomeAssistant) -> Callable[[], None]:  # noqa: PLR0915
+async def inject_template_extensions(hass: HomeAssistant) -> None:  # noqa: PLR0915
     """Inject template extension to the Home Assistant instance."""
     template_environment_init = TemplateEnvironment.__init__
 
     await init_area_to_polygon()
 
-    def get_areas(groups: bool = False) -> list[str]:  # noqa: FBT001, FBT002
-        """Get all areas."""
-        return list(AREAS) if not groups else AREAS_AND_GROUPS
+    class AlertsTemplateAccessor:
+        """Expose alert history as both a callable and an iterable."""
+
+        def __call__(self) -> Generator[dict[str, Any]]:
+            """Return historical alerts."""
+            try:
+                yield from get_config_entry(
+                    hass
+                ).runtime_data.bus_events.alert_history.items()
+            except HomeAssistantError:
+                return
+
+        def __iter__(self) -> Generator[dict[str, Any]]:
+            """Iterate over historical alerts."""
+            yield from self()
+
+    get_alerts = AlertsTemplateAccessor()
+
+    class AreasTemplateAccessor:
+        """Expose areas as both a callable and an iterable."""
+
+        def __call__(self, groups: bool = False) -> list[str]:  # noqa: FBT001, FBT002
+            """Get all areas."""
+            return list(AREAS) if not groups else AREAS_AND_GROUPS
+
+        def __iter__(self) -> Generator[str]:
+            """Iterate over areas without groups by default."""
+            yield from self()
+
+    get_areas = AreasTemplateAccessor()
 
     def area_to_district(area: str) -> str:
         """Convert area to district."""
@@ -76,7 +102,22 @@ async def inject_template_extensions(hass: HomeAssistant) -> Callable[[], None]:
         """Calculate distance of area from home or provided coordinate."""
         if (area_info := AREA_INFO.get(area)) is None:
             return None
-        return distance_func(hass, area_info["lat"], area_info["lon"], *args)
+
+        return cast(
+            "float | None",
+            Template(
+                "{{ distance(oref_lat, oref_lon"
+                + "".join(f", oref_arg_{index}" for index in range(len(args)))
+                + ") }}",
+                hass,
+            ).async_render(
+                {
+                    "oref_lat": area_info["lat"],
+                    "oref_lon": area_info["lon"],
+                    **{f"oref_arg_{index}": arg for index, arg in enumerate(args)},
+                }
+            ),
+        )
 
     def area_distance_test(area: str, distance: float, *args: Any) -> bool:
         """Check if area is within the distance from home or provided coordinate."""
@@ -95,6 +136,7 @@ async def inject_template_extensions(hass: HomeAssistant) -> Callable[[], None]:
     def patch_environment(env: TemplateEnvironment, limited: bool) -> None:  # noqa: FBT001
         """Patch the template environment to add custom filters."""
         env.globals[AREAS_TEMPLATE_FUNCTION] = get_areas
+        env.globals[ALERTS_TEMPLATE_FUNCTION] = get_alerts
         env.globals[DISTRICT_TEMPLATE_FUNCTION] = env.filters[
             DISTRICT_TEMPLATE_FUNCTION
         ] = area_to_district
@@ -110,29 +152,18 @@ async def inject_template_extensions(hass: HomeAssistant) -> Callable[[], None]:
         env.globals[EMOJI_TEMPLATE_FUNCTION] = env.filters[EMOJI_TEMPLATE_FUNCTION] = (
             category_to_emoji
         )
-        env.globals[DISTANCE_TEMPLATE_FUNCTION] = env.filters[
-            DISTANCE_TEMPLATE_FUNCTION
-        ] = area_to_distance
-        env.globals[DISTANCE_TEST_TEMPLATE_FUNCTION] = env.tests[
-            DISTANCE_TEST_TEMPLATE_FUNCTION
-        ] = area_distance_test
         env.globals[POLYGON_TEMPLATE_FUNCTION] = env.filters[
             POLYGON_TEMPLATE_FUNCTION
         ] = area_to_polygon
         if not limited:
+            env.globals[DISTANCE_TEMPLATE_FUNCTION] = env.filters[
+                DISTANCE_TEMPLATE_FUNCTION
+            ] = area_to_distance
+            env.globals[DISTANCE_TEST_TEMPLATE_FUNCTION] = env.tests[
+                DISTANCE_TEST_TEMPLATE_FUNCTION
+            ] = area_distance_test
             env.globals[FIND_AREA_TEMPLATE_FUNCTION] = find_area_by_coordinate
             env.filters[FIND_AREA_TEMPLATE_FUNCTION] = find_area_by_coordinate_filter
-
-    def revert_environment(env: TemplateEnvironment, *_: Any) -> None:
-        """Remove template extensions."""
-        functions = [
-            function
-            for function in dir(const)
-            if function.endswith("TEMPLATE_FUNCTION")
-        ]
-        for extensions in (env.globals, env.filters, env.tests):
-            for function in functions:
-                extensions.pop(getattr(const, function), None)
 
     def patched_init(
         self: TemplateEnvironment,
@@ -164,10 +195,3 @@ async def inject_template_extensions(hass: HomeAssistant) -> Callable[[], None]:
 
     # Patch existing instances of TemplateEnvironment.
     fix_cached_environments(patch_environment)
-
-    def unload_template_extensions() -> None:
-        """Remove template extensions."""
-        TemplateEnvironment.__init__ = template_environment_init  # type: ignore[method-assign]
-        fix_cached_environments(revert_environment)
-
-    return unload_template_extensions

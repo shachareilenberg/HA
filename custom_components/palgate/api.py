@@ -9,10 +9,22 @@ from datetime import datetime, timedelta
 import aiohttp
 from voluptuous.error import Error
 import logging
+from homeassistant.exceptions import HomeAssistantError
 
 from .pylgate.token_generator import generate_token
+from .const import *
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
+
+# Output relay modes: maps friendly name -> (output#LatchStatus, output#Disabled)
+RELAY_MODES: dict[str, tuple[bool, bool]] = {
+    GATE_MODE_NORMAL:      (False, False),
+    GATE_MODE_HOLD_OPEN:   (True,  True),
+    GATE_MODE_HOLD_CLOSED:  (False, True),
+}
+RELAY_MODES_INVERSE: dict[tuple[bool, bool], str] = {
+    v: k for k, v in RELAY_MODES.items()
+}
 
 class PalgateApiClient:
     """Main class for handling connection with."""
@@ -43,9 +55,10 @@ class PalgateApiClient:
         self.next_open: datetime = datetime.now()
         self.next_closing: datetime = datetime.now()
         self.next_closed: datetime = datetime.now()
+        self.relay_mode_permitted: bool = False  # updated by get_relay_mode()
 
-    def url(self) -> str:
-        """Build the url by extracting the gate number (:1 or :2, etc...) and set it in the outputNum"""
+    def _parsed_device_id(self) -> tuple[str, int]:
+        """Return (base_device_id, output_num), parsing any ':N' suffix."""
         device_id = self.device_id
         output_num = 1  # default
 
@@ -55,12 +68,19 @@ class PalgateApiClient:
                 device_id = base_id
                 output_num = int(output)
 
-        return f"https://api1.pal-es.com/v1/bt/device/{device_id}/open-gate?openBy=100&outputNum={output_num}"
+        return device_id, output_num
 
-    def headers(self) -> dict:
-        """Get headers"""
+    def _open_url(self) -> str:
+        """Build the base open-gate URL."""
+        device_id, output_num = self._parsed_device_id()
+        return (
+            f"{BASE_URL}/device/{device_id}"
+            f"/open-gate?openBy=100&outputNum={output_num}"
+        )
 
-        temporal_token = generate_token(bytes.fromhex(self.token),int(self.phone_number),int(self.token_type))
+    def _headers(self) -> dict:
+        """Get headers. Token generates dynamically as it includes a timestamp"""
+
         return {
             "Accept": "*/*",
             "Accept-Encoding": "gzip, deflate, br",
@@ -68,8 +88,71 @@ class PalgateApiClient:
             "Connection": "keep-alive",
             "Content-Type": "application/json",
             "User-Agent": "BlueGate/115 CFNetwork/1128.0.1 Darwin/19.6.0",
-            "x-bt-token": f"{temporal_token}",
+            "x-bt-token": f"{generate_token(bytes.fromhex(self.token),
+                            int(self.phone_number),
+                            int(self.token_type))}",
         }
+
+    async def _api_request(self, url: str) -> dict:
+        """Execute a GET to any Palgate API URL, handle HTTP and API errors, return parsed JSON."""
+        async with self._session.get(url=url, headers=self._headers()) as resp:
+            _LOGGER.debug(f"API request. URL: {resp.url}")
+            if resp.status == HTTPStatus.UNAUTHORIZED:
+                raise HomeAssistantError(f"Unauthorized. {resp.status}")
+            if resp.status != HTTPStatus.OK:
+                raise HomeAssistantError(f"Not OK {resp.status} {await resp.text()}")
+            reply = await resp.json()
+
+        _LOGGER.debug(f"API response: {reply}")
+        if reply.get("err"):
+            raise HomeAssistantError(f"API Request Error: {reply.get('msg') or reply.get('err')}")
+        
+        return reply
+
+    async def _api_post(self, url: str, body: dict) -> dict:
+        """POST to a Palgate API URL with a JSON body."""
+        async with self._session.post(url=url, headers=self._headers(), json=body) as resp:
+            _LOGGER.debug(f"API POST {resp.url}")
+            if resp.status == HTTPStatus.UNAUTHORIZED:
+                raise HomeAssistantError(f"Unauthorized. {resp.status}")
+            if resp.status != HTTPStatus.OK:
+                raise HomeAssistantError(f"Not OK {resp.status} {await resp.text()}")
+            reply = await resp.json()
+
+        _LOGGER.debug(f"API response: {reply}")
+        if reply.get("err"):
+            raise HomeAssistantError(f"API Request Error: {reply.get('msg') or reply.get('err')}")
+        return reply
+
+    async def _api_put(self, url: str, body: dict) -> dict:
+        """PUT to a Palgate API URL with a JSON body."""
+        async with self._session.put(url=url, headers=self._headers(), json=body) as resp:
+            _LOGGER.debug(f"API PUT {resp.url}")
+            if resp.status == HTTPStatus.UNAUTHORIZED:
+                raise HomeAssistantError(f"Unauthorized. {resp.status}")
+            if resp.status != HTTPStatus.OK:
+                raise HomeAssistantError(f"Not OK {resp.status} {await resp.text()}")
+            reply = await resp.json()
+
+        _LOGGER.debug(f"API response: {reply}")
+        if reply.get("err"):
+            raise HomeAssistantError(f"API Request Error: {reply.get('msg') or reply.get('err')}")
+        return reply
+
+    async def _api_delete(self, url: str) -> dict:
+        """DELETE a Palgate API URL."""
+        async with self._session.delete(url=url, headers=self._headers()) as resp:
+            _LOGGER.debug(f"API DELETE {resp.url}")
+            if resp.status == HTTPStatus.UNAUTHORIZED:
+                raise HomeAssistantError(f"Unauthorized. {resp.status}")
+            if resp.status != HTTPStatus.OK:
+                raise HomeAssistantError(f"Not OK {resp.status} {await resp.text()}")
+            reply = await resp.json()
+
+        _LOGGER.debug(f"API response: {reply}")
+        if reply.get("err"):
+            raise HomeAssistantError(f"API Request Error: {reply.get('msg') or reply.get('err')}")
+        return reply
 
     def is_opening(self) -> bool:
         """Current state of gate is opening."""
@@ -81,7 +164,6 @@ class PalgateApiClient:
         
         return True if (self.next_closed > datetime.now() and self.next_closing < datetime.now()) else False
 
-
     def is_closed(self) -> bool:
         """Current state of gate is open."""
 
@@ -90,33 +172,94 @@ class PalgateApiClient:
     async def open_gate(self) -> Any:
         """Open Palgate device."""
 
-        async with self._session.get(url=self.url(), headers=self.headers()) as resp:
-            _LOGGER.debug(f"API open request issued. URL: {resp.url}, Headers: {dict(resp.request_info.headers)}")
-            if resp.status == HTTPStatus.UNAUTHORIZED:
-                raise Error(f"Unauthorized. {resp.status}")
-            if resp.status != HTTPStatus.OK:
-                error_text = json.loads(await resp.text())
-                raise Error(f"Not OK {resp.status} {error_text}")
+        reply = await self._api_request(self._open_url())
+        self.next_open    = datetime.now() + timedelta(seconds=self.seconds_to_open)
+        self.next_closing = datetime.now() + timedelta(seconds=(self.seconds_to_open + self.seconds_open))
+        self.next_closed  = datetime.now() + timedelta(seconds=(self.seconds_to_open + self.seconds_open + self.seconds_to_close))
+        return reply
 
-            self.next_open = datetime.now() + timedelta(seconds=self.seconds_to_open)
-            self.next_closing = datetime.now() + timedelta(seconds=(self.seconds_to_open + self.seconds_open))
-            self.next_closed = datetime.now() + timedelta(seconds=(self.seconds_to_open + self.seconds_open + self.seconds_to_close))
-
-            return await resp.json()
     async def invert_gate(self) -> Any:
         """Trigger the Palgate device again during open"""
 
-        if (self.allow_invert_as_stop and self.is_opening()):
+        if self.allow_invert_as_stop and self.is_opening():
+            reply = await self._api_request(self._open_url())
+            self.next_open = self.next_closing = datetime.now()
+            self.next_closed  = datetime.now() + timedelta(seconds=self.seconds_to_close)  # Best guess
+            return reply
 
-            async with self._session.get(url=self.url(), headers=self.headers()) as resp:
-                _LOGGER.debug(f"API invert/open request issued. URL: {resp.url}, Headers: {dict(resp.request_info.headers)}")
-                if resp.status == HTTPStatus.UNAUTHORIZED:
-                    raise Error(f"Unauthorized. {resp.status}")
-                if resp.status != HTTPStatus.OK:
-                    error_text = json.loads(await resp.text())
-                    raise Error(f"Not OK {resp.status} {error_text}")
+    async def get_device_data(self) -> dict:
+        """Fetch full device data from the API."""
+        device_id, _ = self._parsed_device_id()
+        url = f"{BASE_URL}/device/{device_id}"
+        data = await self._api_request(url)
+        return data.get("device", data)
+        
+    async def get_relay_mode(self) -> str:
+        device_id, output_num = self._parsed_device_id()
 
-                self.next_closing = datetime.now()
-                self.next_closed = datetime.now() + timedelta(seconds=(self.seconds_to_close))  # Best guess
+        device = await self.get_device_data()
 
-                return await resp.json()
+        self.relay_mode_permitted = bool(device.get(f"output{output_num}Latch", False))
+
+        latch = device.get(f"output{output_num}LatchStatus", False)
+        dsbl  = device.get(f"output{output_num}Disabled",    False)
+        return RELAY_MODES_INVERSE.get((latch, dsbl), GATE_MODE_NORMAL)
+
+    async def set_relay_mode(self, mode: str) -> None:
+        """Set the output relay mode. mode must be a key in RELAY_MODES."""
+
+        latch, dsbl = RELAY_MODES[mode]
+        device_id, output_num = self._parsed_device_id()
+        url = (
+            f"{self._open_url()}"
+            f"&output{output_num}LatchStatus={str(latch).lower()}"
+            f"&output{output_num}Disabled={str(dsbl).lower()}"
+        )
+
+        await self._api_request(url)
+
+    # ------------------------------------------------------------------
+    # User management
+    # ------------------------------------------------------------------
+
+    async def get_users_page(self, skip: int = 0, limit: int = 50) -> dict:
+        """Fetch one page of authorized users. Returns raw response dict."""
+        device_id, _ = self._parsed_device_id()
+        url = f"{BASE_URL}/device/{device_id}/users-v2?skip={skip}&limit={limit}"
+        return await self._api_request(url)
+
+    async def get_user(self, phone: str) -> dict:
+        """Fetch a single user by E.164 phone number. Returns raw user dict."""
+        device_id, _ = self._parsed_device_id()
+        url  = f"{BASE_URL}/device/{device_id}/user?pn={phone}"
+        data = await self._api_request(url)
+        user = data.get("user")
+        if not user:
+            raise HomeAssistantError(f"User {phone} not found on this device")
+        return user
+
+    async def add_user(self, phone: str, settings: dict | None = None) -> dict:
+        """Add a new authorized user. phone is E.164 and serves as the user ID."""
+        device_id, _ = self._parsed_device_id()
+        url  = f"{BASE_URL}/device/{device_id}/user"
+        body = {"id": phone, **(settings or {})}
+        return await self._api_post(url, body)
+
+    async def remove_user(self, phone: str) -> dict:
+        """Remove an authorized user by E.164 phone number."""
+        device_id, _ = self._parsed_device_id()
+        url = f"{BASE_URL}/device/{device_id}/user?pn={phone}"
+        return await self._api_delete(url)
+
+    async def set_user_settings(self, phone: str, settings: dict | None = None) -> dict:
+        """Update settings for an existing user. phone is E.164 and serves as the user ID."""
+        device_id, _ = self._parsed_device_id()
+        url  = f"{BASE_URL}/device/{device_id}/user"
+        body = {"id": phone, **(settings or {})}
+        return await self._api_put(url, body)
+
+    async def get_device_log(self) -> dict:
+        """Fetch the gate access log for this device."""
+        device_id, _ = self._parsed_device_id()
+        url = f"{BASE_URL}/user/log?id={device_id}"
+        return await self._api_request(url)

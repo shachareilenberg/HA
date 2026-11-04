@@ -1,0 +1,256 @@
+---
+description: Home Assistant iPad dashboard design standards, card patterns, and safety rules for ui-ipad-dashboard.yaml and all YAML configs
+globs: ["**/*.yaml", "dashboards/*.yaml"]
+alwaysApply: true
+---
+
+# HA Dashboard — Design Standards & Safety Rules
+
+## Safety Rules (Never Break)
+
+- **Never add `unique_id` to dashboard YAML** — `unique_id` belongs only in `configuration.yaml` config entries (e.g. `command_line` sensors). It has no effect in Lovelace cards and creates confusion.
+- **Always use 2-space indentation** throughout all YAML files.
+- **Always add `fill_container: true`** to every card inside a `horizontal-stack`.
+- **Never use `mushroom-entity-card` with `toggle: true` for fans or switches that would open a dialog** — see the Direct Toggle pattern below.
+
+---
+
+## Tech Stack
+
+- Home Assistant (container / HA OS) — YAML dashboard at `ui-ipad-dashboard.yaml`
+- Theme: **Frosted Glass Dark** (`themes/Frosted Glass/Frosted Glass Dark.yaml`) — glass morphism, `blur(10px)`, dark tints
+- HACS frontend cards in use:
+  - `custom:mushroom-*` (lovelace-mushroom v5+) — primary card family
+  - `custom:layout-card` + `custom:grid-layout` — page structure
+  - `lovelace-card-mod` — CSS overrides via `card_mod.style`
+  - `browser_mod` v2+ — `browser_mod.popup` via `fire-dom-event`
+  - `custom:clock-weather-card` — sidebar clock
+
+---
+
+## Page Structure
+
+Every view uses a full-panel grid-layout with a fixed sidebar:
+
+```yaml
+- type: custom:layout-card
+  layout_type: custom:grid-layout
+  layout:
+    grid-template-columns: "280px minmax(0, 1fr)"
+    grid-template-areas: |
+      "sidebar main"
+    grid-gap: "10px"
+    padding: "10px"
+```
+
+Subviews (room tabs) use `subview: true` + single-column full-width:
+
+```yaml
+- title: Office
+  path: office
+  subview: true
+  theme: "Frosted Glass Dark"
+  panel: true
+```
+
+Navigation between views: `tap_action: action: navigate` to `/ui-ipad/{path}`. Back buttons navigate to `/ui-ipad/home`.
+
+---
+
+## Section Headers
+
+All section headers use `mushroom-title-card` with an 8 px top margin:
+
+```yaml
+- type: custom:mushroom-title-card
+  title: Living Room
+  card_mod:
+    style: |
+      ha-card { margin-top: 8px !important; }
+```
+
+Use `margin-top: 4px` (not 8px) for the first item after the clock/weather card.
+
+---
+
+## Color Palette (icon_color values)
+
+| State / Context | Color |
+|---|---|
+| Active / on | entity-appropriate (cyan=fan, deep-orange=heater/boiler, amber=good morning, indigo=night/good night, green=welcome/safe, orange=away/exit, purple=movie, blue=blinds/office) |
+| Inactive / off | `grey` |
+| Warning | `amber` or `orange` |
+| Alert | `red` |
+| AC on | `orange` |
+
+---
+
+## Golden Example 1 — Room Navigation Chip
+
+Compact status chip that shows AC state, light count, and temperature. Tapping navigates to the room tab. Color activates when anything is on.
+
+```yaml
+# Future: replace state_attr temp with states('sensor.office_temperature')
+- type: custom:mushroom-template-card
+  primary: Office
+  secondary: >
+    {% set ac = states('climate.l8_103') %}
+    {% set lon = [states('light.mshrd_mshrd_tqrh'), states('light.mshrd_mshrd_qyr_khlvn'), states('light.mshrd_mshrd_qyr')] | select('eq','on') | list | count %}
+    {% set temp = state_attr('climate.l8_103', 'current_temperature') %}
+    {{ 'AC · ' if ac != 'off' else '' }}{{ lon }} light{{ 's' if lon != 1 }}{% if temp %} · {{ temp }}°{% endif %}
+  icon: mdi:desk
+  icon_color: >
+    {% set ac = states('climate.l8_103') %}
+    {% set lon = [states('light.mshrd_mshrd_tqrh'), states('light.mshrd_mshrd_qyr_khlvn'), states('light.mshrd_mshrd_qyr')] | select('eq','on') | list | count %}
+    {{ 'blue' if ac != 'off' or lon > 0 else 'grey' }}
+  layout: vertical
+  fill_container: true
+  tap_action:
+    action: navigate
+    navigation_path: /ui-ipad/office
+```
+
+**Temperature future-proofing:** always use `state_attr('climate.xxx', 'current_temperature')` as the fallback. Add a comment marking where to swap in a dedicated `sensor.*` when hardware is added.
+
+---
+
+## Golden Example 2 — Direct Toggle (Fan / Switch / Heater)
+
+Never use `mushroom-entity-card` with `toggle: true` for fans or heaters — it opens a dialog on tap. Use `mushroom-template-card` with an explicit service call instead:
+
+```yaml
+# Fan: direct toggle via service call — no dialog
+- type: custom:mushroom-template-card
+  primary: >
+    {{ 'Fan On' if is_state('fan.slvn_slvn_tqrh', 'on') else 'Fan Off' }}
+  secondary: Living Room
+  icon: >
+    {{ 'mdi:fan' if is_state('fan.slvn_slvn_tqrh', 'on') else 'mdi:fan-off' }}
+  icon_color: >
+    {{ 'cyan' if is_state('fan.slvn_slvn_tqrh', 'on') else 'grey' }}
+  layout: vertical
+  fill_container: true
+  tap_action:
+    action: call-service
+    service: fan.toggle          # or switch.toggle for heaters
+    target:
+      entity_id: fan.slvn_slvn_tqrh
+```
+
+Apply the same pattern (with `switch.toggle`) for bathroom heaters and the boiler switch.
+
+---
+
+## Golden Example 3 — browser_mod Popup with Action Choices
+
+Use `fire-dom-event` + `browser_mod.popup` for on-device confirmation dialogs. The popup always appears on the device that triggered the action.
+
+```yaml
+- type: custom:mushroom-template-card
+  primary: Movie Time
+  secondary: Lights + Blinds?
+  icon: mdi:movie-play
+  icon_color: purple
+  layout: vertical
+  fill_container: true
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.popup
+      data:
+        title: Movie Time
+        size: normal
+        content:
+          type: vertical-stack
+          cards:
+            - type: custom:mushroom-template-card
+              primary: Lights will be turned off
+              secondary: Living Room, Kitchen & Office. Close blinds too?
+              icon: mdi:movie-play-outline
+              icon_color: purple
+              layout: horizontal
+              fill_container: true
+            - type: horizontal-stack
+              cards:
+                - type: custom:mushroom-template-card
+                  primary: Lights Only
+                  icon: mdi:lightbulb-off-outline
+                  icon_color: yellow
+                  layout: vertical
+                  fill_container: true
+                  tap_action:
+                    action: call-service
+                    service: script.turn_on
+                    service_data:
+                      entity_id: script.movie_time_lights_only
+                - type: custom:mushroom-template-card
+                  primary: Lights + Blinds
+                  icon: mdi:blinds
+                  icon_color: blue
+                  layout: vertical
+                  fill_container: true
+                  tap_action:
+                    action: call-service
+                    service: script.turn_on
+                    service_data:
+                      entity_id: script.movie_time_lights_and_blinds
+```
+
+---
+
+## Service Call Style
+
+Always use the `call-service` / `service:` form (not `perform-action`) for reliability:
+
+```yaml
+tap_action:
+  action: call-service
+  service: script.turn_on
+  service_data:
+    entity_id: script.good_night_event
+```
+
+Git sync pull/push calls `shell_command.ha_pull_config` / `shell_command.ha_push_config` directly with `action: call-service`.
+
+---
+
+## card_mod CSS Patterns
+
+Alert/warning banner styling:
+```yaml
+card_mod:
+  style: |
+    ha-card {
+      border: 1px solid rgba(255,180,0,0.6) !important;
+      background: rgba(255,180,0,0.12) !important;
+      margin-bottom: 6px !important;
+    }
+```
+
+Max-width constraint (e.g. back button):
+```yaml
+card_mod:
+  style: |
+    ha-card { max-width: 120px; }
+```
+
+---
+
+## Climate Cards
+
+All `mushroom-climate-card` instances must list `hvac_modes` explicitly, including `heat_cool` if the entity supports it:
+
+```yaml
+- type: custom:mushroom-climate-card
+  entity: climate.l8_105
+  name: Bedroom
+  hvac_modes:
+    - "off"
+    - cool
+    - heat
+    - heat_cool
+    - fan_only
+    - dry
+  show_temperature_control: true
+  fill_container: true
+```

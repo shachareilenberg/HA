@@ -14,7 +14,7 @@ lovelace:
   dashboards:
     ui-ipad:
       mode: yaml
-      title: iPad Home
+      title: iPad
       icon: mdi:tablet
       show_in_sidebar: true
       filename: ui-ipad-dashboard.yaml
@@ -52,9 +52,67 @@ command_line:
         echo "ok:$B"
       scan_interval: 120
 
+##############################################################
+# InfluxDB v1 activity logging (TICK stack add-on)
+#
+# Pre-requisites (one-time setup in Chronograf UI):
+#   1. InfluxDB Admin → Databases → Create Database → ha_data
+#   2. InfluxDB Admin → Users → create user "homeassistant"
+#      with ALL permissions on ha_data (only if add-on auth=true)
+#
+##############################################################
+influxdb:
+  host: a0d7b954-influxdb
+  username: homeassistant
+  password: z2jEz4XiLc^mS@
+  port: 8086
+  database: ha_data
+  tags:
+    source: hass
+  include:
+    domains:
+      - light
+      - fan
+      - switch
+      - climate
+      - media_player
+      - input_boolean
+      - cover
+  exclude:
+    entities:
+      - switch.dishwasher_intensive_zone
+      - switch.dishwasher_vario_speed
+      - switch.dishwasher_silence_on_demand
+      - switch.dishwasher_half_load
+      - switch.dishwasher_power
+      - switch.refrigerator_sabbath_mode
+      - switch.refrigerator_power_cool
+      - switch.refrigerator_power_freeze
+      - switch.kitchen_s_echo_shuffle_switch
+      - switch.kitchen_s_echo_repeat_switch
+      - switch.everywhere_shuffle_switch
+      - switch.everywhere_repeat_switch
+      - switch.bedroom_echo_spot_shuffle_switch
+      - switch.bedroom_echo_spot_repeat_switch
+      - switch.shachar_s_fire_tv_do_not_disturb
+      - switch.shachar_s_echo_do_not_disturb
+      - switch.kitchen_s_echo_do_not_disturb_switch
+      - switch.fire_tv_do_not_disturb_switch
+      - switch.everywhere_do_not_disturb_switch
+      - switch.bedroom_echo_spot_do_not_disturb_switch
+      - switch.this_device_do_not_disturb
+      - switch.pure_direct
+      - switch.enhancer
+      - switch.enhancer_2
+      - switch.extra_bass
+      - switch.extra_bass_2
+      - switch.adaptive_drc
+      - switch.party_mode
+
 shell_command:
   ha_pull_config: "/bin/bash /config/ha-pull.sh"
   ha_push_config: "/bin/bash /config/ha-push.sh"
+  create_chronograf_dashboards: "/bin/bash /config/chronograf/create-dashboards-ha.sh"
   clear_update_flag: "rm -f /config/.ha-update-flag"
   # Keeps the 200 most-recent lines so the log never grows unbounded.
   # Triggered daily at 03:00 by the "Git Log — daily rotate" automation.

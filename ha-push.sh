@@ -104,7 +104,7 @@ if ! "$GIT" push origin "$BRANCH" 2>>"$GIT_TMP"; then
   BEHIND="$("$GIT" rev-list "HEAD..origin/$BRANCH" --count 2>/dev/null || echo 0)"
   if [ "$BEHIND" -gt 0 ]; then
     : > "$GIT_TMP"  # clear push rejection noise before rebase
-    if "$GIT" pull --rebase origin "$BRANCH" 2>>"$GIT_TMP" && \
+    if "$GIT" pull --rebase -X ours origin "$BRANCH" 2>>"$GIT_TMP" && \
        "$GIT" push origin "$BRANCH" 2>>"$GIT_TMP"; then
       : > "$GIT_TMP"  # suppress successful push output
       exit 0
