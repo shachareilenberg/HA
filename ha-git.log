@@ -182,3 +182,70 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
+2026-11-04 12:05:01 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 12:05:06 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 12:10:28 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 12:15:01 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 12:15:06 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 12:20:06 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 12:20:11 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 12:25:09 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+remote: Internal Server Error        
+remote: Request ID E4C4:26F164:3D0F7:8255A:6AEB0803        
+remote: Time 2026-11-04T10:25:09Z
+To github.com:shachareilenberg/HA.git
+ ! [remote rejected] room-tabs -> room-tabs (Internal Server Error)
+error: failed to push some refs to 'github.com:shachareilenberg/HA.git'
+2026-11-04 12:30:24 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 12:35:08 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 12:40:11 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
