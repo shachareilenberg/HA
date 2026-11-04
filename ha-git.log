@@ -261,3 +261,57 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
+2026-11-04 13:00:06 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 13:00:11 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 13:05:11 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 13:05:21 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 13:10:16 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 13:10:36 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 13:15:16 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 13:15:31 [push] ERROR: push failed — commit undone, will retry. KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-11-04 13:20:07 [pull] ERROR: git fetch failed (SSH/network). KEY=/config/.ssh/id_ed25519
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
